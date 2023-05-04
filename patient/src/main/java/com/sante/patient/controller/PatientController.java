@@ -25,16 +25,13 @@ public class PatientController {
 	return patientService.createPatient(patient);
     }
 
-    @PutMapping("/patient/{id}")
-    public Patient createPatient(@PathVariable(value = "id") Long id, @RequestBody Patient patient) {
-	if (id != null) {
-	    patient.setId(id);
-	}
+    @PutMapping("/patient")
+    public Patient updatePatient(@RequestBody Patient patient) {
 	return patientService.updatePatient(patient);
     }
 
     @DeleteMapping("/patient/{id}")
-    public void createPatient(@PathVariable(value = "id") Long id) {
+    public void deletePatient(@PathVariable(value = "id") Long id) {
 	patientService.deletePatient(id);
     }
 
