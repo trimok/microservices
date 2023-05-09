@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import com.sante.clientui.model.Patient;
 
 @Service
-@FeignClient(name = "patient", url = "localhost:8081")
+@FeignClient(name = "patient", url = "${patient.url}")
 public interface PatientService {
 
     @PostMapping("/patient")

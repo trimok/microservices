@@ -1,0 +1,46 @@
+version: "3"
+
+services:
+  mysqldb:
+    image: mysql:8.0.31
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootroot
+      MYSQL_DATABASE: patient  
+    ports:
+      - "3307:3306"    
+    healthcheck:
+      test: "exit 0"  
+    networks:
+      - bridge  
+  patient:
+    build:
+      context: ./patient/
+    ports:
+      - "8081:8081"
+    environment:  
+        SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/patient?serverTimezone=UTC&autoReconnect=true   
+    image: patient
+    depends_on:     
+      mysqldb:
+        condition: service_healthy
+    networks:
+      - bridge
+    restart: on-failure  
+  clientui:
+    build:
+      context: ./clientui/
+    ports:
+      - "8080:8080"
+    environment:
+      DOCKER_PATIENT_URL: http://patient:8081  
+    image: clientui
+    depends_on:     
+      patient:
+        condition: service_started
+    networks:
+      - bridge
+networks:
+  bridge:
+    driver:
+      bridge

@@ -60,7 +60,7 @@
 				
 			<!--  Adresse postale -->
 			<div>
-				<label for="adressePostale">Date de naissance</label> <input type="text"
+				<label for="adressePostale">Adresse postale</label> <input type="text"
 					th:field="*{adressePostale}" id="adressePostale" placeholder="Adresse postale" class="form-control mb-4 col-4">
 				<ul>
 					<li th:each="err : ${#fields.errors('adressePostale')}" th:text="${err}"
