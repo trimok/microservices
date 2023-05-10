@@ -11,8 +11,6 @@ services:
       - "3307:3306"    
     healthcheck:
       test: "exit 0"  
-    networks:
-      - bridge  
   patient:
     build:
       context: ./patient/
@@ -24,8 +22,6 @@ services:
     depends_on:     
       mysqldb:
         condition: service_healthy
-    networks:
-      - bridge
     restart: on-failure  
   clientui:
     build:
@@ -38,9 +34,3 @@ services:
     depends_on:     
       patient:
         condition: service_started
-    networks:
-      - bridge
-networks:
-  bridge:
-    driver:
-      bridge

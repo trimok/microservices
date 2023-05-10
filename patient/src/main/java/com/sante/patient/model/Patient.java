@@ -50,4 +50,10 @@ public class Patient {
     @Size(min = 8, max = 32)
     @Pattern(regexp = "[0-9\s]*")
     private String telephone;
+
+    @Override
+    public String toString() {
+	return "Patient [prenom=" + prenom + ", nom=" + nom + ", dateNaissance=" + dateNaissance + ", genre=" + genre
+		+ ", adressePostale=" + adressePostale + ", telephone=" + telephone + "]";
+    }
 }

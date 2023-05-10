@@ -23,6 +23,11 @@ public class PatientService implements IPatientService {
     @Autowired
     private PatientRepository patientRepository;
 
+    public PatientService(PatientRepository patientRepository) {
+	super();
+	this.patientRepository = patientRepository;
+    }
+
     @Override
     public Patient createPatient(Patient patient) {
 	Patient patientCreated = patientRepository.save(patient);
