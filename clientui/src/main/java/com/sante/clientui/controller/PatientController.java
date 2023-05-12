@@ -1,5 +1,6 @@
 package com.sante.clientui.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.sante.clientui.model.Patient;
 import com.sante.clientui.service.PatientService;
@@ -23,8 +25,14 @@ public class PatientController {
     private PatientService patientService;
 
     @GetMapping("/")
-    public String viewHomePage(Model model) {
-	List<Patient> patients = patientService.getPatients();
+    public String viewHomePage(RedirectAttributes ra, Model model) {
+	List<Patient> patients = new ArrayList<>();
+	try {
+	    patients = patientService.getPatients();
+	} catch (Exception e) {
+	    model.addAttribute("error_get_list_patient", true);
+	}
+
 	model.addAttribute("patients", patients);
 	return "home";
     }
@@ -37,35 +45,60 @@ public class PatientController {
     }
 
     @PostMapping("/save")
-    public String savePatient(@Valid @ModelAttribute("patient") Patient patient, BindingResult bindingResult) {
+    public String savePatient(@Valid @ModelAttribute("patient") Patient patient, RedirectAttributes ra, Model model,
+	    BindingResult bindingResult) {
 	if (bindingResult.hasErrors()) {
 	    return "add";
 	} else {
-	    patientService.createPatient(patient);
+	    try {
+		patientService.createPatient(patient);
+	    } catch (Exception e) {
+		ra.addAttribute("error_add_patient", true);
+		ra.addFlashAttribute("error_add_patient", true);
+	    }
 	    return "redirect:/";
 	}
     }
 
     @PostMapping("/update")
-    public String updatePatient(@Valid @ModelAttribute("patient") Patient patient, BindingResult bindingResult) {
+    public String updatePatient(@Valid @ModelAttribute("patient") Patient patient, RedirectAttributes ra, Model model,
+	    BindingResult bindingResult) {
 	if (bindingResult.hasErrors()) {
 	    return "update";
 	} else {
-	    patientService.updatePatient(patient);
+	    try {
+		patientService.updatePatient(patient);
+	    } catch (Exception e) {
+		ra.addAttribute("error_update_patient", true);
+		ra.addFlashAttribute("error_update_patient", true);
+	    }
 	    return "redirect:/";
 	}
     }
 
     @GetMapping("/update/{id}")
-    public String showFormForUpdate(@PathVariable(value = "id") long id, Model model) {
-	Patient patient = patientService.getPatient(id);
-	model.addAttribute("patient", patient);
-	return "update";
+    public String showFormForUpdate(@PathVariable(value = "id") long id, RedirectAttributes ra, Model model) {
+	Patient patient = null;
+
+	try {
+	    patient = patientService.getPatient(id);
+	    model.addAttribute("patient", patient);
+	    return "update";
+	} catch (Exception e) {
+	    ra.addAttribute("error_get_patient", true);
+	    ra.addFlashAttribute("error_get_patient", true);
+	    return "redirect:/";
+	}
     }
 
     @GetMapping("/delete/{id}")
-    public String deleteCourse(@PathVariable(value = "id") long id) {
-	patientService.deletePatient(id);
+    public String deleteCourse(@PathVariable(value = "id") long id, RedirectAttributes ra, Model model) {
+	try {
+	    patientService.deletePatient(id);
+	} catch (Exception e) {
+	    ra.addAttribute("error_delete_patient", true);
+	    ra.addFlashAttribute("error_delete_patient", true);
+	}
 	return "redirect:/";
     }
 }

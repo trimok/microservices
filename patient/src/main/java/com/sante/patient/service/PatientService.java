@@ -75,4 +75,9 @@ public class PatientService implements IPatientService {
 	    return patientOptional.get();
 	}
     }
+
+    @Override
+    public void deleteAllPatient() {
+	patientRepository.deleteAll();
+    }
 }

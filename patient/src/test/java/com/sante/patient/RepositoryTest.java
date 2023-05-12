@@ -37,6 +37,9 @@ public class RepositoryTest {
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private LocalDate dateNaissance = LocalDate.parse("04/12/1957", formatter);
 
+    private Patient patient = new Patient(null, "Tristan", "Mokobodzki", dateNaissance, "M", "1 rue du Louvre, PARIS",
+	    "06 01 02 08 09 ");
+
     @BeforeAll
     public void beforeAll() {
 	patientRepository.deleteAll();
@@ -49,32 +52,45 @@ public class RepositoryTest {
 
     @AfterEach
     public void afterEach() {
+	patientRepository.deleteAll();
     }
 
     @Test
-    void patientCRUD() {
-	Patient patient = new Patient(null, "Tristan", "Mokobodzki", dateNaissance, "M", "1 rue du Louvre, PARIS",
-		"06 01 02 08 09 ");
-
-	// Save
+    public void createPatient() {
 	Patient patientSaved = patientRepository.save(patient);
 	assertNotNull(patientSaved.getId());
 	assertThat(patientSaved.toString().equals(patient.toString()));
+    }
 
-	// Update
+    @Test
+    public void updatePatient() {
+	Patient patientToBeUpdated = patientRepository.save(patient);
 	String newPrenom = "Daniel";
-	patientSaved.setPrenom(newPrenom);
-	Patient patientUpdated = patientRepository.save(patientSaved);
+	patientToBeUpdated.setPrenom(newPrenom);
+	Patient patientUpdated = patientRepository.save(patientToBeUpdated);
 	assertThat(patientUpdated.getPrenom().equals(newPrenom));
+    }
 
-	// Find
+    @Test
+    public void getPatient() {
+	Patient patientDatabase = patientRepository.save(patient);
+	Optional<Patient> patient = patientRepository.findById(patientDatabase.getId());
+	assertTrue(patient.isPresent());
+    }
+
+    @Test
+    public void getPatients() {
+	patientRepository.save(patient);
 	List<Patient> listResult = patientRepository.findAll();
 	assertTrue(listResult.size() == 1);
+    }
 
-	// Delete
+    @Test
+    public void deletePatient() {
+	Patient patientSaved = patientRepository.save(patient);
 	Long id = patientSaved.getId();
 	patientRepository.deleteById(patientSaved.getId());
-	Optional<Patient> bidList = patientRepository.findById(id);
-	assertFalse(bidList.isPresent());
+	Optional<Patient> patient = patientRepository.findById(id);
+	assertFalse(patient.isPresent());
     }
 }

@@ -15,4 +15,6 @@ public interface IPatientService {
     List<Patient> getPatients();
 
     Patient getPatient(Long id);
+
+    void deleteAllPatient();
 }
