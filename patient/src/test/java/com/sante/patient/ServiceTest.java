@@ -26,6 +26,7 @@ import org.junit.jupiter.api.function.Executable;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.sante.patient.exception.PatientConflictException;
 import com.sante.patient.exception.PatientNoContentException;
 import com.sante.patient.exception.PatientNotFoundException;
 import com.sante.patient.model.Patient;
@@ -81,6 +82,13 @@ public class ServiceTest {
 	Executable action = () -> patientService.createPatient(patient);
 	assertThrows(PatientNoContentException.class, action);
 	verify(patientRepository, times(1)).save(any(Patient.class));
+    }
+
+    @Test
+    public void patientServiceCreatePatient_PatientConflictException() {
+
+	Executable action = () -> patientService.createPatient(patientDatabase);
+	assertThrows(PatientConflictException.class, action);
     }
 
     @Test

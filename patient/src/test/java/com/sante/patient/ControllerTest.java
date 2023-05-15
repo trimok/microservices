@@ -34,6 +34,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.sante.patient.controller.PatientController;
+import com.sante.patient.exception.PatientConflictException;
 import com.sante.patient.exception.PatientNoContentException;
 import com.sante.patient.exception.PatientNotFoundException;
 import com.sante.patient.model.Patient;
@@ -156,6 +157,21 @@ public class ControllerTest {
 			.contentType(MediaType.APPLICATION_JSON)
 			.accept(MediaType.APPLICATION_JSON))
 		.andExpect(status().is(204)).andReturn();
+
+	verify(patientService, times(1)).createPatient(any(Patient.class));
+    }
+
+    @Test
+    public void savePatient_PatientConflictException() throws Exception {
+
+	when(patientService.createPatient(any(Patient.class))).thenThrow(new PatientConflictException());
+
+	mockMvc
+		.perform(
+			MockMvcRequestBuilders.post("/patient").content(Util.mapper.writeValueAsString(patientDatabase))
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+		.andExpect(status().is(409)).andReturn();
 
 	verify(patientService, times(1)).createPatient(any(Patient.class));
     }

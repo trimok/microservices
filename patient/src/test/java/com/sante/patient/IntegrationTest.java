@@ -132,6 +132,18 @@ public class IntegrationTest {
     }
 
     @Test
+    public void savePatient_PatientConflictException() throws Exception {
+
+	mockMvc
+		.perform(
+			MockMvcRequestBuilders.post("/patient")
+				.content(Util.mapper.writeValueAsString(patientDatabase))
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+		.andExpect(status().is(409)).andReturn();
+    }
+
+    @Test
     public void updatePatient() throws Exception {
 
 	// Creation d'un patient
