@@ -13,7 +13,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.sante.clientui.model.Note;
 import com.sante.clientui.model.Patient;
+import com.sante.clientui.model.PatientHistory;
+import com.sante.clientui.service.PatientHistoryService;
 import com.sante.clientui.service.PatientService;
 
 import jakarta.validation.Valid;
@@ -23,6 +26,9 @@ public class PatientController {
 
     @Autowired
     private PatientService patientService;
+
+    @Autowired
+    private PatientHistoryService patientHistoryService;
 
     @GetMapping("/")
     public String viewHomePage(RedirectAttributes ra, Model model) {
@@ -100,5 +106,87 @@ public class PatientController {
 	    ra.addFlashAttribute("error_delete_patient", true);
 	}
 	return "redirect:/";
+    }
+
+    @GetMapping("/notes_add/{id}")
+    public String showNewPatientHistoryForm(@PathVariable(value = "id") long id,
+	    RedirectAttributes ra, Model model) {
+	Note note = new Note();
+	model.addAttribute("note", note);
+
+	PatientHistory patientHistory = new PatientHistory();
+	patientHistory.setId(id);
+	model.addAttribute("patientHistory", patientHistory);
+
+	Patient patient = null;
+	try {
+	    patient = patientService.getPatient(id);
+	    model.addAttribute("patient", patient);
+	} catch (Exception e) {
+	    ra.addAttribute("error_get_patient", true);
+	    ra.addFlashAttribute("error_get_patient", true);
+	    return "redirect:/";
+	}
+
+	return "notes_add";
+    }
+
+    @GetMapping("/notes/{id}")
+    public String viewNotesHomePage(@PathVariable(value = "id") long id, RedirectAttributes ra, Model model) {
+	Patient patient = null;
+
+	try {
+	    patient = patientService.getPatient(id);
+	    model.addAttribute("patient", patient);
+
+	    PatientHistory patientHistory = null;
+
+	    try {
+		patientHistory = patientHistoryService.getPatientHistory(patient.getId());
+	    } catch (Exception e) {
+		// S'il n'y a pas d'historique, on revient quand même dans notes_home
+		// avec une liste vide
+		patientHistory = new PatientHistory();
+		patientHistory.setId(patient.getId());
+	    }
+
+	    model.addAttribute("patientHistory", patientHistory);
+	    return "notes_home";
+	} catch (Exception e) {
+	    ra.addAttribute("error_get_patient", true);
+	    ra.addFlashAttribute("error_get_patient", true);
+	    return "redirect:/";
+	}
+    }
+
+    @PostMapping("/notes_save")
+    public String savePatientHistory(@Valid @ModelAttribute("patientHistory") PatientHistory patientHistory,
+	    @Valid @ModelAttribute("note") Note note,
+	    RedirectAttributes ra, Model model,
+	    BindingResult bindingResult) {
+	if (bindingResult.hasErrors()) {
+	    return "notes_add";
+	} else {
+	    try {
+		patientHistory.getNotes().add(note);
+		patientHistory = patientHistoryService.createUpdatePatientHistory(patientHistory);
+	    } catch (Exception e) {
+		ra.addAttribute("error_add_patient_history", true);
+		ra.addFlashAttribute("error_add_patient_history", true);
+	    }
+	    model.addAttribute("patientHistory", patientHistory);
+
+	    Patient patient;
+	    try {
+		patient = patientService.getPatient(patientHistory.getId());
+		model.addAttribute("patient", patient);
+	    } catch (Exception e) {
+		ra.addAttribute("error_get_patient", true);
+		ra.addFlashAttribute("error_get_patient", true);
+		return "redirect:/";
+	    }
+	    model.addAttribute("patient", patient);
+	    return "notes_home";
+	}
     }
 }

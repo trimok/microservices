@@ -58,8 +58,12 @@
 					<td th:text="${patient.adressePostale}"></td>
 					<td th:text="${patient.telephone}"></td>
 					<td><a th:href="@{/update/{id}(id=${patient.id})}"
-						class="btn btn-primary">Modifier</a> <a
-						th:href="@{/delete/{id}(id=${patient.id})}" class="btn btn-danger">Supprimer</a>
+						class="btn btn-primary">Modifier</a> 
+						<a
+						th:href="@{/delete/{id}(id=${patient.id})}" class="btn btn-danger">Supprimer
+						</a>
+						<a th:href="@{/notes/{id}(id=${patient.id})}"
+						class="btn btn-primary">Notes</a>
 					</td>
 				</tr>
 			</tbody>
