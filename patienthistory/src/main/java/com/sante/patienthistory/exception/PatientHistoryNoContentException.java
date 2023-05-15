@@ -1,4 +1,4 @@
-package com.sante.patient.exception;
+package com.sante.patienthistory.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -11,10 +11,13 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class PatientNoContentException extends PatientRuntimeException {
+public class PatientHistoryNoContentException extends PatientHistoryRuntimeException {
+    /**
+     * 
+     */
     private static final long serialVersionUID = 2L;
 
-    public PatientNoContentException(String action) {
+    public PatientHistoryNoContentException(String action) {
 	super(action);
     }
 }

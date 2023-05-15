@@ -71,7 +71,7 @@ public class IntegrationTest {
     public void getPatients() throws Exception {
 
 	// Creation d'un patient
-	patientService.createPatient(patientDatabase);
+	Patient patientCreated = patientService.createPatient(patient);
 
 	MvcResult mvcResult = mockMvc
 		.perform(MockMvcRequestBuilders.get("/patient"))
@@ -80,21 +80,21 @@ public class IntegrationTest {
 	List<Patient> patientsReturn = Util.getListPatientFromMvcResult(mvcResult);
 	assertNotNull(patientsReturn);
 	assertThat(patientsReturn.size() == 1);
-	assertThat(patientsReturn.get(0).toString().equals(patientDatabase.toString()));
+	assertThat(patientsReturn.get(0).toString().equals(patientCreated.toString()));
     }
 
     @Test
     public void getPatient() throws Exception {
 
 	// Creation d'un patient
-	Patient patientCreated = patientService.createPatient(patientDatabase);
+	Patient patientCreated = patientService.createPatient(patient);
 
 	MvcResult mvcResult = mockMvc
 		.perform(MockMvcRequestBuilders.get("/patient/" + patientCreated.getId()))
 		.andExpect(status().is(200)).andReturn();
 
 	Patient patient = Util.getPatientFromMvcResult(mvcResult);
-	assertThat(patient.toString().equals(patientDatabase.toString()));
+	assertThat(patient.toString().equals(patientCreated.toString()));
     }
 
     @Test
@@ -135,7 +135,7 @@ public class IntegrationTest {
     public void updatePatient() throws Exception {
 
 	// Creation d'un patient
-	Patient patientToBeUpdated = patientService.createPatient(patientDatabase);
+	Patient patientToBeUpdated = patientService.createPatient(patient);
 	patientToBeUpdated.setPrenom("Daniel");
 
 	MvcResult mvcResult = mockMvc
@@ -169,7 +169,7 @@ public class IntegrationTest {
     @Test
     public void updatePatient_MethodArgumentNotValidException() throws Exception {
 	// Creation d'un patient
-	Patient patientNotValidToBeUpdated = patientService.createPatient(patientDatabase);
+	Patient patientNotValidToBeUpdated = patientService.createPatient(patient);
 	patientNotValidToBeUpdated.setGenre("MF");
 
 	mockMvc
@@ -184,7 +184,7 @@ public class IntegrationTest {
     @Test
     public void deletePatient() throws Exception {
 	// Creation d'un patient
-	patientService.createPatient(patientDatabase);
+	patientService.createPatient(patient);
 
 	mockMvc
 		.perform(MockMvcRequestBuilders.delete("/patient/1"))

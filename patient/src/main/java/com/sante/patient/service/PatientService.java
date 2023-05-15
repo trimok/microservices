@@ -12,6 +12,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.sante.patient.exception.PatientConflictException;
 import com.sante.patient.exception.PatientNoContentException;
 import com.sante.patient.exception.PatientNotFoundException;
 import com.sante.patient.model.Patient;
@@ -30,6 +31,10 @@ public class PatientService implements IPatientService {
 
     @Override
     public Patient createPatient(Patient patient) {
+	if (patient.getId() != null) {
+	    throw new PatientConflictException(ACTION_CREATE);
+	}
+
 	Patient patientCreated = patientRepository.save(patient);
 	if (patientCreated == null) {
 	    throw new PatientNoContentException(ACTION_CREATE);

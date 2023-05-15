@@ -32,6 +32,7 @@ public class PatientController {
     @ApiResponse(responseCode = "204")
     @ApiResponse(responseCode = "201")
     @ApiResponse(responseCode = "400")
+    @ApiResponse(responseCode = "409")
     @PostMapping("/patient")
     public ResponseEntity<Patient> createPatient(@Valid @RequestBody Patient patient) {
 	Patient patientAdded = patientService.createPatient(patient);

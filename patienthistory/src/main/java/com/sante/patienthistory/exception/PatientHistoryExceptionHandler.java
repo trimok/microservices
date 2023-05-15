@@ -1,10 +1,10 @@
-package com.sante.patient.exception;
+package com.sante.patienthistory.exception;
 
-import static com.sante.patient.constants.Constants.CONFLICT;
-//import static com.sante.patient.constants.Constants.*;
-import static com.sante.patient.constants.Constants.ERROR_VALIDATION;
-import static com.sante.patient.constants.Constants.NOT_FOUND;
-import static com.sante.patient.constants.Constants.NO_CONTENT;
+//import static com.sante.patienthistory.constants.Constants.*;
+import static com.sante.patienthistory.constants.Constants.ERROR_VALIDATION;
+import static com.sante.patienthistory.constants.Constants.NOT_FOUND;
+import static com.sante.patienthistory.constants.Constants.NO_CONTENT;
+import static com.sante.patienthistory.constants.Constants.PATIENT_ID_NOT_FOUND;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,12 +20,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
 @RestControllerAdvice
-public class PatientExceptionHandler {
+public class PatientHistoryExceptionHandler {
 
     @ExceptionHandler({ MethodArgumentNotValidException.class, HttpMessageNotReadableException.class,
-	    PatientNoContentException.class,
-	    PatientNotFoundException.class,
-	    PatientConflictException.class })
+	    PatientHistoryNoContentException.class,
+	    PatientHistoryNotFoundException.class,
+	    PatientIdNotValidException.class })
     public ResponseEntity<Error> handlException(Exception exception, WebRequest request) {
 
 	HttpStatus status = null;
@@ -44,23 +44,22 @@ public class PatientExceptionHandler {
 	    error = new Error(ERROR_VALIDATION, details);
 	    status = HttpStatus.BAD_REQUEST;
 	} else if (exception instanceof HttpMessageNotReadableException) {
-	    error = new Error(ERROR_VALIDATION, "patient : date naissance :" + exception.getMessage());
+	    error = new Error(ERROR_VALIDATION, "info : date creation :" + exception.getMessage());
 	    status = HttpStatus.BAD_REQUEST;
 
-	} else if (exception instanceof PatientNotFoundException) {
-	    PatientNotFoundException pnfe = (PatientNotFoundException) exception;
+	} else if (exception instanceof PatientHistoryNotFoundException) {
+	    PatientHistoryNotFoundException pnfe = (PatientHistoryNotFoundException) exception;
 	    error = new Error(pnfe.getAction(), NOT_FOUND);
 	    status = HttpStatus.NOT_FOUND;
-	} else if (exception instanceof PatientNoContentException) {
-	    PatientNoContentException pnce = (PatientNoContentException) exception;
+	} else if (exception instanceof PatientHistoryNoContentException) {
+	    PatientHistoryNoContentException pnce = (PatientHistoryNoContentException) exception;
 	    error = new Error(pnce.getAction(), NO_CONTENT);
 	    status = HttpStatus.NO_CONTENT;
-	} else if (exception instanceof PatientConflictException) {
-	    PatientConflictException pce = (PatientConflictException) exception;
-	    error = new Error(pce.getAction(), CONFLICT);
-	    status = HttpStatus.CONFLICT;
+	} else if (exception instanceof PatientIdNotValidException) {
+	    PatientIdNotValidException pinve = (PatientIdNotValidException) exception;
+	    error = new Error(pinve.getAction(), PATIENT_ID_NOT_FOUND);
+	    status = HttpStatus.BAD_REQUEST;
 	}
-
 	return new ResponseEntity<Error>(error, status);
     }
 }
