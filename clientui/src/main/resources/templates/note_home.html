@@ -21,11 +21,27 @@
 	<div th:if="${error_add_patient_history}"
 		class="mb-5 alert alert-success text-danger">Impossible
 		d'ajouter une note @agrave à l'historique des patients</div>
+		
+		<div th:if="${error_get_patient_history}"
+		class="mb-5 alert alert-success text-danger">Impossible d'acceder @agrave l'historique des patients
+		</div>
+		
+		<div th:if="${error_delete_note}"
+		class="mb-5 alert alert-success text-danger">Impossible de supprimer la note
+		</div>
+		
+		<div th:if="${error_get_note}"
+		class="mb-5 alert alert-success text-danger">Impossible de trouver la note
+		</div>
+		
+		<div th:if="${error_update_note}"
+		class="mb-5 alert alert-success text-danger">Impossible de modifier la note
+		</div>
 
 	<div class="container my-2">
 		<h1 th:text="'Historique du patient ' + ${patient.prenom} + ' ' + ${patient.nom}"></h1>
 
-		<a th:href="@{/notes_add/{id}(id=${patientHistory.id})}"      class="btn btn-primary btn-sm mb-3">		
+		<a th:href="@{/note/add/{id}(id=${patientHistory.id})}"      class="btn btn-primary btn-sm mb-3">		
 			Ajouter une note &agrave l'historique</a>
 
 		<table border="1" class="table table-striped table-responsive-md">
@@ -33,6 +49,7 @@
 				<tr>
 					<th>Date de cr&eacuteation</th>
 					<th>Information</th>
+					<th>Actions</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -40,6 +57,12 @@
 					<td
 						th:text="${#temporals.format(note.creationDate, 'dd/MM/yyyy HH:mm:ss')}"></td>
 					<td th:text="${note.info}"></td>
+					<td><a th:href="@{/note/update/{id}/{creationDate}(id=${patient.id},creationDate=${note.creationDate})}"
+						class="btn btn-primary">Modifier</a> 
+						<a
+						th:href="@{/note/delete/{id}/{creationDate}(id=${patient.id},creationDate=${note.creationDate})}" class="btn btn-danger">Supprimer
+						</a>						
+					</td>
 				</tr>
 			</tbody>
 		</table>

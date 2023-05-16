@@ -5,6 +5,7 @@ import static com.sante.patienthistory.constants.Constants.ERROR_VALIDATION;
 import static com.sante.patienthistory.constants.Constants.NOT_FOUND;
 import static com.sante.patienthistory.constants.Constants.NO_CONTENT;
 import static com.sante.patienthistory.constants.Constants.PATIENT_ID_NOT_FOUND;
+import static com.sante.patienthistory.constants.Constants.PATIENT_NOTE_DATE_NOT_VALID;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +26,8 @@ public class PatientHistoryExceptionHandler {
     @ExceptionHandler({ MethodArgumentNotValidException.class, HttpMessageNotReadableException.class,
 	    PatientHistoryNoContentException.class,
 	    PatientHistoryNotFoundException.class,
-	    PatientIdNotValidException.class })
+	    PatientIdNotValidException.class,
+	    PatientNoteNotValidException.class })
     public ResponseEntity<Error> handlException(Exception exception, WebRequest request) {
 
 	HttpStatus status = null;
@@ -58,6 +60,10 @@ public class PatientHistoryExceptionHandler {
 	} else if (exception instanceof PatientIdNotValidException) {
 	    PatientIdNotValidException pinve = (PatientIdNotValidException) exception;
 	    error = new Error(pinve.getAction(), PATIENT_ID_NOT_FOUND);
+	    status = HttpStatus.BAD_REQUEST;
+	} else if (exception instanceof PatientNoteNotValidException) {
+	    PatientNoteNotValidException pnve = (PatientNoteNotValidException) exception;
+	    error = new Error(pnve.getAction(), PATIENT_NOTE_DATE_NOT_VALID);
 	    status = HttpStatus.BAD_REQUEST;
 	}
 	return new ResponseEntity<Error>(error, status);

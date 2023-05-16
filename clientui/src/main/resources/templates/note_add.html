@@ -16,21 +16,23 @@
 	<div class="container">
 		<h2 th:text = "'Ajouter une note pour le patient ' + ${patient.prenom} + ' ' + ${patient.nom}"></h2>
 
-		<form action="#" th:action="@{/notes_save}" th:object="${note}"
+		<form action="#" th:action="@{/note/save}" th:object="${note}"
 			method="POST">
 			
 			<!-- Add hidden form field to handle update -->
 			<input type="hidden" th:field="${patientHistory.id}" /> 
+			<input type="hidden" th:field="*{creationDate}" /> 
 			
-			<!--  Date de creation -->
+			<!--  Date de creation (readonly) -->
 			<div>
-				<label for="creationDate">Date de creation</label> <input type="text"
+				<label for="creationDate">Date de creation</label> <input type="text" th:readonly="true" 
 					th:field="*{creationDate}" id="creationDate" placeholder="Date de creation" class="form-control mb-4 col-4">
 				<ul>
 					<li th:each="err : ${#fields.errors('creationDate')}" th:text="${err}"
 						class="error" />
 				</ul>
-			</div>	
+			</div>		
+			
 			<!--  Information -->
 			<div>
 				<label for="info">Information</label> <input type="text"

@@ -1,7 +1,9 @@
 package com.sante.clientui.controller;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -108,7 +110,7 @@ public class PatientController {
 	return "redirect:/";
     }
 
-    @GetMapping("/notes_add/{id}")
+    @GetMapping("/note/add/{id}")
     public String showNewPatientHistoryForm(@PathVariable(value = "id") long id,
 	    RedirectAttributes ra, Model model) {
 	Note note = new Note();
@@ -128,7 +130,7 @@ public class PatientController {
 	    return "redirect:/";
 	}
 
-	return "notes_add";
+	return "note_add";
     }
 
     @GetMapping("/notes/{id}")
@@ -151,7 +153,7 @@ public class PatientController {
 	    }
 
 	    model.addAttribute("patientHistory", patientHistory);
-	    return "notes_home";
+	    return "note_home";
 	} catch (Exception e) {
 	    ra.addAttribute("error_get_patient", true);
 	    ra.addFlashAttribute("error_get_patient", true);
@@ -159,13 +161,13 @@ public class PatientController {
 	}
     }
 
-    @PostMapping("/notes_save")
+    @PostMapping("/note/save")
     public String savePatientHistory(@Valid @ModelAttribute("patientHistory") PatientHistory patientHistory,
 	    @Valid @ModelAttribute("note") Note note,
 	    RedirectAttributes ra, Model model,
 	    BindingResult bindingResult) {
 	if (bindingResult.hasErrors()) {
-	    return "notes_add";
+	    return "note_add";
 	} else {
 	    try {
 		patientHistory.getNotes().add(note);
@@ -186,7 +188,85 @@ public class PatientController {
 		return "redirect:/";
 	    }
 	    model.addAttribute("patient", patient);
-	    return "notes_home";
+	    return "note_home";
+	}
+    }
+
+    @GetMapping("/note/delete/{id}/{creationDate}")
+    public String deleteNote(@PathVariable(value = "id") long id,
+	    @PathVariable(value = "creationDate") LocalDateTime creationDate,
+	    RedirectAttributes ra, Model model) {
+
+	PatientHistory patientHistory = new PatientHistory();
+	patientHistory.setId(id);
+	Note note = new Note();
+	note.setCreationDate(creationDate);
+	patientHistory.getNotes().add(note);
+
+	try {
+	    patientHistoryService.deleteNote(patientHistory);
+	} catch (Exception e) {
+	    ra.addAttribute("error_delete_note", true);
+	    ra.addFlashAttribute("error_delete_note", true);
+	}
+	return "redirect:/notes/" + id;
+    }
+
+    @GetMapping("/note/update/{id}/{creationDate}")
+    public String showNoteFormForUpdate(@PathVariable(value = "id") long id,
+	    @PathVariable(value = "creationDate") LocalDateTime creationDate, RedirectAttributes ra, Model model) {
+	Patient patient = null;
+	PatientHistory patientHistory = null;
+
+	try {
+	    patient = patientService.getPatient(id);
+	    model.addAttribute("patient", patient);
+	} catch (Exception e) {
+	    ra.addAttribute("error_get_patient", true);
+	    ra.addFlashAttribute("error_get_patient", true);
+	    return "redirect:/";
+	}
+
+	try {
+	    patientHistory = patientHistoryService.getPatientHistory(id);
+	    model.addAttribute("patientHistory", patientHistory);
+	} catch (Exception e) {
+	    ra.addAttribute("error_get_patient_history", true);
+	    ra.addFlashAttribute("error_get_patient_history", true);
+	    return "redirect:/";
+	}
+
+	Optional<Note> optionalNote = patientHistory.getNotes().stream()
+		.filter(n -> n.getCreationDate().equals(creationDate))
+		.findFirst();
+
+	if (optionalNote.isEmpty()) {
+	    ra.addAttribute("error_get_note", true);
+	    ra.addFlashAttribute("error_get_note", true);
+	    return "redirect:/notes/" + id;
+	} else {
+	    model.addAttribute("note", optionalNote.get());
+	    return "note_update";
+	}
+    }
+
+    @PostMapping("/note/update")
+    public String updateNote(@Valid @ModelAttribute("patientHistory") PatientHistory patientHistory,
+	    @Valid @ModelAttribute("note") Note note, RedirectAttributes ra, Model model,
+	    BindingResult bindingResult) {
+	if (bindingResult.hasErrors()) {
+	    return "note_update";
+	} else {
+	    try {
+		PatientHistory patientHistoryToUpdate = new PatientHistory();
+		patientHistoryToUpdate.setId(patientHistory.getId());
+		patientHistoryToUpdate.getNotes().add(note);
+		patientHistoryService.updateNote(patientHistoryToUpdate);
+	    } catch (Exception e) {
+		ra.addAttribute("error_update_note", true);
+		ra.addFlashAttribute("error_update_note", true);
+	    }
+	    return "redirect:/notes/" + patientHistory.getId();
 	}
     }
 }

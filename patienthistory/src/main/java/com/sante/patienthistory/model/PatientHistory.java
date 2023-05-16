@@ -17,7 +17,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@CompoundIndex(name = "note_creation_date", def = "{'notes.creationDate' : 1}", unique = true)
+@CompoundIndex(name = "note_creation_date", def = "{'id': 1, 'notes.creationDate' : 1}", unique = true)
 @Document(collection = "patientHistories")
 public class PatientHistory {
 

@@ -12,4 +12,7 @@ public interface IPatientHistoryService {
 
     PatientHistory createUpdatePatientHistory(PatientHistory patientHistory);
 
+    PatientHistory updateNote(PatientHistory patientHistory);
+
+    PatientHistory deleteNote(PatientHistory patientHistory);
 }
