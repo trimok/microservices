@@ -44,7 +44,7 @@ public class PatientHistoryController {
 	return new ResponseEntity<PatientHistory>(patientHistoryUpdated, HttpStatus.OK);
     }
 
-    @Operation(summary = "Ajouter une note (Création et/ou modification d' un historique de patient")
+    @Operation(summary = "Ajouter une note (Création et/ou modification d' un historique de patient)")
     @ApiResponse(responseCode = "200")
     @ApiResponse(responseCode = "204")
     @ApiResponse(responseCode = "404")

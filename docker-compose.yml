@@ -1,6 +1,24 @@
 version: "3"
 
 services:
+  mongodb:
+    image: mongo
+    ports:
+      - '27017:27017'
+    healthcheck:
+      test: "exit 0"    
+  patienthistory:
+    build:
+      context: ./patienthistory/
+    ports:
+      - "8082:8082"
+    environment:  
+        MONGODB_HOST: mongodb   
+    image: patienthistory
+    depends_on:     
+      mongodb:
+        condition: service_healthy
+    restart: on-failure      
   mysqldb:
     image: mysql:8.0.31
     restart: always
@@ -30,7 +48,10 @@ services:
       - "8080:8080"
     environment:
       DOCKER_PATIENT_URL: http://patient:8081  
+      DOCKER_PATIENT_HISTORY_URL: http://patienthistory:8082  
     image: clientui
     depends_on:     
       patient:
         condition: service_started
+      patienthistory:
+        condition: service_started  
