@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Repository
 @Slf4j
-public class NoteRepository implements INoteRepository {
+public class PatientHistoryRepositoryImpl implements IPatientRepositoryCustom {
 
     @Autowired
     private MongoTemplate mongoTemplate;
@@ -57,4 +57,5 @@ public class NoteRepository implements INoteRepository {
 
 	return result;
     }
+
 }

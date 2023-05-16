@@ -20,7 +20,7 @@ import com.sante.patienthistory.exception.PatientIdNotValidException;
 import com.sante.patienthistory.exception.PatientNoteNotValidException;
 import com.sante.patienthistory.model.Note;
 import com.sante.patienthistory.model.PatientHistory;
-import com.sante.patienthistory.repository.INoteRepository;
+import com.sante.patienthistory.repository.IPatientRepositoryCustom;
 import com.sante.patienthistory.repository.PatientHistoryRepository;
 
 @Service
@@ -29,7 +29,7 @@ public class PatientHistoryService implements IPatientHistoryService {
     private PatientHistoryRepository patientHistoryRepository;
 
     @Autowired
-    private INoteRepository noteRepository;
+    private IPatientRepositoryCustom patientRepositoryImpl;
 
     @Override
     public PatientHistory createPatientHistory(PatientHistory patientHistory) {
@@ -102,7 +102,7 @@ public class PatientHistoryService implements IPatientHistoryService {
 	    throw new PatientNoteNotValidException(ACTION_NOTE_UPDATE);
 	}
 
-	UpdateResult result = noteRepository.updateNote(patientHistory);
+	UpdateResult result = patientRepositoryImpl.updateNote(patientHistory);
 	if (result.getMatchedCount() == 0 || result.getModifiedCount() == 0) {
 	    throw new PatientHistoryNotFoundException(ACTION_NOTE_UPDATE);
 	}
@@ -128,7 +128,7 @@ public class PatientHistoryService implements IPatientHistoryService {
 	    throw new PatientNoteNotValidException(ACTION_NOTE_DELETE);
 	}
 
-	UpdateResult result = noteRepository.deleteNote(patientHistory);
+	UpdateResult result = patientRepositoryImpl.deleteNote(patientHistory);
 	if (result.getMatchedCount() == 0 || result.getModifiedCount() == 0) {
 	    throw new PatientHistoryNotFoundException(ACTION_NOTE_DELETE);
 	}

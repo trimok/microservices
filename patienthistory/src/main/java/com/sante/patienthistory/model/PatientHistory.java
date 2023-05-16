@@ -21,6 +21,11 @@ import lombok.Setter;
 @Document(collection = "patientHistories")
 public class PatientHistory {
 
+    @Override
+    public String toString() {
+	return "PatientHistory [id=" + id + ", notes=" + notes + "]";
+    }
+
     @Id
     private Long id;
 

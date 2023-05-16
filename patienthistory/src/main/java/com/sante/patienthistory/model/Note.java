@@ -17,6 +17,11 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Note implements Comparable<Note> {
+    @Override
+    public String toString() {
+	return "Note [creationDate=" + creationDate + ", info=" + info + "]";
+    }
+
     @DateTimeFormat(pattern = "dd/MM/yyyy HH:mm:ss")
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
     @NotNull
