@@ -49,23 +49,23 @@ public class RepositoryTest {
     private Note note = new Note(creationDate, "Info");
     private Note noteAdd = new Note(creationDateNoteAdd, "Info note add");
 
-    private PatientHistory patientHistoryDatabase = new PatientHistory();
+    private PatientHistory patientHistoryDatabase = null;
 
     @BeforeAll
     public void beforeAll() {
 	patientHistoryRepository.deleteAll();
-	patientHistoryDatabase.setId(1L);
-	patientHistoryDatabase.getNotes().add(note);
     }
 
     @BeforeEach
     public void beforeEach() {
-
+	patientHistoryRepository.deleteAll();
+	patientHistoryDatabase = new PatientHistory();
+	patientHistoryDatabase.setId(1L);
+	patientHistoryDatabase.getNotes().add(note);
     }
 
     @AfterEach
     public void afterEach() {
-	patientHistoryRepository.deleteAll();
     }
 
     @Test
@@ -98,6 +98,7 @@ public class RepositoryTest {
     @Test
     public void updateNote() {
 	PatientHistory patientHistorySaved = patientHistoryRepository.insert(patientHistoryDatabase);
+	assertThat(patientHistorySaved.getNotes().size()).isEqualTo(1);
 	Note note = patientHistorySaved.getNotes().first();
 	String infoModifiee = "Info modifiee";
 	note.setInfo(infoModifiee);
@@ -108,7 +109,7 @@ public class RepositoryTest {
 	Optional<PatientHistory> patientHistory = patientHistoryRepository.findById(patientHistorySaved.getId());
 	assertTrue(patientHistory.isPresent());
 	SortedSet<Note> notes = patientHistory.get().getNotes();
-	assertTrue(notes.size() == 1);
+	assertThat(notes.size()).isEqualTo(1);
 	Note noteUpdated = (Note) notes.first();
 	assertThat(noteUpdated.getInfo().equals(infoModifiee));
     }
@@ -116,6 +117,7 @@ public class RepositoryTest {
     @Test
     public void deleteNote() {
 	PatientHistory patientHistorySaved = patientHistoryRepository.insert(patientHistoryDatabase);
+	assertThat(patientHistorySaved.getNotes().size()).isEqualTo(1);
 
 	UpdateResult result = nodeRepository.deleteNote(patientHistorySaved);
 	assert (result.getModifiedCount() > 0);
@@ -123,6 +125,6 @@ public class RepositoryTest {
 	Optional<PatientHistory> patientHistory = patientHistoryRepository.findById(patientHistorySaved.getId());
 	assertTrue(patientHistory.isPresent());
 	SortedSet<Note> notes = patientHistory.get().getNotes();
-	assertTrue(notes.size() == 0);
+	assertThat(notes.size()).isEqualTo(0);
     }
 }
