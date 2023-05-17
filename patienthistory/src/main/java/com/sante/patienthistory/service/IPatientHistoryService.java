@@ -17,4 +17,6 @@ public interface IPatientHistoryService {
     PatientHistory deleteNote(PatientHistory patientHistory);
 
     void deletePatientHistory(Long id);
+
+    void deleteAllPatientHistory();
 }

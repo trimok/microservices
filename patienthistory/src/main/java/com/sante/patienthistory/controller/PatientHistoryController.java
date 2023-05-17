@@ -39,7 +39,7 @@ public class PatientHistoryController {
     @ApiResponse(responseCode = "404")
     @ApiResponse(responseCode = "400")
     @PutMapping("/patientHistory")
-    public ResponseEntity<PatientHistory> updatePatient(@Valid @RequestBody PatientHistory patientHistory) {
+    public ResponseEntity<PatientHistory> updatePatientHistory(@Valid @RequestBody PatientHistory patientHistory) {
 	PatientHistory patientHistoryUpdated = patientHistoryService.updatePatientHistory(patientHistory);
 	return new ResponseEntity<PatientHistory>(patientHistoryUpdated, HttpStatus.OK);
     }
@@ -51,7 +51,8 @@ public class PatientHistoryController {
     @ApiResponse(responseCode = "400")
     @ApiResponse(responseCode = "201")
     @PostMapping("/patientHistory/add")
-    public ResponseEntity<PatientHistory> createUpdatePatient(@Valid @RequestBody PatientHistory patientHistory) {
+    public ResponseEntity<PatientHistory> createUpdatePatientHistory(
+	    @Valid @RequestBody PatientHistory patientHistory) {
 	PatientHistory patientHistoryUpdated = patientHistoryService.createUpdatePatientHistory(patientHistory);
 	return new ResponseEntity<PatientHistory>(patientHistoryUpdated, HttpStatus.OK);
     }
@@ -60,7 +61,7 @@ public class PatientHistoryController {
     @ApiResponse(responseCode = "200")
     @ApiResponse(responseCode = "404")
     @GetMapping("/patientHistory/{id}")
-    public ResponseEntity<PatientHistory> getPatient(@PathVariable(value = "id") Long id) {
+    public ResponseEntity<PatientHistory> getPatientHistory(@PathVariable(value = "id") Long id) {
 	PatientHistory patientHistory = patientHistoryService.getPatientHistory(id);
 	return new ResponseEntity<PatientHistory>(patientHistory, HttpStatus.OK);
     }

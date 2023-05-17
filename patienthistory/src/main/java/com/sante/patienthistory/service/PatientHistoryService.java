@@ -154,4 +154,9 @@ public class PatientHistoryService implements IPatientHistoryService {
 	    patientHistoryRepository.deleteById(id);
 	}
     }
+
+    @Override
+    public void deleteAllPatientHistory() {
+	patientHistoryRepository.deleteAll();
+    }
 }
