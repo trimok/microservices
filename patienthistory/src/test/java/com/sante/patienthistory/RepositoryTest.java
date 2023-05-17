@@ -25,7 +25,7 @@ import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import com.mongodb.client.result.UpdateResult;
 import com.sante.patienthistory.model.Note;
 import com.sante.patienthistory.model.PatientHistory;
-import com.sante.patienthistory.repository.IPatientRepositoryCustom;
+import com.sante.patienthistory.repository.PatientHistoryCustomRepository;
 import com.sante.patienthistory.repository.PatientHistoryRepository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +40,7 @@ public class RepositoryTest {
     private PatientHistoryRepository patientHistoryRepository;
 
     @Autowired
-    private IPatientRepositoryCustom nodeRepository;
+    private PatientHistoryCustomRepository nodeRepository;
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
     private LocalDateTime creationDate = LocalDateTime.parse("04/12/1957 11:10:07", formatter);
@@ -53,7 +53,7 @@ public class RepositoryTest {
 
     @BeforeAll
     public void beforeAll() {
-	patientHistoryRepository.deleteAll();
+
     }
 
     @BeforeEach
@@ -86,6 +86,14 @@ public class RepositoryTest {
 	assertThat(patientHistoryUpdated.toString().equals(patientHistorySaved.toString()));
 	Set<Note> notes = patientHistoryUpdated.getNotes();
 	assertThat(notes.size() == 2);
+    }
+
+    @Test
+    public void deletePatientHistory() {
+	PatientHistory patientHistorySaved = patientHistoryRepository.insert(patientHistoryDatabase);
+	patientHistoryRepository.deleteById(patientHistorySaved.getId());
+	Optional<PatientHistory> patientHistory = patientHistoryRepository.findById(patientHistorySaved.getId());
+	assertTrue(!patientHistory.isPresent());
     }
 
     @Test

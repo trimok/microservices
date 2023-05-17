@@ -84,4 +84,13 @@ public class PatientHistoryController {
 	PatientHistory patientHistoryUpdated = patientHistoryService.deleteNote(patientHistory);
 	return new ResponseEntity<PatientHistory>(patientHistoryUpdated, HttpStatus.OK);
     }
+
+    @Operation(summary = "Supprimer un historique de patinet")
+    @ApiResponse(responseCode = "200")
+    @ApiResponse(responseCode = "404")
+    @DeleteMapping("/patientHistory/{id}")
+    public ResponseEntity<PatientHistory> deletePatientHistory(@PathVariable(value = "id") Long id) {
+	patientHistoryService.deletePatientHistory(id);
+	return ResponseEntity.ok().build();
+    }
 }

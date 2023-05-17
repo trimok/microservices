@@ -2,6 +2,7 @@ package com.sante.patienthistory.service;
 
 import static com.sante.patienthistory.constants.Constants.ACTION_CREATE;
 import static com.sante.patienthistory.constants.Constants.ACTION_CREATE_UPDATE;
+import static com.sante.patienthistory.constants.Constants.ACTION_DELETE;
 import static com.sante.patienthistory.constants.Constants.ACTION_GET;
 import static com.sante.patienthistory.constants.Constants.ACTION_NOTE_DELETE;
 import static com.sante.patienthistory.constants.Constants.ACTION_NOTE_UPDATE;
@@ -14,13 +15,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mongodb.client.result.UpdateResult;
+import com.sante.patienthistory.exception.PatientHistoryIdNotValidException;
 import com.sante.patienthistory.exception.PatientHistoryNoContentException;
 import com.sante.patienthistory.exception.PatientHistoryNotFoundException;
-import com.sante.patienthistory.exception.PatientIdNotValidException;
 import com.sante.patienthistory.exception.PatientNoteNotValidException;
 import com.sante.patienthistory.model.Note;
 import com.sante.patienthistory.model.PatientHistory;
-import com.sante.patienthistory.repository.IPatientRepositoryCustom;
+import com.sante.patienthistory.repository.PatientHistoryCustomRepository;
 import com.sante.patienthistory.repository.PatientHistoryRepository;
 
 @Service
@@ -29,12 +30,19 @@ public class PatientHistoryService implements IPatientHistoryService {
     private PatientHistoryRepository patientHistoryRepository;
 
     @Autowired
-    private IPatientRepositoryCustom patientRepositoryImpl;
+    private PatientHistoryCustomRepository patientHistoryRepositoryImpl;
+
+    public PatientHistoryService(PatientHistoryRepository patientHistoryRepository,
+	    PatientHistoryCustomRepository patientHistoryRepositoryImpl) {
+	super();
+	this.patientHistoryRepository = patientHistoryRepository;
+	this.patientHistoryRepositoryImpl = patientHistoryRepositoryImpl;
+    }
 
     @Override
     public PatientHistory createPatientHistory(PatientHistory patientHistory) {
 	if (patientHistory.getId() == null) {
-	    throw new PatientIdNotValidException(ACTION_CREATE);
+	    throw new PatientHistoryIdNotValidException(ACTION_CREATE);
 	}
 	PatientHistory patientHistoryCreated = patientHistoryRepository.insert(patientHistory);
 	if (patientHistoryCreated == null) {
@@ -47,7 +55,7 @@ public class PatientHistoryService implements IPatientHistoryService {
     @Override
     public PatientHistory updatePatientHistory(PatientHistory patientHistory) {
 	if (patientHistory.getId() == null) {
-	    throw new PatientIdNotValidException(ACTION_CREATE);
+	    throw new PatientHistoryIdNotValidException(ACTION_CREATE);
 	}
 
 	Optional<PatientHistory> optionalPatientHistoryDatabase = null;
@@ -69,7 +77,7 @@ public class PatientHistoryService implements IPatientHistoryService {
     @Override
     public PatientHistory createUpdatePatientHistory(PatientHistory patientHistory) {
 	if (patientHistory.getId() == null) {
-	    throw new PatientIdNotValidException(ACTION_CREATE_UPDATE);
+	    throw new PatientHistoryIdNotValidException(ACTION_CREATE_UPDATE);
 	}
 	if (patientHistoryRepository.findById(patientHistory.getId()).isEmpty()) {
 	    return createPatientHistory(patientHistory);
@@ -81,7 +89,7 @@ public class PatientHistoryService implements IPatientHistoryService {
     @Override
     public PatientHistory getPatientHistory(Long id) {
 	if (id == null) {
-	    throw new PatientIdNotValidException(ACTION_CREATE);
+	    throw new PatientHistoryIdNotValidException(ACTION_CREATE);
 	}
 
 	Optional<PatientHistory> patientHistoryOptional = patientHistoryRepository.findById(id);
@@ -95,18 +103,15 @@ public class PatientHistoryService implements IPatientHistoryService {
     @Override
     public PatientHistory updateNote(PatientHistory patientHistory) {
 	if (patientHistory.getId() == null) {
-	    throw new PatientIdNotValidException(ACTION_NOTE_UPDATE);
+	    throw new PatientHistoryIdNotValidException(ACTION_NOTE_UPDATE);
 	}
 	SortedSet<Note> notes = patientHistory.getNotes();
 	if (notes.isEmpty() || (((Note) notes.first()).getCreationDate() == null)) {
 	    throw new PatientNoteNotValidException(ACTION_NOTE_UPDATE);
 	}
 
-	UpdateResult result = patientRepositoryImpl.updateNote(patientHistory);
+	UpdateResult result = patientHistoryRepositoryImpl.updateNote(patientHistory);
 	if (result.getMatchedCount() == 0 || result.getModifiedCount() == 0) {
-	    throw new PatientHistoryNotFoundException(ACTION_NOTE_UPDATE);
-	}
-	if (result.getModifiedCount() == 0) {
 	    throw new PatientHistoryNotFoundException(ACTION_NOTE_UPDATE);
 	}
 
@@ -121,18 +126,15 @@ public class PatientHistoryService implements IPatientHistoryService {
     @Override
     public PatientHistory deleteNote(PatientHistory patientHistory) {
 	if (patientHistory.getId() == null) {
-	    throw new PatientIdNotValidException(ACTION_NOTE_DELETE);
+	    throw new PatientHistoryIdNotValidException(ACTION_NOTE_DELETE);
 	}
 	SortedSet<Note> notes = patientHistory.getNotes();
 	if (notes.isEmpty() || (((Note) notes.first()).getCreationDate() == null)) {
 	    throw new PatientNoteNotValidException(ACTION_NOTE_DELETE);
 	}
 
-	UpdateResult result = patientRepositoryImpl.deleteNote(patientHistory);
+	UpdateResult result = patientHistoryRepositoryImpl.deleteNote(patientHistory);
 	if (result.getMatchedCount() == 0 || result.getModifiedCount() == 0) {
-	    throw new PatientHistoryNotFoundException(ACTION_NOTE_DELETE);
-	}
-	if (result.getModifiedCount() == 0) {
 	    throw new PatientHistoryNotFoundException(ACTION_NOTE_DELETE);
 	}
 
@@ -141,6 +143,15 @@ public class PatientHistoryService implements IPatientHistoryService {
 	    throw new PatientHistoryNotFoundException(ACTION_GET);
 	} else {
 	    return patientHistoryOptional.get();
+	}
+    }
+
+    @Override
+    public void deletePatientHistory(Long id) {
+	if (patientHistoryRepository.findById(id).isEmpty()) {
+	    throw new PatientHistoryNotFoundException(ACTION_DELETE);
+	} else {
+	    patientHistoryRepository.deleteById(id);
 	}
     }
 }

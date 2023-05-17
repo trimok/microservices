@@ -7,14 +7,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class PatientIdNotValidException extends PatientHistoryRuntimeException {
+public class PatientHistoryIdNotValidException extends PatientHistoryRuntimeException {
 
     /**
      * 
      */
     private static final long serialVersionUID = 5L;
 
-    public PatientIdNotValidException(String action) {
+    public PatientHistoryIdNotValidException(String action) {
 	super(action);
     }
 }

@@ -26,7 +26,7 @@ public class PatientHistoryExceptionHandler {
     @ExceptionHandler({ MethodArgumentNotValidException.class, HttpMessageNotReadableException.class,
 	    PatientHistoryNoContentException.class,
 	    PatientHistoryNotFoundException.class,
-	    PatientIdNotValidException.class,
+	    PatientHistoryIdNotValidException.class,
 	    PatientNoteNotValidException.class })
     public ResponseEntity<Error> handlException(Exception exception, WebRequest request) {
 
@@ -57,8 +57,8 @@ public class PatientHistoryExceptionHandler {
 	    PatientHistoryNoContentException pnce = (PatientHistoryNoContentException) exception;
 	    error = new Error(pnce.getAction(), NO_CONTENT);
 	    status = HttpStatus.NO_CONTENT;
-	} else if (exception instanceof PatientIdNotValidException) {
-	    PatientIdNotValidException pinve = (PatientIdNotValidException) exception;
+	} else if (exception instanceof PatientHistoryIdNotValidException) {
+	    PatientHistoryIdNotValidException pinve = (PatientHistoryIdNotValidException) exception;
 	    error = new Error(pinve.getAction(), PATIENT_ID_NOT_FOUND);
 	    status = HttpStatus.BAD_REQUEST;
 	} else if (exception instanceof PatientNoteNotValidException) {
