@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.TreeSet;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,6 +27,9 @@ import com.sante.patienthistory.model.Note;
 import com.sante.patienthistory.model.PatientHistory;
 import com.sante.patienthistory.service.IPatientHistoryService;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @ContextConfiguration
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -43,8 +47,8 @@ public class IntegrationTest {
     private LocalDateTime creationDate = LocalDateTime.parse("04/12/1957 11:10:07", formatter);
     private LocalDateTime creationDateNoteAdd = LocalDateTime.parse("04/12/1997 11:10:07", formatter);
 
-    private Note note = new Note(creationDate, "Info");
-    private Note noteAdd = new Note(creationDateNoteAdd, "Info note add");
+    private Note note = null;
+    private Note noteAdd = null;
 
     private PatientHistory patientHistoryDatabase = null;
     private PatientHistory patientHistoryNoDatabase = null;
@@ -52,6 +56,9 @@ public class IntegrationTest {
 
     @BeforeEach
     public void beforeEach() {
+
+	note = new Note(creationDate, "Info");
+	noteAdd = new Note(creationDateNoteAdd, "Info note add");
 
 	patientHistoryDatabase = new PatientHistory();
 	patientHistoryDatabase.setId(1L);
@@ -62,6 +69,8 @@ public class IntegrationTest {
 
 	patientHistoryDatabaseWithoutNotes = new PatientHistory();
 	patientHistoryDatabaseWithoutNotes.setId(1L);
+
+	patientHistoryService.deleteAllPatientHistory();
     }
 
     @AfterEach
@@ -75,7 +84,7 @@ public class IntegrationTest {
     public void getPatientHistory() throws Exception {
 
 	// Creation d'un patientHistory
-	PatientHistory patientHistoryCreated = patientHistoryService.createPatientHistory(patientHistoryNoDatabase);
+	PatientHistory patientHistoryCreated = patientHistoryService.createPatientHistory(patientHistoryDatabase);
 
 	MvcResult mvcResult = mockMvc
 		.perform(MockMvcRequestBuilders.get("/patientHistory/" + patientHistoryCreated.getId()))
@@ -94,11 +103,11 @@ public class IntegrationTest {
     }
 
     @Test
-    public void savePatientHistory() throws Exception {
+    public void createPatientHistory() throws Exception {
 
 	MvcResult mvcResult = mockMvc
 		.perform(MockMvcRequestBuilders.post("/patientHistory")
-			.content(Util.mapper.writeValueAsString(patientHistoryNoDatabase))
+			.content(Util.mapper.writeValueAsString(patientHistoryDatabase))
 			.contentType(MediaType.APPLICATION_JSON)
 			.accept(MediaType.APPLICATION_JSON))
 		.andExpect(status().is(201)).andReturn();
@@ -108,76 +117,226 @@ public class IntegrationTest {
 	assertThat(patientHistorySaved.toString().equals(patientHistoryDatabase.toString()));
     }
 
-    /*
-     * 
-     * @Test public void savePatientHistory_MethodArgumentNotValidException() throws
-     * Exception {
-     * 
-     * mockMvc .perform( MockMvcRequestBuilders.post("/patientHistory")
-     * .content(Util.mapper.writeValueAsString(patientHistoryToBeSavedNotValid))
-     * .contentType(MediaType.APPLICATION_JSON) .accept(MediaType.APPLICATION_JSON))
-     * .andExpect(status().is(400)).andReturn(); }
-     * 
-     * @Test public void savePatientHistory_PatientHistoryConflictException() throws
-     * Exception {
-     * 
-     * mockMvc .perform( MockMvcRequestBuilders.post("/patientHistory")
-     * .content(Util.mapper.writeValueAsString(patientHistoryDatabase))
-     * .contentType(MediaType.APPLICATION_JSON) .accept(MediaType.APPLICATION_JSON))
-     * .andExpect(status().is(409)).andReturn(); }
-     * 
-     * @Test public void updatePatientHistory() throws Exception {
-     * 
-     * // Creation d'un patientHistory PatientHistory patientHistoryToBeUpdated =
-     * patientHistoryService.createPatientHistory(patientHistory);
-     * patientHistoryToBeUpdated.setPrenom("Daniel");
-     * 
-     * MvcResult mvcResult = mockMvc
-     * .perform(MockMvcRequestBuilders.put("/patientHistory")
-     * .content(Util.mapper.writeValueAsString(patientHistoryToBeUpdated))
-     * .contentType(MediaType.APPLICATION_JSON) .accept(MediaType.APPLICATION_JSON))
-     * .andExpect(status().is(200)).andReturn();
-     * 
-     * PatientHistory patientHistoryUpdated =
-     * Util.getPatientHistoryFromMvcResult(mvcResult);
-     * assertNotNull(patientHistoryUpdated.getId());
-     * assertThat(patientHistoryUpdated.toString().equals(patientHistoryToBeUpdated.
-     * toString())); }
-     * 
-     * @Test public void updatePatientHistory_PatientHistoryNotFoundException()
-     * throws Exception {
-     * 
-     * // Creation d'un patientHistory PatientHistory patientHistoryToBeUpdated =
-     * patientHistoryService.createPatientHistory(patientHistory);
-     * patientHistoryToBeUpdated.setPrenom("Daniel");
-     * patientHistoryToBeUpdated.setId(2L);
-     * 
-     * mockMvc .perform(MockMvcRequestBuilders.put("/patientHistory")
-     * .content(Util.mapper.writeValueAsString(patientHistoryToBeUpdated))
-     * .contentType(MediaType.APPLICATION_JSON) .accept(MediaType.APPLICATION_JSON))
-     * .andExpect(status().is(404)).andReturn(); }
-     * 
-     * @Test public void updatePatientHistory_MethodArgumentNotValidException()
-     * throws Exception { // Creation d'un patientHistory PatientHistory
-     * patientHistoryNotValidToBeUpdated =
-     * patientHistoryService.createPatientHistory(patientHistory);
-     * patientHistoryNotValidToBeUpdated.setGenre("MF");
-     * 
-     * mockMvc .perform( MockMvcRequestBuilders.put("/patientHistory")
-     * .content(Util.mapper.writeValueAsString(patientHistoryNotValidToBeUpdated))
-     * .contentType(MediaType.APPLICATION_JSON) .accept(MediaType.APPLICATION_JSON))
-     * .andExpect(status().is(400)).andReturn(); }
-     * 
-     * @Test public void deletePatientHistory() throws Exception { // Creation d'un
-     * patientHistory patientHistoryService.createPatientHistory(patientHistory);
-     * 
-     * mockMvc .perform(MockMvcRequestBuilders.delete("/patientHistory/1"))
-     * .andExpect(status().is(200)).andReturn(); }
-     * 
-     * @Test public void deletePatientHistory_PatientHistoryNotFoundException()
-     * throws Exception {
-     * 
-     * mockMvc .perform(MockMvcRequestBuilders.delete("/patientHistory/1"))
-     * .andExpect(status().is(404)); }
-     */
+    @Test
+    public void createPatientHistory_PatientHistoryIdNotValidException()
+	    throws Exception {
+
+	mockMvc.perform(MockMvcRequestBuilders.post("/patientHistory")
+		.content(Util.mapper.writeValueAsString(patientHistoryNoDatabase))
+		.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+		.andExpect(status().is(400)).andReturn();
+    }
+
+    @Test
+    public void updatePatientHistory() throws Exception {
+
+	// Creation d'un patientHistory
+	PatientHistory patientHistoryToBeUpdated = patientHistoryService.createPatientHistory(patientHistoryDatabase);
+	patientHistoryToBeUpdated.getNotes().add(noteAdd);
+
+	MvcResult mvcResult = mockMvc
+		.perform(MockMvcRequestBuilders.put("/patientHistory")
+			.content(Util.mapper.writeValueAsString(patientHistoryToBeUpdated))
+			.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+		.andExpect(status().is(200)).andReturn();
+
+	PatientHistory patientHistoryUpdated = Util.getPatientHistoryFromMvcResult(mvcResult);
+	assertNotNull(patientHistoryUpdated.getId());
+	log.info(patientHistoryUpdated.toString());
+	assertThat(patientHistoryUpdated.toString().equals(patientHistoryToBeUpdated.toString()));
+    }
+
+    @Test
+    public void updatePatientHistory_PatientHistoryNotFoundException()
+	    throws Exception {
+
+	// Creation d'un patientHistory
+	PatientHistory patientHistoryToBeUpdated = patientHistoryService.createPatientHistory(patientHistoryDatabase);
+	patientHistoryToBeUpdated.getNotes().add(noteAdd);
+	patientHistoryToBeUpdated.setId(2L);
+
+	mockMvc.perform(MockMvcRequestBuilders.put("/patientHistory")
+		.content(Util.mapper.writeValueAsString(patientHistoryToBeUpdated))
+		.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+		.andExpect(status().is(404)).andReturn();
+    }
+
+    @Test
+    public void createUpdatePatientHistory_createMode() throws Exception {
+
+	MvcResult mvcResult = mockMvc
+		.perform(MockMvcRequestBuilders.post("/patientHistory/add")
+			.content(Util.mapper.writeValueAsString(patientHistoryDatabase))
+			.contentType(MediaType.APPLICATION_JSON)
+			.accept(MediaType.APPLICATION_JSON))
+		.andExpect(status().is(200)).andReturn();
+
+	PatientHistory patientHistorySaved = Util.getPatientHistoryFromMvcResult(mvcResult);
+	assertNotNull(patientHistorySaved.getId());
+	assertThat(patientHistorySaved.toString().equals(patientHistoryDatabase.toString()));
+    }
+
+    @Test
+    public void createUpdatePatientHistory_updateMode() throws Exception {
+
+	// Creation d'un patientHistory
+	PatientHistory patientHistoryToBeUpdated = patientHistoryService.createPatientHistory(patientHistoryDatabase);
+	patientHistoryToBeUpdated.getNotes().add(noteAdd);
+	patientHistoryToBeUpdated.setId(2L);
+
+	MvcResult mvcResult = mockMvc
+		.perform(MockMvcRequestBuilders.post("/patientHistory/add")
+			.content(Util.mapper.writeValueAsString(patientHistoryToBeUpdated))
+			.contentType(MediaType.APPLICATION_JSON)
+			.accept(MediaType.APPLICATION_JSON))
+		.andExpect(status().is(200)).andReturn();
+
+	PatientHistory patientHistorySaved = Util.getPatientHistoryFromMvcResult(mvcResult);
+	assertNotNull(patientHistorySaved.getId());
+	assertThat(patientHistorySaved.toString().equals(patientHistoryDatabase.toString()));
+    }
+
+    @Test
+    public void deletePatientHistory() throws Exception {
+	// Creation d'un patientHistory
+	patientHistoryService.createPatientHistory(patientHistoryDatabase);
+
+	mockMvc.perform(MockMvcRequestBuilders.delete("/patientHistory/1"))
+		.andExpect(status().is(200)).andReturn();
+    }
+
+    @Test
+    public void deletePatientHistory_PatientHistoryNotFoundException()
+	    throws Exception {
+
+	mockMvc.perform(MockMvcRequestBuilders.delete("/patientHistory/1"))
+		.andExpect(status().is(404));
+    }
+
+    @Test
+    public void updateNote() throws Exception {
+	// Creation d'un patientHistory
+	PatientHistory patientHistoryToBeUpdated = patientHistoryService.createPatientHistory(patientHistoryDatabase);
+	patientHistoryToBeUpdated.getNotes().first().setInfo("Info modifiée");
+
+	PatientHistory patientTest = patientHistoryService.getPatientHistory(patientHistoryToBeUpdated.getId());
+
+	MvcResult mvcResult = mockMvc
+		.perform(MockMvcRequestBuilders.put("/patientHistory/note")
+			.content(Util.mapper.writeValueAsString(patientHistoryToBeUpdated))
+			.contentType(MediaType.APPLICATION_JSON)
+			.accept(MediaType.APPLICATION_JSON))
+		.andExpect(status().is(200)).andReturn();
+
+	PatientHistory patientHistoryUpdated = Util.getPatientHistoryFromMvcResult(mvcResult);
+	assertNotNull(patientHistoryUpdated.getId());
+	assertThat(patientHistoryUpdated.toString().equals(patientHistoryToBeUpdated.toString()));
+    }
+
+    @Test
+    public void updateNote_PatientHistoryIdNotValidException() throws Exception {
+	// Creation d'un patientHistory
+	PatientHistory patientHistoryToBeUpdated = patientHistoryService.createPatientHistory(patientHistoryDatabase);
+	patientHistoryToBeUpdated.getNotes().first().setInfo("Info modifiée");
+	patientHistoryToBeUpdated.setId(null);
+
+	mockMvc
+		.perform(MockMvcRequestBuilders.put("/patientHistory/note")
+			.content(Util.mapper.writeValueAsString(patientHistoryToBeUpdated))
+			.contentType(MediaType.APPLICATION_JSON)
+			.accept(MediaType.APPLICATION_JSON))
+		.andExpect(status().is(400)).andReturn();
+    }
+
+    @Test
+    public void updateNote_PatientNoteNotValidException() throws Exception {
+	// Creation d'un patientHistory
+	PatientHistory patientHistoryToBeUpdated = patientHistoryService.createPatientHistory(patientHistoryDatabase);
+	patientHistoryToBeUpdated.setNotes(new TreeSet<>());
+
+	mockMvc
+		.perform(MockMvcRequestBuilders.put("/patientHistory/note")
+			.content(Util.mapper.writeValueAsString(patientHistoryToBeUpdated))
+			.contentType(MediaType.APPLICATION_JSON)
+			.accept(MediaType.APPLICATION_JSON))
+		.andExpect(status().is(400)).andReturn();
+    }
+
+    @Test
+    public void updateNote_PatientHistoryNotFoundException() throws Exception {
+	// Creation d'un patientHistory
+	PatientHistory patientHistoryToBeUpdated = patientHistoryService.createPatientHistory(patientHistoryDatabase);
+	patientHistoryToBeUpdated.setNotes(new TreeSet<>());
+	patientHistoryToBeUpdated.getNotes().add(noteAdd);
+
+	mockMvc
+		.perform(MockMvcRequestBuilders.put("/patientHistory/note")
+			.content(Util.mapper.writeValueAsString(patientHistoryToBeUpdated))
+			.contentType(MediaType.APPLICATION_JSON)
+			.accept(MediaType.APPLICATION_JSON))
+		.andExpect(status().is(404)).andReturn();
+    }
+
+    @Test
+    public void deleteNote() throws Exception {
+	// Creation d'un patientHistory
+	PatientHistory patientHistoryToBeUpdated = patientHistoryService.createPatientHistory(patientHistoryDatabase);
+	patientHistoryToBeUpdated.getNotes().first().setInfo("Info modifiée");
+
+	MvcResult mvcResult = mockMvc
+		.perform(MockMvcRequestBuilders.delete("/patientHistory/note")
+			.content(Util.mapper.writeValueAsString(patientHistoryToBeUpdated))
+			.contentType(MediaType.APPLICATION_JSON)
+			.accept(MediaType.APPLICATION_JSON))
+		.andExpect(status().is(200)).andReturn();
+
+	PatientHistory patientHistoryUpdated = Util.getPatientHistoryFromMvcResult(mvcResult);
+	assertNotNull(patientHistoryUpdated.getId());
+	assertThat(patientHistoryUpdated.toString().equals(patientHistoryToBeUpdated.toString()));
+    }
+
+    @Test
+    public void deleteNote_PatientHistoryIdNotValidException() throws Exception {
+	// Creation d'un patientHistory
+	PatientHistory patientHistoryToBeUpdated = patientHistoryService.createPatientHistory(patientHistoryDatabase);
+	patientHistoryToBeUpdated.getNotes().first().setInfo("Info modifiée");
+	patientHistoryToBeUpdated.setId(null);
+
+	mockMvc
+		.perform(MockMvcRequestBuilders.delete("/patientHistory/note")
+			.content(Util.mapper.writeValueAsString(patientHistoryToBeUpdated))
+			.contentType(MediaType.APPLICATION_JSON)
+			.accept(MediaType.APPLICATION_JSON))
+		.andExpect(status().is(400)).andReturn();
+    }
+
+    @Test
+    public void deleteNote_PatientNoteNotValidException() throws Exception {
+	// Creation d'un patientHistory
+	PatientHistory patientHistoryToBeUpdated = patientHistoryService.createPatientHistory(patientHistoryDatabase);
+	patientHistoryToBeUpdated.setNotes(new TreeSet<>());
+
+	mockMvc
+		.perform(MockMvcRequestBuilders.delete("/patientHistory/note")
+			.content(Util.mapper.writeValueAsString(patientHistoryToBeUpdated))
+			.contentType(MediaType.APPLICATION_JSON)
+			.accept(MediaType.APPLICATION_JSON))
+		.andExpect(status().is(400)).andReturn();
+    }
+
+    @Test
+    public void deleteNote_PatientHistoryNotFoundException() throws Exception {
+	// Creation d'un patientHistory
+	PatientHistory patientHistoryToBeUpdated = patientHistoryService.createPatientHistory(patientHistoryDatabase);
+	patientHistoryToBeUpdated.setNotes(new TreeSet<>());
+	patientHistoryToBeUpdated.getNotes().add(noteAdd);
+
+	mockMvc
+		.perform(MockMvcRequestBuilders.delete("/patientHistory/note")
+			.content(Util.mapper.writeValueAsString(patientHistoryToBeUpdated))
+			.contentType(MediaType.APPLICATION_JSON)
+			.accept(MediaType.APPLICATION_JSON))
+		.andExpect(status().is(404)).andReturn();
+    }
+
 }
