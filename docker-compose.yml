@@ -40,7 +40,19 @@ services:
     depends_on:     
       mysqldb:
         condition: service_healthy
-    restart: on-failure  
+    restart: on-failure      
+  expert:
+    build:
+      context: ./expert/
+    ports:
+      - "8083:8083"
+    environment:  
+        SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/patient?serverTimezone=UTC&autoReconnect=true   
+    image: expert
+    depends_on:     
+      mysqldb:
+        condition: service_healthy
+    restart: on-failure    
   clientui:
     build:
       context: ./clientui/
@@ -48,10 +60,13 @@ services:
       - "8080:8080"
     environment:
       DOCKER_PATIENT_URL: http://patient:8081  
-      DOCKER_PATIENT_HISTORY_URL: http://patienthistory:8082  
+      DOCKER_PATIENT_HISTORY_URL: http://patienthistory:8082
+      DOCKER_EXPERT_URL: http://expert:8083    
     image: clientui
     depends_on:     
       patient:
         condition: service_started
       patienthistory:
         condition: service_started  
+      expert:
+        condition: service_started    

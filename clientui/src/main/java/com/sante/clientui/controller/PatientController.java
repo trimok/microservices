@@ -283,11 +283,17 @@ public class PatientController {
 
 	try {
 	    patient = patientService.getPatient(id);
-	    patientHistory = patientHistoryService.getPatientHistory(id);
 	} catch (Exception e) {
 	    ra.addAttribute("error_get_patient", true);
 	    ra.addFlashAttribute("error_get_patient", true);
 	    return "redirect:/";
+	}
+
+	try {
+	    patientHistory = patientHistoryService.getPatientHistory(id);
+	} catch (Exception e) {
+	    patientHistory = new PatientHistory();
+	    patientHistory.setId(patient.getId());
 	}
 
 	PatientDao patientDao = new PatientDao(patient, patientHistory);

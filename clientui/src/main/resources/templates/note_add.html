@@ -21,17 +21,18 @@
 			
 			<!-- Add hidden form field to handle update -->
 			<input type="hidden" th:field="${patientHistory.id}" /> 
-			<input type="hidden" th:field="*{creationDate}" /> 
 			
 			<!--  Date de creation (readonly) -->
 			<div>
-				<label for="creationDate">Date de creation</label> <input type="text" th:readonly="true" 
-					th:field="*{creationDate}" id="creationDate" placeholder="Date de creation" class="form-control mb-4 col-4">
+				<label for="creationDate">Date de creation</label> <br>
+				<input type="text"  
+					th:readonly="true" th:field="*{creationDate}" id="creationDate" placeholder="Date de creation">
 				<ul>
 					<li th:each="err : ${#fields.errors('creationDate')}" th:text="${err}"
 						class="error" />
 				</ul>
 			</div>		
+			
 			
 			<!--  Information -->
 			<div>

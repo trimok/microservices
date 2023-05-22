@@ -55,10 +55,10 @@
 				</ul>
 			</div>	
 			
-			<!--  Date de naissance -->
 			<div>
-				<label for="dateNaissance">Date de naissance</label> <input type="text"
-					th:field="*{dateNaissance}" id="dateNaissance" placeholder="Date de naissance" class="form-control mb-4 col-4">
+				<label for="dateNaissance">Date de naissance</label> <br> <input type="date" 
+					th:field="*{dateNaissance}"										
+					id="dateNaissance" placeholder="Date de naissance">
 				<ul>
 					<li th:each="err : ${#fields.errors('dateNaissance')}" th:text="${err}"
 						class="error" />

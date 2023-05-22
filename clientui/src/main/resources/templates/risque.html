@@ -19,6 +19,8 @@
 		<h2 th:text = "${risque.detail}" class="error"></h2>
 
 		<hr>
+		 <a th:href="@{/notes/{id}(id=${patientDao.patient.id})}">Retour &agrave; l'historique du patient</a>
+		 <hr>
 		<a th:href="@{/}"> Retour &agrave; la liste des patients</a>
 	</div>
 	<script
