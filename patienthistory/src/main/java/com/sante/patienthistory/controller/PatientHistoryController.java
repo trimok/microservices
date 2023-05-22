@@ -16,8 +16,10 @@ import com.sante.patienthistory.service.IPatientHistoryService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
+@Tag(name = "Historique du patient")
 @RestController
 public class PatientHistoryController {
     @Autowired
@@ -44,7 +46,7 @@ public class PatientHistoryController {
 	return new ResponseEntity<PatientHistory>(patientHistoryUpdated, HttpStatus.OK);
     }
 
-    @Operation(summary = "Ajouter une note (Création et/ou modification d' un historique de patient)")
+    @Operation(summary = "Ajouter une note (Création et/ou modification d'un historique de patient)")
     @ApiResponse(responseCode = "200")
     @ApiResponse(responseCode = "204")
     @ApiResponse(responseCode = "404")
@@ -86,7 +88,7 @@ public class PatientHistoryController {
 	return new ResponseEntity<PatientHistory>(patientHistoryUpdated, HttpStatus.OK);
     }
 
-    @Operation(summary = "Supprimer un historique de patinet")
+    @Operation(summary = "Supprimer un historique de patient")
     @ApiResponse(responseCode = "200")
     @ApiResponse(responseCode = "404")
     @DeleteMapping("/patientHistory/{id}")

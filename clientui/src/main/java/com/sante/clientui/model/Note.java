@@ -6,6 +6,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,7 +23,7 @@ public class Note implements Comparable<Note> {
     @NotNull
     private LocalDateTime creationDate = LocalDateTime.now();
 
-    @NotNull
+    @NotEmpty
     private String info;
 
     @Override
