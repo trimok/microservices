@@ -15,9 +15,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.sante.clientui.dao.PatientDao;
 import com.sante.clientui.model.Note;
 import com.sante.clientui.model.Patient;
 import com.sante.clientui.model.PatientHistory;
+import com.sante.clientui.model.Risque;
+import com.sante.clientui.service.ExpertService;
 import com.sante.clientui.service.PatientHistoryService;
 import com.sante.clientui.service.PatientService;
 
@@ -31,6 +34,9 @@ public class PatientController {
 
     @Autowired
     private PatientHistoryService patientHistoryService;
+
+    @Autowired
+    private ExpertService expertService;
 
     @GetMapping("/")
     public String viewHomePage(RedirectAttributes ra, Model model) {
@@ -268,5 +274,35 @@ public class PatientController {
 	    }
 	    return "redirect:/notes/" + patientHistory.getId();
 	}
+    }
+
+    @GetMapping("/risque/{id}")
+    public String showRisqueForm(@PathVariable(value = "id") long id, RedirectAttributes ra, Model model) {
+	Patient patient = null;
+	PatientHistory patientHistory = null;
+
+	try {
+	    patient = patientService.getPatient(id);
+	    patientHistory = patientHistoryService.getPatientHistory(id);
+	} catch (Exception e) {
+	    ra.addAttribute("error_get_patient", true);
+	    ra.addFlashAttribute("error_get_patient", true);
+	    return "redirect:/";
+	}
+
+	PatientDao patientDao = new PatientDao(patient, patientHistory);
+	Risque risque = null;
+	try {
+	    risque = expertService.getRisque(patientDao);
+	} catch (Exception e) {
+	    ra.addAttribute("error_get_risque", true);
+	    ra.addFlashAttribute("error_get_risque", true);
+	    return "redirect:/";
+	}
+
+	model.addAttribute("patientDao", patientDao);
+	model.addAttribute("risque", risque);
+
+	return "risque";
     }
 }

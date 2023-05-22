@@ -26,6 +26,9 @@
 	<div th:if="${error_get_list_patient}"
 		class="mb-5 alert alert-success text-danger">Impossible
 		d'obtenir la liste des patients</div>
+	<div th:if="${error_get_risque}"
+		class="mb-5 alert alert-success text-danger">Impossible
+		d'obtenir le risque associ&eacute au patient</div>
 
 	<div class="container my-2">
 
@@ -58,13 +61,12 @@
 					<td th:text="${patient.adressePostale}"></td>
 					<td th:text="${patient.telephone}"></td>
 					<td><a th:href="@{/update/{id}(id=${patient.id})}"
-						class="btn btn-primary">Modifier</a> 
-						<a
+						class="btn btn-primary">Modifier</a> <a
+						th:href="@{/notes/{id}(id=${patient.id})}" class="btn btn-primary">Notes</a>
+						<a th:href="@{/risque/{id}(id=${patient.id})}"
+						class="btn btn-primary">Risque</a> <a
 						th:href="@{/delete/{id}(id=${patient.id})}" class="btn btn-danger">Supprimer
-						</a>
-						<a th:href="@{/notes/{id}(id=${patient.id})}"
-						class="btn btn-primary">Notes</a>
-					</td>
+					</a></td>
 				</tr>
 			</tbody>
 		</table>

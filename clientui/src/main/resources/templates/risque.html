@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Cr&aacute;er un Patient</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+	<style>
+    .error {
+        color: red;
+    }
+    </style>
+</head>
+<body>
+	<div class="container">
+		<h2 th:text = "'Estimation du risque pour le patient ' + ${patientDao.patient.prenom} + ' ' + ${patientDao.patient.nom} + ':'"></h2>
+		
+		<h2 th:text = "${risque.detail}" class="error"></h2>
+
+		<hr>
+		<a th:href="@{/}"> Retour &agrave; la liste des patients</a>
+	</div>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js">		
+	</script>
+</body>
+</html>

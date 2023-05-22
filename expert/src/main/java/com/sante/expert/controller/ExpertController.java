@@ -33,7 +33,7 @@ public class ExpertController {
     @ApiResponse(responseCode = "400")
     @ApiResponse(responseCode = "404")
     @PostMapping("/expert")
-    public ResponseEntity<Risque> createPatient(@Valid @RequestBody PatientDao patientDao) {
+    public ResponseEntity<Risque> getRisque(@Valid @RequestBody PatientDao patientDao) {
 	List<String> keywords = declencheurService.findKeywords();
 	Risque risque = regleService.findRisque(patientDao, keywords);
 	return new ResponseEntity<Risque>(risque, HttpStatus.OK);
