@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sante.expert.dao.PatientDao;
-import com.sante.expert.model.Regle;
+import com.sante.expert.model.Risque;
 import com.sante.expert.service.DeclencheurService;
 import com.sante.expert.service.RegleService;
 
@@ -33,10 +33,9 @@ public class ExpertController {
     @ApiResponse(responseCode = "400")
     @ApiResponse(responseCode = "404")
     @PostMapping("/expert")
-    public ResponseEntity<Regle.Risque> createPatient(@Valid @RequestBody PatientDao patientDao) {
+    public ResponseEntity<Risque> createPatient(@Valid @RequestBody PatientDao patientDao) {
 	List<String> keywords = declencheurService.findKeywords();
-	Regle.Risque risque = regleService.findRisque(patientDao, keywords);
-	return new ResponseEntity<Regle.Risque>(risque, HttpStatus.OK);
+	Risque risque = regleService.findRisque(patientDao, keywords);
+	return new ResponseEntity<Risque>(risque, HttpStatus.OK);
     }
-
 }

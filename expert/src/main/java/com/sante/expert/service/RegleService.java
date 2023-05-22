@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import com.sante.expert.dao.Patient;
 import com.sante.expert.dao.PatientDao;
 import com.sante.expert.exception.RisqueNotFoundException;
-import com.sante.expert.model.Regle;
+import com.sante.expert.model.Risque;
 import com.sante.expert.repository.RegleRepository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +26,7 @@ public class RegleService implements IRegleService {
     RegleRepository regleRepository;
 
     @Override
-    public Regle.Risque findRisque(PatientDao patientDao, List<String> keywords) {
+    public Risque findRisque(PatientDao patientDao, List<String> keywords) {
 	// Données age et genre
 	Patient patient = patientDao.getPatient();
 	int age = Period.between(patient.getDateNaissance(), LocalDate.now()).getYears();
@@ -51,6 +51,6 @@ public class RegleService implements IRegleService {
 	    throw new RisqueNotFoundException(RISQUE_NOT_FOUND);
 	}
 
-	return Regle.Risque.values()[risqueInt];
+	return Risque.values()[risqueInt];
     }
 }

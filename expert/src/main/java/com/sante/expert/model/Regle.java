@@ -17,10 +17,6 @@ import lombok.Setter;
 @Entity
 public class Regle {
 
-    public enum Risque {
-	AUCUN_RISQUE, RISQUE_LIMITE, DANGER, APPARITION_PRECOCE;
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
