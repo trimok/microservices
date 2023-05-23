@@ -7,6 +7,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * @author trimok
+ *
+ *         PatientConflictException
+ */
 @ResponseStatus(HttpStatus.CONFLICT)
 @Getter
 @Setter

@@ -4,6 +4,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * @author trimok
+ *
+ *         DeclencheurNotFoundException
+ * 
+ */
 @Getter
 @Setter
 @NoArgsConstructor

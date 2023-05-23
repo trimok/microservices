@@ -11,9 +11,17 @@ import org.springframework.stereotype.Service;
 import com.sante.expert.exception.DeclencheurNotFoundException;
 import com.sante.expert.repository.DeclencheurRepository;
 
+/**
+ * @author trimok
+ *
+ *         Le service qui permet de récupérer les mots-clés
+ */
 @Service
 public class DeclencheurService implements IDeclencheurService {
 
+    /**
+     * Le repository correspondant
+     */
     @Autowired
     private DeclencheurRepository declencheurRepository;
 
@@ -23,6 +31,9 @@ public class DeclencheurService implements IDeclencheurService {
 	this.declencheurRepository = declencheurRepository;
     }
 
+    /**
+     * Retourne la liste des mots-clés
+     */
     @Override
     public List<String> findKeywords() {
 	List<String> keywords = new ArrayList<>();

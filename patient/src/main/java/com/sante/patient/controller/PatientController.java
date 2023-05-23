@@ -21,13 +21,28 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
+/**
+ * @author trimok
+ *
+ *         Contrôleur de l'application
+ *
+ */
 @RestController
 @Tag(name = "Patients")
 public class PatientController {
 
+    /**
+     * le service patient
+     */
     @Autowired
     private IPatientService patientService;
 
+    /**
+     * Ajout d'un patient
+     * 
+     * @param patient : le patient à ajouter
+     * @return : le patient ajouté (avec son id)
+     */
     @Operation(summary = "Ajouter un patient")
     @ApiResponse(responseCode = "204")
     @ApiResponse(responseCode = "201")
@@ -39,6 +54,12 @@ public class PatientController {
 	return new ResponseEntity<Patient>(patientAdded, HttpStatus.CREATED);
     }
 
+    /**
+     * Modification d'un patient
+     * 
+     * @param patient : le patient à modifier
+     * @return : le patient modifié
+     */
     @Operation(summary = "Modifier un patient")
     @ApiResponse(responseCode = "200")
     @ApiResponse(responseCode = "204")
@@ -50,6 +71,12 @@ public class PatientController {
 	return new ResponseEntity<Patient>(patientUpdated, HttpStatus.OK);
     }
 
+    /**
+     * Obtention d'un patient
+     * 
+     * @param id : l'id du patient
+     * @return : le patient
+     */
     @Operation(summary = "Obtenir un patient")
     @ApiResponse(responseCode = "200")
     @ApiResponse(responseCode = "404")
@@ -59,6 +86,11 @@ public class PatientController {
 	return new ResponseEntity<Patient>(patient, HttpStatus.OK);
     }
 
+    /**
+     * Obtention de la liste des patients
+     * 
+     * @return : la liste des patients
+     */
     @Operation(summary = "Obtenir la liste des patients")
     @ApiResponse(responseCode = "200")
     @GetMapping("/patient")
@@ -67,6 +99,12 @@ public class PatientController {
 	return new ResponseEntity<List<Patient>>(patients, HttpStatus.OK);
     }
 
+    /**
+     * Suppression d'u patient
+     * 
+     * @param id : l'id du patient
+     * @return : ok
+     */
     @Operation(summary = "Supprimer un patient")
     @ApiResponse(responseCode = "200")
     @ApiResponse(responseCode = "404")

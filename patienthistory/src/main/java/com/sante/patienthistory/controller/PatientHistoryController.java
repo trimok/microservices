@@ -19,12 +19,27 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
+/**
+ * @author trimok
+ *
+ *
+ *         Le contrôleur de l'application
+ */
 @Tag(name = "Historique du patient")
 @RestController
 public class PatientHistoryController {
+    /**
+     * Le service correspondant
+     */
     @Autowired
     private IPatientHistoryService patientHistoryService;
 
+    /**
+     * Ajouter une note (création d'un historique de patient)
+     * 
+     * @param patientHistory : historique du patient
+     * @return : historique du patient
+     */
     @Operation(summary = "Ajouter une note (création d'un historique de patient)")
     @ApiResponse(responseCode = "204")
     @ApiResponse(responseCode = "201")
@@ -35,6 +50,12 @@ public class PatientHistoryController {
 	return new ResponseEntity<PatientHistory>(patientHistoryAdded, HttpStatus.CREATED);
     }
 
+    /**
+     * Ajouter une note (modification d'un historique de patient)
+     * 
+     * @param patientHistory : historique du patient
+     * @return : historique du patient
+     */
     @Operation(summary = "Ajouter une note (modification d'un historique de patient)")
     @ApiResponse(responseCode = "200")
     @ApiResponse(responseCode = "204")
@@ -46,6 +67,13 @@ public class PatientHistoryController {
 	return new ResponseEntity<PatientHistory>(patientHistoryUpdated, HttpStatus.OK);
     }
 
+    /**
+     * 
+     * Ajouter une note (Création et/ou modification d'un historique de patient)
+     * 
+     * @param patientHistory : historique du patient
+     * @return : historique du patient
+     */
     @Operation(summary = "Ajouter une note (Création et/ou modification d'un historique de patient)")
     @ApiResponse(responseCode = "200")
     @ApiResponse(responseCode = "204")
@@ -59,6 +87,12 @@ public class PatientHistoryController {
 	return new ResponseEntity<PatientHistory>(patientHistoryUpdated, HttpStatus.OK);
     }
 
+    /**
+     * Obtenir un historique de patient
+     * 
+     * @param id : l'id du patient
+     * @return : historique du patient
+     */
     @Operation(summary = "Obtenir un historique de patient")
     @ApiResponse(responseCode = "200")
     @ApiResponse(responseCode = "404")
@@ -68,6 +102,13 @@ public class PatientHistoryController {
 	return new ResponseEntity<PatientHistory>(patientHistory, HttpStatus.OK);
     }
 
+    /**
+     * Modifier une note
+     * 
+     * @param patientHistory : l'historique du patient (id), avec une seule note (la
+     *                       note à modifier)
+     * @return : l'historique du patient complet
+     */
     @Operation(summary = "Modifier une note")
     @ApiResponse(responseCode = "200")
     @ApiResponse(responseCode = "404")
@@ -78,6 +119,13 @@ public class PatientHistoryController {
 	return new ResponseEntity<PatientHistory>(patientHistoryUpdated, HttpStatus.OK);
     }
 
+    /**
+     * Supprimer une note
+     * 
+     * @param patientHistory : l'historique du patient (id), avec une seule note (la
+     *                       note à supprimer)
+     * @return : l'historique du patient complet
+     */
     @Operation(summary = "Supprimer une note")
     @ApiResponse(responseCode = "200")
     @ApiResponse(responseCode = "404")
@@ -88,6 +136,12 @@ public class PatientHistoryController {
 	return new ResponseEntity<PatientHistory>(patientHistoryUpdated, HttpStatus.OK);
     }
 
+    /**
+     * Suppression d'un historique de patient
+     * 
+     * @param id : l'id de l'historique de patient à supprimer
+     * @return : ok
+     */
     @Operation(summary = "Supprimer un historique de patient")
     @ApiResponse(responseCode = "200")
     @ApiResponse(responseCode = "404")

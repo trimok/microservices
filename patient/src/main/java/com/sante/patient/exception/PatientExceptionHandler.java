@@ -19,9 +19,20 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
+/**
+ * @author trimok
+ *
+ *
+ *         Gestion centralisée des exceptions
+ */
 @RestControllerAdvice
 public class PatientExceptionHandler {
 
+    /**
+     * @param exception : l'exception levée
+     * @param request   : la requête
+     * @return : un objet ResponseEntity<Error>
+     */
     @ExceptionHandler({ MethodArgumentNotValidException.class, HttpMessageNotReadableException.class,
 	    PatientNoContentException.class,
 	    PatientNotFoundException.class,

@@ -13,6 +13,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * @author trimok
+ *
+ *         Classe modélisant le patient
+ */
 @Getter
 @Setter
 @NoArgsConstructor
@@ -21,14 +26,23 @@ import lombok.Setter;
 @Document(collection = "patientHistories")
 public class PatientHistory {
 
+    /**
+     * id
+     */
+    @Id
+    private Long id;
+
+    /**
+     * La liste des notes
+     */
+    @NotNull
+    private SortedSet<Note> notes = new TreeSet<>();
+
+    /**
+     * toString
+     */
     @Override
     public String toString() {
 	return "PatientHistory [id=" + id + ", notes=" + notes + "]";
     }
-
-    @Id
-    private Long id;
-
-    @NotNull
-    private SortedSet<Note> notes = new TreeSet<>();
 }

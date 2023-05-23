@@ -7,6 +7,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * @author trimok
+ *
+ *         PatientNoContentException
+ */
 @ResponseStatus(HttpStatus.NO_CONTENT)
 @Getter
 @Setter

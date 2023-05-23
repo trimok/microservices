@@ -8,6 +8,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * @author trimok
+ *
+ *         ExpertRuntimeException, classe mère pour les exceptions runtime de
+ *         l'application
+ */
 @ResponseStatus(HttpStatus.NO_CONTENT)
 @Getter
 @Setter

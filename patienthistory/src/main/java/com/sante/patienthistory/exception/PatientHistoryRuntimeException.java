@@ -5,6 +5,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * @author trimok
+ *
+ *         Classe mère pour les exceptions Runtime de l'application
+ */
 @Getter
 @Setter
 @AllArgsConstructor

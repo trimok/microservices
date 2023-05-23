@@ -13,6 +13,14 @@ import com.sante.patienthistory.model.PatientHistory;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * @author trimok
+ *
+ *         Implementation custom pour le repository PatientHistory pour accéder
+ *         à la sous-structure des notes)
+ * 
+ * @see PatientHistoryCustomRepository
+ */
 @Repository
 @Slf4j
 public class PatientHistoryRepositoryImpl implements PatientHistoryCustomRepository {
@@ -20,6 +28,9 @@ public class PatientHistoryRepositoryImpl implements PatientHistoryCustomReposit
     @Autowired
     private MongoTemplate mongoTemplate;
 
+    /**
+     * Mise à jour d'une note
+     */
     @Override
     public UpdateResult updateNote(PatientHistory patientHistory) {
 	Note note = patientHistory.getNotes().first();
@@ -39,6 +50,9 @@ public class PatientHistoryRepositoryImpl implements PatientHistoryCustomReposit
 	return result;
     }
 
+    /**
+     * Suppression d'une note
+     */
     @Override
     public UpdateResult deleteNote(PatientHistory patientHistory) {
 

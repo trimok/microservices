@@ -1,4 +1,4 @@
-package com.sante.patient;
+package com.sante.expert;
 
 import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
@@ -10,7 +10,7 @@ import io.swagger.v3.oas.models.info.Info;
 /**
  * @author trimok
  *
- *         Configuration Swagger / Open API
+ *         Paramétrisation de la configuration Swagger
  *
  */
 @Configuration
@@ -23,8 +23,8 @@ public class SwaggerConfig {
     public OpenAPI openAPI() {
 	return new OpenAPI()
 		.info(new Info()
-			.title("Microservice patient")
-			.description("Description des endpoints de type CRUD.")
+			.title("Microservice expert diabète")
+			.description("Description des endpoints de type GET.")
 			.version("v1.0.0"));
     }
 
@@ -35,8 +35,8 @@ public class SwaggerConfig {
     public GroupedOpenApi userApi() {
 	return GroupedOpenApi.builder()
 		.group("user")
-		.packagesToScan("com.sante.patient.controller")
-		.pathsToMatch("/patient/**")
+		.packagesToScan("com.sante.expert.controller")
+		.pathsToMatch("/expert/**")
 		.build();
     }
 

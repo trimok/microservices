@@ -24,6 +24,12 @@ import com.sante.patienthistory.model.PatientHistory;
 import com.sante.patienthistory.repository.PatientHistoryCustomRepository;
 import com.sante.patienthistory.repository.PatientHistoryRepository;
 
+/**
+ * @author trimok
+ *
+ *
+ *         Service responsable des opérations CRUD sur l'historique de patient
+ */
 @Service
 public class PatientHistoryService implements IPatientHistoryService {
     @Autowired
@@ -39,6 +45,9 @@ public class PatientHistoryService implements IPatientHistoryService {
 	this.patientHistoryRepositoryImpl = patientHistoryRepositoryImpl;
     }
 
+    /**
+     * Ajout d'une note avec Création d'un historique de patient
+     */
     @Override
     public PatientHistory createPatientHistory(PatientHistory patientHistory) {
 	if (patientHistory.getId() == null) {
@@ -52,6 +61,9 @@ public class PatientHistoryService implements IPatientHistoryService {
 	}
     }
 
+    /**
+     * Ajout d'une note avec Modification d'un historique de patient
+     */
     @Override
     public PatientHistory updatePatientHistory(PatientHistory patientHistory) {
 	if (patientHistory.getId() == null) {
@@ -74,6 +86,9 @@ public class PatientHistoryService implements IPatientHistoryService {
 	}
     }
 
+    /**
+     * Ajout d'une note (création ou modification de l'historique du patient)
+     */
     @Override
     public PatientHistory createUpdatePatientHistory(PatientHistory patientHistory) {
 	if (patientHistory.getId() == null) {
@@ -86,6 +101,9 @@ public class PatientHistoryService implements IPatientHistoryService {
 	}
     }
 
+    /**
+     * Obtention d'un historique de patient
+     */
     @Override
     public PatientHistory getPatientHistory(Long id) {
 	if (id == null) {
@@ -100,6 +118,9 @@ public class PatientHistoryService implements IPatientHistoryService {
 	}
     }
 
+    /**
+     * Mise à jour d'une note
+     */
     @Override
     public PatientHistory updateNote(PatientHistory patientHistory) {
 	if (patientHistory.getId() == null) {
@@ -123,6 +144,9 @@ public class PatientHistoryService implements IPatientHistoryService {
 	}
     }
 
+    /**
+     * Suppression d'une note
+     */
     @Override
     public PatientHistory deleteNote(PatientHistory patientHistory) {
 	if (patientHistory.getId() == null) {
@@ -146,6 +170,9 @@ public class PatientHistoryService implements IPatientHistoryService {
 	}
     }
 
+    /**
+     * Suppression de l'historique de patient, par son id
+     */
     @Override
     public void deletePatientHistory(Long id) {
 	if (patientHistoryRepository.findById(id).isEmpty()) {
@@ -155,6 +182,9 @@ public class PatientHistoryService implements IPatientHistoryService {
 	}
     }
 
+    /**
+     * Suppression de tous les historiques de patient
+     */
     @Override
     public void deleteAllPatientHistory() {
 	patientHistoryRepository.deleteAll();

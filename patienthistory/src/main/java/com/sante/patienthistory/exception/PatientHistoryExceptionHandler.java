@@ -20,9 +20,21 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
+/**
+ * @author trimok
+ *
+ *         Gestion centralisée des exceptions
+ *
+ */
+
 @RestControllerAdvice
 public class PatientHistoryExceptionHandler {
 
+    /**
+     * @param exception : l'exception à traiter
+     * @param request   : la requête
+     * @return : un objet de type ResponseEntity<Error>
+     */
     @ExceptionHandler({ MethodArgumentNotValidException.class, HttpMessageNotReadableException.class,
 	    PatientHistoryNoContentException.class,
 	    PatientHistoryNotFoundException.class,

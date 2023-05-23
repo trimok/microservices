@@ -19,16 +19,33 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
+/**
+ * @author trimok
+ *
+ *         Le controleur de l'application
+ */
 @RestController
 @Tag(name = "Expert Diabète")
 public class ExpertController {
 
+    /**
+     * Le service permettant de récupérer les mots-cle medicaux
+     */
     @Autowired
     private IDeclencheurService declencheurService;
 
+    /**
+     * Le service permettant de calculer le risque
+     */
     @Autowired
     private IRegleService regleService;
 
+    /**
+     * Obtention du risque
+     * 
+     * @param patientDao : les données patient
+     * @return : le risque
+     */
     @Operation(summary = "Obtenir un niveau de risque")
     @ApiResponse(responseCode = "400")
     @ApiResponse(responseCode = "404")

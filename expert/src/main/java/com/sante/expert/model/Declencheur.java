@@ -10,6 +10,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * @author trimok
+ *
+ *         Classe declencheur, modélise les mots-clé médicaux
+ */
 @Getter
 @Setter
 @NoArgsConstructor
@@ -17,10 +22,16 @@ import lombok.Setter;
 @Entity
 public class Declencheur {
 
+    /**
+     * id
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /**
+     * le keyword médical
+     */
     @Size(min = 3, max = 20)
     private String keyword;
 }

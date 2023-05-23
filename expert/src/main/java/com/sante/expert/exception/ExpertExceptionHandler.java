@@ -18,9 +18,20 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
+/**
+ * @author trimok
+ *
+ *         Centralisation de la gestion des exceptions
+ *
+ */
 @RestControllerAdvice
 public class ExpertExceptionHandler {
 
+    /**
+     * @param exception : l'exception à traiter
+     * @param request   : la requête
+     * @return : un objet de type ResponseEntity<Error>
+     */
     @ExceptionHandler({ MethodArgumentNotValidException.class, HttpMessageNotReadableException.class,
 	    RisqueNotFoundException.class, DeclencheurNotFoundException.class
     })

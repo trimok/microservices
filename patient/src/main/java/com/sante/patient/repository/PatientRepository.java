@@ -5,6 +5,11 @@ import org.springframework.stereotype.Repository;
 
 import com.sante.patient.model.Patient;
 
+/**
+ * @author trimok
+ *
+ *         Repository pour le patient
+ */
 @Repository
 public interface PatientRepository extends JpaRepository<Patient, Long> {
 

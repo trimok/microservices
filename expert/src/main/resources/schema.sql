@@ -1,18 +1,18 @@
 drop table if exists declencheur;
 create table declencheur (id bigint not null auto_increment, keyword varchar(20), primary key (id));
 
-insert into declencheur(keyword) VALUES 
-('Hémoglobine A1C'), 
-('Microalbumine'),
-('Taille'),
-('Poids'),
-('Fumeur'),
-('Anormal'),
-('Cholestérol'),
-('Vertige'),
-('Rechute'),
-('Réaction'),
-('Anticorps');
+insert into declencheur(keyword) VALUES
+('hemoglobine a1c'), 
+('microalbumine'),
+('taille'),
+('poids'),
+('fume'),
+('anormal'),
+('cholesterol'),
+('vertige'),
+('rechute'),
+('reaction'),
+('anticorps');
  
 
 drop table if exists regle;

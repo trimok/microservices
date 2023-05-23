@@ -4,6 +4,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * @author trimok
+ *
+ *         PatientHistoryIdNotValidException
+ */
 @Getter
 @Setter
 @NoArgsConstructor

@@ -18,6 +18,13 @@ import com.sante.patient.exception.PatientNotFoundException;
 import com.sante.patient.model.Patient;
 import com.sante.patient.repository.PatientRepository;
 
+/**
+ * @author trimok
+ *
+ *         Le service pour les opérations CRUD sur le patient
+ * @see IPatientService
+ *
+ */
 @Service
 public class PatientService implements IPatientService {
 
@@ -29,6 +36,9 @@ public class PatientService implements IPatientService {
 	this.patientRepository = patientRepository;
     }
 
+    /**
+     * Ajout d'un patient
+     */
     @Override
     public Patient createPatient(Patient patient) {
 	if (patient.getId() != null) {
@@ -43,6 +53,9 @@ public class PatientService implements IPatientService {
 	}
     }
 
+    /**
+     * Modification d'un patient
+     */
     @Override
     public Patient updatePatient(Patient patient) {
 	if (patientRepository.findById(patient.getId()).isEmpty()) {
@@ -57,6 +70,9 @@ public class PatientService implements IPatientService {
 	}
     }
 
+    /**
+     * Suppression d'un patient
+     */
     @Override
     public void deletePatient(Long id) {
 	if (patientRepository.findById(id).isEmpty()) {
@@ -66,11 +82,17 @@ public class PatientService implements IPatientService {
 	}
     }
 
+    /**
+     * Obtention de la liste des patients
+     */
     @Override
     public List<Patient> getPatients() {
 	return patientRepository.findAll();
     }
 
+    /**
+     * Obtention d'un patient
+     */
     @Override
     public Patient getPatient(Long id) {
 	Optional<Patient> patientOptional = patientRepository.findById(id);
@@ -81,6 +103,9 @@ public class PatientService implements IPatientService {
 	}
     }
 
+    /**
+     * Suppression de tous les patients
+     */
     @Override
     public void deleteAllPatient() {
 	patientRepository.deleteAll();

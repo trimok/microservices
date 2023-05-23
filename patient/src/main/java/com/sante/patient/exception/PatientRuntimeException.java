@@ -8,6 +8,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * @author trimok
+ *
+ *         PatientRuntimeException, classe mère pour les exceptions Runtime de
+ *         l'application
+ */
 @ResponseStatus(HttpStatus.NO_CONTENT)
 @Getter
 @Setter
