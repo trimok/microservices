@@ -37,7 +37,7 @@
 			<!--  Information -->
 			<div>
 				<label for="info">Information</label> <input type="text"
-					th:field="*{info}" id="info" placeholder="Information" class="form-control mb-4 col-4">
+					th:field="*{info}" id="info" placeholder="Information" class="form-control mb-4 col-4" required>
 				<ul>
 					<li th:each="err : ${#fields.errors('info')}" th:text="${err}"
 						class="error" />

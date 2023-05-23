@@ -40,6 +40,6 @@ public class Patient {
     private String adressePostale;
 
     @Size(min = 8, max = 20)
-    @Pattern(regexp = "[0-9\s]*")
+    @Pattern(regexp = "[0-9]{2} [0-9]{2} [0-9]{2} [0-9]{2} [0-9]{2}")
     private String telephone;
 }

@@ -59,8 +59,8 @@ public class PatientController {
     }
 
     @PostMapping("/save")
-    public String savePatient(@Valid @ModelAttribute("patient") Patient patient, RedirectAttributes ra, Model model,
-	    BindingResult bindingResult) {
+    public String savePatient(@Valid @ModelAttribute("patient") Patient patient,
+	    BindingResult bindingResult, RedirectAttributes ra, Model model) {
 	if (bindingResult.hasErrors()) {
 	    return "add";
 	} else {
@@ -75,8 +75,8 @@ public class PatientController {
     }
 
     @PostMapping("/update")
-    public String updatePatient(@Valid @ModelAttribute("patient") Patient patient, RedirectAttributes ra, Model model,
-	    BindingResult bindingResult) {
+    public String updatePatient(@Valid @ModelAttribute("patient") Patient patient,
+	    BindingResult bindingResult, RedirectAttributes ra, Model model) {
 	if (bindingResult.hasErrors()) {
 	    return "update";
 	} else {
@@ -170,8 +170,8 @@ public class PatientController {
     @PostMapping("/note/save")
     public String savePatientHistory(@Valid @ModelAttribute("patientHistory") PatientHistory patientHistory,
 	    @Valid @ModelAttribute("note") Note note,
-	    RedirectAttributes ra, Model model,
-	    BindingResult bindingResult) {
+	    BindingResult bindingResult,
+	    RedirectAttributes ra, Model model) {
 	if (bindingResult.hasErrors()) {
 	    return "note_add";
 	} else {
@@ -258,8 +258,8 @@ public class PatientController {
 
     @PostMapping("/note/update")
     public String updateNote(@Valid @ModelAttribute("patientHistory") PatientHistory patientHistory,
-	    @Valid @ModelAttribute("note") Note note, RedirectAttributes ra, Model model,
-	    BindingResult bindingResult) {
+	    @Valid @ModelAttribute("note") Note note,
+	    BindingResult bindingResult, RedirectAttributes ra, Model model) {
 	if (bindingResult.hasErrors()) {
 	    return "note_update";
 	} else {

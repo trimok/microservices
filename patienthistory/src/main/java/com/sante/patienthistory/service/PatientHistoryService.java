@@ -111,7 +111,7 @@ public class PatientHistoryService implements IPatientHistoryService {
 	}
 
 	UpdateResult result = patientHistoryRepositoryImpl.updateNote(patientHistory);
-	if (result.getMatchedCount() == 0 || result.getModifiedCount() == 0) {
+	if (result.getMatchedCount() == 0) {
 	    throw new PatientHistoryNotFoundException(ACTION_NOTE_UPDATE);
 	}
 
