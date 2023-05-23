@@ -38,7 +38,7 @@ public class RepositoryTest {
     private LocalDate dateNaissance = LocalDate.parse("04/12/1957", formatter);
 
     private Patient patient = new Patient(null, "Tristan", "Mokobodzki", dateNaissance, "M", "1 rue du Louvre, PARIS",
-	    "06 01 02 08 09 ");
+	    "06 01 02 08 09");
 
     @BeforeAll
     public void beforeAll() {

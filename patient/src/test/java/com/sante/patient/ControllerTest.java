@@ -64,10 +64,10 @@ public class ControllerTest {
     @BeforeEach
     public void beforeEach() {
 	patient = new Patient(null, "Tristan", "Mokobodzki", dateNaissance, "M", "1 rue du Louvre, PARIS",
-		"06 01 02 08 09 ");
+		"06 01 02 08 09");
 
 	patientDatabase = new Patient(1L, "Tristan", "Mokobodzki", dateNaissance, "M", "1 rue du Louvre, PARIS",
-		"06 01 02 08 09 ");
+		"06 01 02 08 09");
     }
 
     @AfterAll

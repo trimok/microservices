@@ -25,6 +25,12 @@ public class RegleService implements IRegleService {
     @Autowired
     RegleRepository regleRepository;
 
+    @Autowired
+    public RegleService(RegleRepository regleRepository) {
+	super();
+	this.regleRepository = regleRepository;
+    }
+
     @Override
     public Risque findRisque(PatientDao patientDao, List<String> keywords) {
 	// Données age et genre

@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sante.expert.dao.PatientDao;
 import com.sante.expert.model.Risque;
-import com.sante.expert.service.DeclencheurService;
-import com.sante.expert.service.RegleService;
+import com.sante.expert.service.IDeclencheurService;
+import com.sante.expert.service.IRegleService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -24,10 +24,10 @@ import jakarta.validation.Valid;
 public class ExpertController {
 
     @Autowired
-    private DeclencheurService declencheurService;
+    private IDeclencheurService declencheurService;
 
     @Autowired
-    private RegleService regleService;
+    private IRegleService regleService;
 
     @Operation(summary = "Obtenir un niveau de risque")
     @ApiResponse(responseCode = "400")

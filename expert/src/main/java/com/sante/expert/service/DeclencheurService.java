@@ -17,6 +17,12 @@ public class DeclencheurService implements IDeclencheurService {
     @Autowired
     private DeclencheurRepository declencheurRepository;
 
+    @Autowired
+    public DeclencheurService(DeclencheurRepository declencheurRepository) {
+	super();
+	this.declencheurRepository = declencheurRepository;
+    }
+
     @Override
     public List<String> findKeywords() {
 	List<String> keywords = new ArrayList<>();
