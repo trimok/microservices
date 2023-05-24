@@ -16,7 +16,13 @@ services:
     ports:
       - "3307:3306"    
     healthcheck:
-      test: "exit 0"      
+      test: "exit 0"           
+  microservice-config-server:
+    build:
+      context: ./microservice-configserver/
+    ports:
+      - "9101:9101"
+    image: configserver          
   microservice-patienthistory:
     build:
       context: ./microservice-patienthistory/
@@ -24,6 +30,7 @@ services:
       - "8082:8082"
     environment:  
         MONGODB_HOST: mongodb   
+        DOCKER_CONFIG_SERVER_URL: http://microservice-configserver:9101
     image: patienthistory
     depends_on:     
       mongodb:
@@ -35,7 +42,8 @@ services:
     ports:
       - "8081:8081"
     environment:  
-        SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/patient?serverTimezone=UTC&autoReconnect=true   
+        SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/patient?serverTimezone=UTC&autoReconnect=true 
+        DOCKER_CONFIG_SERVER_URL: http://microservice-configserver:9101  
     image: patient
     depends_on:     
       mysqldb:
@@ -48,6 +56,7 @@ services:
       - "8083:8083"
     environment:  
         SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/patient?serverTimezone=UTC&autoReconnect=true   
+        DOCKER_CONFIG_SERVER_URL: http://microservice-configserver:9101
     image: expert
     depends_on:     
       mysqldb:
@@ -62,6 +71,7 @@ services:
       DOCKER_PATIENT_URL: http://microservice-patient:8081  
       DOCKER_PATIENT_HISTORY_URL: http://microservice-patienthistory:8082
       DOCKER_EXPERT_URL: http://microservice-expert:8083    
+      DOCKER_CONFIG_SERVER_URL: http://microservice-configserver:9101
     image: clientui
     depends_on:     
       microservice-patient:
