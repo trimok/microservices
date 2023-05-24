@@ -6,19 +6,7 @@ services:
     ports:
       - '27017:27017'
     healthcheck:
-      test: "exit 0"    
-  patienthistory:
-    build:
-      context: ./patienthistory/
-    ports:
-      - "8082:8082"
-    environment:  
-        MONGODB_HOST: mongodb   
-    image: patienthistory
-    depends_on:     
-      mongodb:
-        condition: service_healthy
-    restart: on-failure      
+      test: "exit 0"          
   mysqldb:
     image: mysql:8.0.31
     restart: always
@@ -28,10 +16,22 @@ services:
     ports:
       - "3307:3306"    
     healthcheck:
-      test: "exit 0"  
-  patient:
+      test: "exit 0"      
+  microservice-patienthistory:
     build:
-      context: ./patient/
+      context: ./microservice-patienthistory/
+    ports:
+      - "8082:8082"
+    environment:  
+        MONGODB_HOST: mongodb   
+    image: patienthistory
+    depends_on:     
+      mongodb:
+        condition: service_healthy
+    restart: on-failure        
+  microservice-patient:
+    build:
+      context: ./microservice-patient/
     ports:
       - "8081:8081"
     environment:  
@@ -41,9 +41,9 @@ services:
       mysqldb:
         condition: service_healthy
     restart: on-failure      
-  expert:
+  microservice-expert:
     build:
-      context: ./expert/
+      context: ./microservice-expert/
     ports:
       - "8083:8083"
     environment:  
@@ -53,20 +53,20 @@ services:
       mysqldb:
         condition: service_healthy
     restart: on-failure    
-  clientui:
+  microservice-clientui:
     build:
-      context: ./clientui/
+      context: ./microservice-clientui/
     ports:
       - "8080:8080"
     environment:
-      DOCKER_PATIENT_URL: http://patient:8081  
-      DOCKER_PATIENT_HISTORY_URL: http://patienthistory:8082
-      DOCKER_EXPERT_URL: http://expert:8083    
+      DOCKER_PATIENT_URL: http://microservice-patient:8081  
+      DOCKER_PATIENT_HISTORY_URL: http://microservice-patienthistory:8082
+      DOCKER_EXPERT_URL: http://microservice-expert:8083    
     image: clientui
     depends_on:     
-      patient:
+      microservice-patient:
         condition: service_started
-      patienthistory:
+      microservice-patienthistory:
         condition: service_started  
-      expert:
+      microservice-expert:
         condition: service_started    
