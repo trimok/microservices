@@ -28,17 +28,17 @@ services:
         interval: 10s
         timeout: 5s
         retries: 5        
-  microservice-eureka-server:
+  microservice-eurekaserver:
     build:
        context: ./microservice-eurekaserver/
     ports:
        - "8761:8761"
     environment:
       DOCKER_CONFIG_SERVER_URL: http://microservice-configserver:9101
-      DOCKER_EUREKA_SERVER: http://microservice-eurekaserver:8761/eureka
+      DOCKER_EUREKA_SERVER_URL: http://microservice-eurekaserver:8761/eureka
     image: eureka-server
     depends_on:
-     config-server:
+     microservice-configserver:
       condition: service_healthy
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://microservice-eurekaserver:8761" ]
@@ -53,6 +53,7 @@ services:
     environment:  
         MONGODB_HOST: mongodb   
         DOCKER_CONFIG_SERVER_URL: http://microservice-configserver:9101
+        DOCKER_EUREKA_SERVER_URL: http://microservice-eurekaserver:8761/eureka
     image: patienthistory
     depends_on:     
       mongodb:
@@ -70,6 +71,7 @@ services:
     environment:  
         SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/patient?serverTimezone=UTC&autoReconnect=true 
         DOCKER_CONFIG_SERVER_URL: http://microservice-configserver:9101  
+        DOCKER_EUREKA_SERVER_URL: http://microservice-eurekaserver:8761/eureka
     image: patient
     depends_on:     
       mysqldb:
@@ -87,6 +89,7 @@ services:
     environment:  
         SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/patient?serverTimezone=UTC&autoReconnect=true   
         DOCKER_CONFIG_SERVER_URL: http://microservice-configserver:9101
+        DOCKER_EUREKA_SERVER_URL: http://microservice-eurekaserver:8761/eureka
     image: expert
     depends_on:     
       mysqldb:
@@ -102,10 +105,11 @@ services:
     ports:
       - "8080:8080"
     environment:
+      DOCKER_CONFIG_SERVER_URL: http://microservice-configserver:9101
+      DOCKER_EUREKA_SERVER_URL: http://microservice-eurekaserver:8761/eureka    
       DOCKER_PATIENT_URL: http://microservice-patient:8081  
       DOCKER_PATIENT_HISTORY_URL: http://microservice-patienthistory:8082
       DOCKER_EXPERT_URL: http://microservice-expert:8083    
-      DOCKER_CONFIG_SERVER_URL: http://microservice-configserver:9101
     image: clientui
     depends_on:     
       microservice-configserver:
