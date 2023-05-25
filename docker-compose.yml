@@ -6,7 +6,7 @@ services:
     ports:
       - '27017:27017'
     healthcheck:
-      test: "exit 0"          
+      test: "exit 0"
   mysqldb:
     image: mysql:8.0.31
     restart: always
@@ -22,12 +22,12 @@ services:
       context: ./microservice-configserver/
     ports:
       - "9101:9101"
-    image: configserver          
+    image: configserver
     healthcheck:
         test: [ "CMD", "curl", "-f", "http://microservice-configserver:9101/eureka-server/default" ]
         interval: 10s
         timeout: 5s
-        retries: 5        
+        retries: 5
   microservice-eurekaserver:
     build:
        context: ./microservice-eurekaserver/
@@ -44,60 +44,60 @@ services:
       test: [ "CMD", "curl", "-f", "http://microservice-eurekaserver:8761" ]
       interval: 10s
       timeout: 5s
-      retries: 5                
+      retries: 5
   microservice-patienthistory:
     build:
       context: ./microservice-patienthistory/
     ports:
       - "8082:8082"
-    environment:  
-        MONGODB_HOST: mongodb   
+    environment:
+        MONGODB_HOST: mongodb
         DOCKER_CONFIG_SERVER_URL: http://microservice-configserver:9101
         DOCKER_EUREKA_SERVER_URL: http://microservice-eurekaserver:8761/eureka
     image: patienthistory
-    depends_on:     
+    depends_on:
       mongodb:
         condition: service_healthy
       microservice-configserver:
-       condition: service_healthy	
+       condition: service_healthy
       microservice-eurekaserver:
-       condition: service_healthy  	
-    restart: on-failure        
+       condition: service_healthy
+    restart: on-failure
   microservice-patient:
     build:
       context: ./microservice-patient/
     ports:
       - "8081:8081"
-    environment:  
-        SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/patient?serverTimezone=UTC&autoReconnect=true 
-        DOCKER_CONFIG_SERVER_URL: http://microservice-configserver:9101  
+    environment:
+        SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/patient?serverTimezone=UTC&autoReconnect=true
+        DOCKER_CONFIG_SERVER_URL: http://microservice-configserver:9101
         DOCKER_EUREKA_SERVER_URL: http://microservice-eurekaserver:8761/eureka
     image: patient
-    depends_on:     
+    depends_on:
       mysqldb:
         condition: service_healthy
       microservice-configserver:
-       condition: service_healthy		
-      microservice-eurekaserver: 
+       condition: service_healthy
+      microservice-eurekaserver:
         condition: service_healthy
-    restart: on-failure      
+    restart: on-failure
   microservice-expert:
     build:
       context: ./microservice-expert/
     ports:
       - "8083:8083"
     environment:  
-        SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/patient?serverTimezone=UTC&autoReconnect=true   
+        SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/patient?serverTimezone=UTC&autoReconnect=true
         DOCKER_CONFIG_SERVER_URL: http://microservice-configserver:9101
         DOCKER_EUREKA_SERVER_URL: http://microservice-eurekaserver:8761/eureka
     image: expert
-    depends_on:     
+    depends_on:
       mysqldb:
         condition: service_healthy
       microservice-configserver:
         condition: service_healthy
       microservice-eurekaserver: 
-        condition: service_healthy       
+        condition: service_healthy
     restart: on-failure    
   microservice-clientui:
     build:
@@ -106,19 +106,19 @@ services:
       - "8080:8080"
     environment:
       DOCKER_CONFIG_SERVER_URL: http://microservice-configserver:9101
-      DOCKER_EUREKA_SERVER_URL: http://microservice-eurekaserver:8761/eureka    
-      DOCKER_PATIENT_URL: http://microservice-patient:8081  
+      DOCKER_EUREKA_SERVER_URL: http://microservice-eurekaserver:8761/eureka
+      DOCKER_PATIENT_URL: http://microservice-patient:8081
       DOCKER_PATIENT_HISTORY_URL: http://microservice-patienthistory:8082
-      DOCKER_EXPERT_URL: http://microservice-expert:8083    
+      DOCKER_EXPERT_URL: http://microservice-expert:8083
     image: clientui
-    depends_on:     
+    depends_on:
       microservice-configserver:
         condition: service_healthy
       microservice-eurekaserver: 
-        condition: service_healthy        
+        condition: service_healthy
       microservice-patient:
         condition: service_started
       microservice-patienthistory:
-        condition: service_started  
+        condition: service_started
       microservice-expert:
-        condition: service_started    
+        condition: service_started
