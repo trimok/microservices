@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import com.sante.clientui.model.Patient;
 
 @Service
-@FeignClient(name = "patient", url = "${patient.url}")
+// @FeignClient(name = "patient", url = "${patient.url}")
+@FeignClient(name = "microservice-patient")
 public interface PatientService {
 
     @PostMapping("/patient")
