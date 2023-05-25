@@ -8,7 +8,6 @@ import com.sante.clientui.dao.PatientDao;
 import com.sante.clientui.model.Risque;
 
 @Service
-// @FeignClient(name = "expert", url = "${expert.url}")
 @FeignClient(name = "microservice-expert")
 public interface ExpertService {
 

@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import com.sante.clientui.model.PatientHistory;
 
 @Service
-// @FeignClient(name = "patient-history", url = "${patient-history.url}")
 @FeignClient(name = "microservice-patienthistory")
 public interface PatientHistoryService {
     @PostMapping("/patientHistory")

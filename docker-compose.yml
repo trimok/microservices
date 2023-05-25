@@ -1,6 +1,11 @@
 version: "3"
 
 services:
+  zipkin:
+    container_name: zipkin
+    image: openzipkin/zipkin
+    ports:
+      - "9411:9411"
   mongodb:
     image: mongo
     ports:
@@ -54,6 +59,7 @@ services:
         MONGODB_HOST: mongodb
         DOCKER_CONFIG_SERVER_URL: http://microservice-configserver:9101
         DOCKER_EUREKA_SERVER_URL: http://microservice-eurekaserver:8761/eureka
+        DOCKER_ZIPKIN_URL: http://zipkin:9411/api/v2/spans
     image: patienthistory
     depends_on:
       mongodb:
@@ -61,6 +67,8 @@ services:
       microservice-configserver:
        condition: service_healthy
       microservice-eurekaserver:
+       condition: service_healthy
+      zipkin: 
        condition: service_healthy
     restart: on-failure
   microservice-patient:
@@ -72,6 +80,7 @@ services:
         SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/patient?serverTimezone=UTC&autoReconnect=true
         DOCKER_CONFIG_SERVER_URL: http://microservice-configserver:9101
         DOCKER_EUREKA_SERVER_URL: http://microservice-eurekaserver:8761/eureka
+        DOCKER_ZIPKIN_URL: http://zipkin:9411/api/v2/spans
     image: patient
     depends_on:
       mysqldb:
@@ -80,6 +89,8 @@ services:
        condition: service_healthy
       microservice-eurekaserver:
         condition: service_healthy
+      zipkin: 
+       condition: service_healthy  
     restart: on-failure
   microservice-expert:
     build:
@@ -90,6 +101,7 @@ services:
         SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/patient?serverTimezone=UTC&autoReconnect=true
         DOCKER_CONFIG_SERVER_URL: http://microservice-configserver:9101
         DOCKER_EUREKA_SERVER_URL: http://microservice-eurekaserver:8761/eureka
+        DOCKER_ZIPKIN_URL: http://zipkin:9411/api/v2/spans
     image: expert
     depends_on:
       mysqldb:
@@ -98,6 +110,8 @@ services:
         condition: service_healthy
       microservice-eurekaserver: 
         condition: service_healthy
+      zipkin: 
+        condition: service_healthy  
     restart: on-failure    
   microservice-clientui:
     build:
@@ -107,9 +121,7 @@ services:
     environment:
       DOCKER_CONFIG_SERVER_URL: http://microservice-configserver:9101
       DOCKER_EUREKA_SERVER_URL: http://microservice-eurekaserver:8761/eureka
-      DOCKER_PATIENT_URL: http://microservice-patient:8081
-      DOCKER_PATIENT_HISTORY_URL: http://microservice-patienthistory:8082
-      DOCKER_EXPERT_URL: http://microservice-expert:8083
+      DOCKER_ZIPKIN_URL: http://zipkin:9411/api/v2/spans
     image: clientui
     depends_on:
       microservice-configserver:
@@ -122,3 +134,5 @@ services:
         condition: service_started
       microservice-expert:
         condition: service_started
+      zipkin: 
+        condition: service_healthy  
