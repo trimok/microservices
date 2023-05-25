@@ -1,0 +1,23 @@
+spring:
+  output:
+    ansi:
+      enabled: always
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+      - id: microservice-patient
+        uri: microservice-patient
+        predicates:
+        - Path=microservice-patient/**       
+      - id: microservice-patienthistory
+        uri: microservice-patienthistory
+        predicates:
+        - Path=microservice-patienthistory/**
+      - id: microservice-expert
+        uri: microservice-expert
+        predicates:
+        - Path=microservice-expert/**
+        
