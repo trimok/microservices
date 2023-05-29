@@ -7,23 +7,19 @@ spring:
       discovery:
         locator:
           enabled: true
+      default-filters:
+      - SaveSession    
       routes:
       - id: microservice-patient
         uri: lb://microservice-patient
         predicates:
         - Path=/patient/**       
-        filters:
-        - SaveSession  
       - id: microservice-patienthistory
         uri: lb://microservice-patienthistory
         predicates:
         - Path=/patientHistory/**
-        filters:
-        - SaveSession
       - id: microservice-expert
         uri: lb://microservice-expert
         predicates:
         - Path=/expert/**
-        filters:
-        - SaveSession
         
