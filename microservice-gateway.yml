@@ -15,7 +15,7 @@ spring:
       - id: microservice-patienthistory
         uri: lb://microservice-patienthistory
         predicates:
-        - Path=/patienthistory/**
+        - Path=/patientHistory/**
       - id: microservice-expert
         uri: lb://microservice-expert
         predicates:
