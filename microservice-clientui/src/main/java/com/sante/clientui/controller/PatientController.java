@@ -20,9 +20,7 @@ import com.sante.clientui.model.Note;
 import com.sante.clientui.model.Patient;
 import com.sante.clientui.model.PatientHistory;
 import com.sante.clientui.model.Risque;
-import com.sante.clientui.service.ExpertService;
-import com.sante.clientui.service.PatientHistoryService;
-import com.sante.clientui.service.PatientService;
+import com.sante.clientui.service.GatewayService;
 
 import jakarta.validation.Valid;
 
@@ -30,19 +28,13 @@ import jakarta.validation.Valid;
 public class PatientController {
 
     @Autowired
-    private PatientService patientService;
-
-    @Autowired
-    private PatientHistoryService patientHistoryService;
-
-    @Autowired
-    private ExpertService expertService;
+    private GatewayService gatewayService;
 
     @GetMapping("/")
     public String viewHomePage(RedirectAttributes ra, Model model) {
 	List<Patient> patients = new ArrayList<>();
 	try {
-	    patients = patientService.getPatients();
+	    patients = gatewayService.getPatients();
 	} catch (Exception e) {
 	    model.addAttribute("error_get_list_patient", true);
 	}
@@ -65,7 +57,7 @@ public class PatientController {
 	    return "add";
 	} else {
 	    try {
-		patientService.createPatient(patient);
+		gatewayService.createPatient(patient);
 	    } catch (Exception e) {
 		ra.addAttribute("error_add_patient", true);
 		ra.addFlashAttribute("error_add_patient", true);
@@ -81,7 +73,7 @@ public class PatientController {
 	    return "update";
 	} else {
 	    try {
-		patientService.updatePatient(patient);
+		gatewayService.updatePatient(patient);
 	    } catch (Exception e) {
 		ra.addAttribute("error_update_patient", true);
 		ra.addFlashAttribute("error_update_patient", true);
@@ -95,7 +87,7 @@ public class PatientController {
 	Patient patient = null;
 
 	try {
-	    patient = patientService.getPatient(id);
+	    patient = gatewayService.getPatient(id);
 	    model.addAttribute("patient", patient);
 	    return "update";
 	} catch (Exception e) {
@@ -108,7 +100,7 @@ public class PatientController {
     @GetMapping("/delete/{id}")
     public String deleteCourse(@PathVariable(value = "id") long id, RedirectAttributes ra, Model model) {
 	try {
-	    patientService.deletePatient(id);
+	    gatewayService.deletePatient(id);
 	} catch (Exception e) {
 	    ra.addAttribute("error_delete_patient", true);
 	    ra.addFlashAttribute("error_delete_patient", true);
@@ -128,7 +120,7 @@ public class PatientController {
 
 	Patient patient = null;
 	try {
-	    patient = patientService.getPatient(id);
+	    patient = gatewayService.getPatient(id);
 	    model.addAttribute("patient", patient);
 	} catch (Exception e) {
 	    ra.addAttribute("error_get_patient", true);
@@ -144,13 +136,13 @@ public class PatientController {
 	Patient patient = null;
 
 	try {
-	    patient = patientService.getPatient(id);
+	    patient = gatewayService.getPatient(id);
 	    model.addAttribute("patient", patient);
 
 	    PatientHistory patientHistory = null;
 
 	    try {
-		patientHistory = patientHistoryService.getPatientHistory(patient.getId());
+		patientHistory = gatewayService.getPatientHistory(patient.getId());
 	    } catch (Exception e) {
 		// S'il n'y a pas d'historique, on revient quand même dans notes_home
 		// avec une liste vide
@@ -177,7 +169,7 @@ public class PatientController {
 	} else {
 	    try {
 		patientHistory.getNotes().add(note);
-		patientHistory = patientHistoryService.createUpdatePatientHistory(patientHistory);
+		patientHistory = gatewayService.createUpdatePatientHistory(patientHistory);
 	    } catch (Exception e) {
 		ra.addAttribute("error_add_patient_history", true);
 		ra.addFlashAttribute("error_add_patient_history", true);
@@ -186,7 +178,7 @@ public class PatientController {
 
 	    Patient patient;
 	    try {
-		patient = patientService.getPatient(patientHistory.getId());
+		patient = gatewayService.getPatient(patientHistory.getId());
 		model.addAttribute("patient", patient);
 	    } catch (Exception e) {
 		ra.addAttribute("error_get_patient", true);
@@ -210,7 +202,7 @@ public class PatientController {
 	patientHistory.getNotes().add(note);
 
 	try {
-	    patientHistoryService.deleteNote(patientHistory);
+	    gatewayService.deleteNote(patientHistory);
 	} catch (Exception e) {
 	    ra.addAttribute("error_delete_note", true);
 	    ra.addFlashAttribute("error_delete_note", true);
@@ -225,7 +217,7 @@ public class PatientController {
 	PatientHistory patientHistory = null;
 
 	try {
-	    patient = patientService.getPatient(id);
+	    patient = gatewayService.getPatient(id);
 	    model.addAttribute("patient", patient);
 	} catch (Exception e) {
 	    ra.addAttribute("error_get_patient", true);
@@ -234,7 +226,7 @@ public class PatientController {
 	}
 
 	try {
-	    patientHistory = patientHistoryService.getPatientHistory(id);
+	    patientHistory = gatewayService.getPatientHistory(id);
 	    model.addAttribute("patientHistory", patientHistory);
 	} catch (Exception e) {
 	    ra.addAttribute("error_get_patient_history", true);
@@ -267,7 +259,7 @@ public class PatientController {
 		PatientHistory patientHistoryToUpdate = new PatientHistory();
 		patientHistoryToUpdate.setId(patientHistory.getId());
 		patientHistoryToUpdate.getNotes().add(note);
-		patientHistoryService.updateNote(patientHistoryToUpdate);
+		gatewayService.updateNote(patientHistoryToUpdate);
 	    } catch (Exception e) {
 		ra.addAttribute("error_update_note", true);
 		ra.addFlashAttribute("error_update_note", true);
@@ -282,7 +274,7 @@ public class PatientController {
 	PatientHistory patientHistory = null;
 
 	try {
-	    patient = patientService.getPatient(id);
+	    patient = gatewayService.getPatient(id);
 	} catch (Exception e) {
 	    ra.addAttribute("error_get_patient", true);
 	    ra.addFlashAttribute("error_get_patient", true);
@@ -290,7 +282,7 @@ public class PatientController {
 	}
 
 	try {
-	    patientHistory = patientHistoryService.getPatientHistory(id);
+	    patientHistory = gatewayService.getPatientHistory(id);
 	} catch (Exception e) {
 	    patientHistory = new PatientHistory();
 	    patientHistory.setId(patient.getId());
@@ -299,7 +291,7 @@ public class PatientController {
 	PatientDao patientDao = new PatientDao(patient, patientHistory);
 	Risque risque = null;
 	try {
-	    risque = expertService.getRisque(patientDao);
+	    risque = gatewayService.getRisque(patientDao);
 	} catch (Exception e) {
 	    ra.addAttribute("error_get_risque", true);
 	    ra.addFlashAttribute("error_get_risque", true);

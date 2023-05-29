@@ -9,15 +9,15 @@ spring:
           enabled: true
       routes:
       - id: microservice-patient
-        uri: microservice-patient
+        uri: lb://microservice-patient
         predicates:
-        - Path=microservice-patient/**       
+        - Path=/patient/**       
       - id: microservice-patienthistory
-        uri: microservice-patienthistory
+        uri: lb://microservice-patienthistory
         predicates:
-        - Path=microservice-patienthistory/**
+        - Path=/patienthistory/**
       - id: microservice-expert
-        uri: microservice-expert
+        uri: lb://microservice-expert
         predicates:
-        - Path=microservice-expert/**
+        - Path=/expert/**
         

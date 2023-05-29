@@ -1,5 +1,7 @@
 package com.sante.clientui.service;
 
+import java.util.List;
+
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -8,11 +10,31 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
+import com.sante.clientui.dao.PatientDao;
+import com.sante.clientui.model.Patient;
 import com.sante.clientui.model.PatientHistory;
+import com.sante.clientui.model.Risque;
 
 @Service
-@FeignClient(name = "microservice-patienthistory")
-public interface PatientHistoryService {
+@FeignClient(name = "MICROSERVICE-GATEWAY")
+public interface GatewayService {
+    // PATIENT
+    @PostMapping("/patient")
+    public Patient createPatient(Patient patient);
+
+    @PutMapping("/patient")
+    public Patient updatePatient(Patient patient);
+
+    @DeleteMapping("/patient/{id}")
+    public void deletePatient(@PathVariable("id") Long id);
+
+    @GetMapping("/patient")
+    public List<Patient> getPatients();
+
+    @GetMapping("/patient/{id}")
+    public Patient getPatient(@PathVariable("id") Long id);
+
+    // HISTORIQUE PATIENT
     @PostMapping("/patientHistory")
     public PatientHistory createPatientHistory(PatientHistory patientHistory);
 
@@ -30,4 +52,8 @@ public interface PatientHistoryService {
 
     @DeleteMapping("/patientHistory/note")
     public PatientHistory deleteNote(PatientHistory patientHistory);
+
+    // EXPERT
+    @PostMapping("/expert")
+    public Risque getRisque(PatientDao patientDao);
 }
