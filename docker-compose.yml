@@ -49,25 +49,7 @@ services:
     ports:
       - "3307:3306"    
     healthcheck:
-      test: "exit 0"           
-  microservice-gateway:
-    build:
-      context: ./microservice-gateway/
-    ports:
-      - "8084:8084"
-    environment:
-        DOCKER_CONFIG_SERVER_URL: http://microservice-configserver:9101
-        DOCKER_EUREKA_SERVER_URL: http://microservice-eurekaserver:8761/eureka
-        DOCKER_ZIPKIN_URL: http://zipkin:9411/api/v2/spans
-    image: gateway
-    depends_on:
-      microservice-configserver:
-       condition: service_healthy
-      microservice-eurekaserver:
-       condition: service_healthy
-      zipkin: 
-       condition: service_healthy
-    restart: on-failure        
+      test: "exit 0"             
   microservice-patienthistory:
     build:
       context: ./microservice-patienthistory/
@@ -78,6 +60,7 @@ services:
         DOCKER_CONFIG_SERVER_URL: http://microservice-configserver:9101
         DOCKER_EUREKA_SERVER_URL: http://microservice-eurekaserver:8761/eureka
         DOCKER_ZIPKIN_URL: http://zipkin:9411/api/v2/spans
+        DOCKER_KEYCLOCK_URL : http://keyclock:8080
     image: patienthistory
     depends_on:
       mongodb:
@@ -99,6 +82,7 @@ services:
         DOCKER_CONFIG_SERVER_URL: http://microservice-configserver:9101
         DOCKER_EUREKA_SERVER_URL: http://microservice-eurekaserver:8761/eureka
         DOCKER_ZIPKIN_URL: http://zipkin:9411/api/v2/spans
+        DOCKER_KEYCLOCK_URL : http://keyclock:8080
     image: patient
     depends_on:
       mysqldb:
@@ -120,6 +104,7 @@ services:
         DOCKER_CONFIG_SERVER_URL: http://microservice-configserver:9101
         DOCKER_EUREKA_SERVER_URL: http://microservice-eurekaserver:8761/eureka
         DOCKER_ZIPKIN_URL: http://zipkin:9411/api/v2/spans
+        DOCKER_KEYCLOCK_URL : http://keyclock:8080
     image: expert
     depends_on:
       mysqldb:
@@ -131,6 +116,30 @@ services:
       zipkin: 
         condition: service_healthy  
     restart: on-failure    
+  microservice-gateway:
+    build:
+      context: ./microservice-gateway/
+    ports:
+      - "8084:8084"
+    environment:
+        DOCKER_CONFIG_SERVER_URL: http://microservice-configserver:9101
+        DOCKER_EUREKA_SERVER_URL: http://microservice-eurekaserver:8761/eureka
+        DOCKER_ZIPKIN_URL: http://zipkin:9411/api/v2/spans
+    image: gateway
+    depends_on:
+      microservice-configserver:
+       condition: service_healthy
+      microservice-eurekaserver:
+       condition: service_healthy
+      microservice-expert:
+       condition: service_started
+      microservice-patient:
+       condition: service_started 
+      microservice-patienthistory:
+       condition: service_started       
+      zipkin: 
+       condition: service_healthy
+    restart: on-failure      
   microservice-clientui:
     build:
       context: ./microservice-clientui/
@@ -140,6 +149,7 @@ services:
       DOCKER_CONFIG_SERVER_URL: http://microservice-configserver:9101
       DOCKER_EUREKA_SERVER_URL: http://microservice-eurekaserver:8761/eureka
       DOCKER_ZIPKIN_URL: http://zipkin:9411/api/v2/spans
+      DOCKER_KEYCLOCK_URL : http://keyclock
     image: clientui
     depends_on:
       microservice-configserver:
@@ -151,6 +161,8 @@ services:
       microservice-patienthistory:
         condition: service_started
       microservice-expert:
+        condition: service_started
+      microservice-gateway:
         condition: service_started
       zipkin: 
         condition: service_healthy  

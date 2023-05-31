@@ -14,8 +14,6 @@ spring:
         uri: lb://microservice-patient
         predicates:
         - Path=/patient/**  
-        filters:
-          - TokenRelay=
       - id: microservice-patienthistory
         uri: lb://microservice-patienthistory
         predicates:
