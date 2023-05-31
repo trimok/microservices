@@ -1,0 +1,27 @@
+spring:
+  output:
+    ansi:
+      enabled: always
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      default-filters:
+      - TokenRelay=
+      routes:
+      - id: microservice-patient
+        uri: lb://microservice-patient
+        predicates:
+        - Path=/patient/**  
+        filters:
+          - TokenRelay=
+      - id: microservice-patienthistory
+        uri: lb://microservice-patienthistory
+        predicates:
+        - Path=/patientHistory/**
+      - id: microservice-expert
+        uri: lb://microservice-expert
+        predicates:
+        - Path=/expert/**
+ 

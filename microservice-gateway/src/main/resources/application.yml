@@ -1,7 +1,0 @@
-spring:
-  security:
-    oauth2:
-      client:       
-        registration:
-          gateway:
-            client-secret: HD0sbm0nSnMuCxxYAtbSylt3qKebG9D2 
