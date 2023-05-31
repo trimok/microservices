@@ -1,4 +1,4 @@
-package com.sante.patient;
+package com.sante.expert;
 
 import java.util.Collection;
 import java.util.Map;
@@ -26,7 +26,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @ComponentScan(basePackages = { "com.sante.patient" })
-public class PatientSecurityConfig {
+public class ExpertSecurityConfig {
 
     /**
      * Configuring the filter chain

@@ -10,13 +10,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
+import com.sante.clientui.ClientuiFeignConfig;
 import com.sante.clientui.dao.PatientDao;
 import com.sante.clientui.model.Patient;
 import com.sante.clientui.model.PatientHistory;
 import com.sante.clientui.model.Risque;
 
 @Service
-@FeignClient(name = "MICROSERVICE-GATEWAY")
+@FeignClient(name = "MICROSERVICE-GATEWAY", configuration = ClientuiFeignConfig.class)
 public interface GatewayService {
     // PATIENT
     @PostMapping("/patient")

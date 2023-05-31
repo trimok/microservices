@@ -1,63 +1,37 @@
 package com.sante.clientui;
 
-import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-/**
- * @author trimok
- *
- */
+import lombok.extern.slf4j.Slf4j;
+
 @Configuration
 @EnableWebSecurity
-@ComponentScan(basePackages = { "com.sante.clientui" })
+@Slf4j
 public class ClientuiSecurityConfig {
 
-    /**
-     * Configuring the filter chain
-     * 
-     * @param http : the http object
-     * @return : SecurityFilterChain
-     * @throws Exception : any exception
-     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-	http.authorizeHttpRequests()
-		.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-		.anyRequest().hasAnyRole("USER")
-		.and().formLogin()
-		.permitAll()
-		.and().csrf().disable();
-
+	http.authorizeHttpRequests().anyRequest().authenticated().and().oauth2Login();
+	http.csrf().disable();
 	return http.build();
     }
 
-    @Bean
-    public AuthenticationManager authManager(HttpSecurity http) throws Exception {
-	AuthenticationManagerBuilder authenticationManagerBuilder = http
-		.getSharedObject(AuthenticationManagerBuilder.class);
-	String password = passwordEncoder().encode("password");
-	authenticationManagerBuilder.inMemoryAuthentication().withUser("user").password(password).roles("USER");
-	return authenticationManagerBuilder.build();
-    }
-
-    /**
-     * Password encoder
+    /*
+     * @Bean public RequestInterceptor requestTokenBearerInterceptor() {
      * 
-     * @return : a BCryptPasswordEncoder
+     * return new RequestInterceptor() {
+     * 
+     * @Override public void apply(RequestTemplate requestTemplate) { Authentication
+     * authentication = SecurityContextHolder.getContext().getAuthentication(); //
+     * OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) //
+     * authentication.getDetails(); AbstractAuthenticationToken details =
+     * (AbstractAuthenticationToken) ((OAuth2AuthenticationToken) authentication)
+     * .getDetails(); requestTemplate.header("Authorization", "Bearer " + details);
+     * log.info(authentication.toString()); } }; }
      */
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-	return new BCryptPasswordEncoder();
-    }
 }
