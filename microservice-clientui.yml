@@ -7,6 +7,7 @@ spring:
             token-uri: ${DOCKER_KEYCLOAK_TOKEN_URL:http://localhost:8888}/auth/realms/master/protocol/openid-connect/token
             authorization-uri: ${DOCKER_KEYCLOAK_AUTHORIZATION_URL:http://localhost:8888}/auth/realms/master/protocol/openid-connect/auth
             user-info-uri: ${DOCKER_KEYCLOAK_USERINFO_URL:http://localhost:8888}/auth/realms/master/protocol/openid-connect/userinfo
+            user-name-attribute: email
         registration:
           gateway:
             provider: keycloak
