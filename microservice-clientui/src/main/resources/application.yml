@@ -4,4 +4,4 @@ spring:
       client:
         registration:
           gateway:
-            client-secret: xFIVblPFSf13i9sApKkvmGTTMHinlG0E
+            client-secret: mIOFj1aVCWDxd6CRs9SvLKTMceRudC4m
