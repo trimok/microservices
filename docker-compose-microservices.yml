@@ -60,7 +60,7 @@ services:
         DOCKER_CONFIG_SERVER_URL: http://microservice-configserver:9101
         DOCKER_EUREKA_SERVER_URL: http://microservice-eurekaserver:8761/eureka
         DOCKER_ZIPKIN_URL: http://zipkin:9411/api/v2/spans
-        DOCKER_KEYCLOCK_URL : http://keyclock:8080
+        DOCKER_KEYCLOAK_URL : http://keycloak:8080
     image: patienthistory
     depends_on:
       mongodb:
@@ -82,7 +82,7 @@ services:
         DOCKER_CONFIG_SERVER_URL: http://microservice-configserver:9101
         DOCKER_EUREKA_SERVER_URL: http://microservice-eurekaserver:8761/eureka
         DOCKER_ZIPKIN_URL: http://zipkin:9411/api/v2/spans
-        DOCKER_KEYCLOCK_URL : http://keyclock:8080
+        DOCKER_KEYCLOAK_URL : http://keycloak:8080
     image: patient
     depends_on:
       mysqldb:
@@ -104,7 +104,7 @@ services:
         DOCKER_CONFIG_SERVER_URL: http://microservice-configserver:9101
         DOCKER_EUREKA_SERVER_URL: http://microservice-eurekaserver:8761/eureka
         DOCKER_ZIPKIN_URL: http://zipkin:9411/api/v2/spans
-        DOCKER_KEYCLOCK_URL : http://keyclock:8080
+        DOCKER_KEYCLOAK_URL : http://keycloak:8080
     image: expert
     depends_on:
       mysqldb:
@@ -149,7 +149,7 @@ services:
       DOCKER_CONFIG_SERVER_URL: http://microservice-configserver:9101
       DOCKER_EUREKA_SERVER_URL: http://microservice-eurekaserver:8761/eureka
       DOCKER_ZIPKIN_URL: http://zipkin:9411/api/v2/spans
-      DOCKER_KEYCLOCK_URL : http://keyclock
+      DOCKER_KEYCLOAK_URL : http://keycloak:8080
     image: clientui
     depends_on:
       microservice-configserver:
@@ -166,7 +166,7 @@ services:
         condition: service_started
       zipkin: 
         condition: service_healthy  
-
-        
-        
+networks: 
+  default: 
+    name: microservice        
  

@@ -3,4 +3,4 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: ${DOCKER_KEYCLOCK_URL:http://localhost:8888}/auth/realms/master
+          issuer-uri: ${DOCKER_KEYCLOAK_URL:http://localhost:8888}/auth/realms/master

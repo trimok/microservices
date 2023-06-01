@@ -4,9 +4,9 @@ spring:
       client:
         provider:
           keycloak:
-            token-uri: ${DOCKER_KEYCLOCK_URL:http://localhost:8888}/auth/realms/master/protocol/openid-connect/token
-            authorization-uri: ${DOCKER_KEYCLOCK_URL:http://localhost:8888}/auth/realms/master/protocol/openid-connect/auth
-            user-info-uri: ${DOCKER_KEYCLOCK_URL:http://localhost:8888}/auth/realms/master/protocol/openid-connect/userinfo
+            token-uri: ${DOCKER_KEYCLOAK_URL:http://localhost:8888}/auth/realms/master/protocol/openid-connect/token
+            authorization-uri: ${DOCKER_KEYCLOAK_URL:http://localhost:8888}/auth/realms/master/protocol/openid-connect/auth
+            user-info-uri: ${DOCKER_KEYCLOAK_URL:http://localhost:8888}/auth/realms/master/protocol/openid-connect/userinfo
             user-name-attribute: preferred_username
         registration:
           gateway:

@@ -13,4 +13,4 @@ call mvn package -DskipTests
 cd ../microservice-clientui
 call mvn package -DskipTests
 cd ..
-docker compose up
+docker-compose -f docker-compose-microservices.yml up
