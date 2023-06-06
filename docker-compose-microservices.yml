@@ -50,7 +50,26 @@ services:
     ports:
       - "3307:3306"    
     healthcheck:
-      test: "exit 0"             
+      test: "exit 0"
+                         
+  microservice-oauth2server:
+    build:
+      context: ./microservice-oauth2server/
+    ports:
+      - "9000:9000"
+    image: oauth2server    
+    environment:
+        DOCKER_CONFIG_SERVER_URL: http://microservice-configserver:9101
+        DOCKER_EUREKA_SERVER_URL: http://microservice-eurekaserver:8761/eureka
+    depends_on:
+      microservice-configserver:
+       condition: service_healthy
+      microservice-eurekaserver:
+       condition: service_healthy
+      zipkin: 
+       condition: service_healthy
+    restart: on-failure
+      
   microservice-patienthistory:
     build:
       context: ./microservice-patienthistory/
@@ -61,7 +80,7 @@ services:
         DOCKER_CONFIG_SERVER_URL: http://microservice-configserver:9101
         DOCKER_EUREKA_SERVER_URL: http://microservice-eurekaserver:8761/eureka
         DOCKER_ZIPKIN_URL: http://zipkin:9411/api/v2/spans
-        DOCKER_KEYCLOAK_ISSUER_URL : http://keycloak:8888
+        DOCKER_ISSUER_URI: http://microservice-oauth2server:9000
     image: patienthistory
     depends_on:
       mongodb:
@@ -72,6 +91,8 @@ services:
        condition: service_healthy
       zipkin: 
        condition: service_healthy
+      microservice-oauth2server: 
+       condition: service_started
     restart: on-failure
   microservice-patient:
     build:
@@ -83,7 +104,7 @@ services:
         DOCKER_CONFIG_SERVER_URL: http://microservice-configserver:9101
         DOCKER_EUREKA_SERVER_URL: http://microservice-eurekaserver:8761/eureka
         DOCKER_ZIPKIN_URL: http://zipkin:9411/api/v2/spans
-        DOCKER_KEYCLOAK_ISSUER_URL : http://keycloak:8888
+        DOCKER_ISSUER_URI: http://microservice-oauth2server:9000
     image: patient
     depends_on:
       mysqldb:
@@ -94,6 +115,8 @@ services:
         condition: service_healthy
       zipkin: 
        condition: service_healthy  
+      microservice-oauth2server: 
+       condition: service_started 
     restart: on-failure
   microservice-expert:
     build:
@@ -105,7 +128,7 @@ services:
         DOCKER_CONFIG_SERVER_URL: http://microservice-configserver:9101
         DOCKER_EUREKA_SERVER_URL: http://microservice-eurekaserver:8761/eureka
         DOCKER_ZIPKIN_URL: http://zipkin:9411/api/v2/spans
-        DOCKER_KEYCLOAK_ISSUER_URL : http://keycloak:8888
+        DOCKER_ISSUER_URI: http://microservice-oauth2server:9000
     image: expert
     depends_on:
       mysqldb:
@@ -116,6 +139,8 @@ services:
         condition: service_healthy
       zipkin: 
         condition: service_healthy  
+      microservice-oauth2server: 
+       condition: service_started  
     restart: on-failure    
   microservice-gateway:
     build:
@@ -150,10 +175,7 @@ services:
       DOCKER_CONFIG_SERVER_URL: http://microservice-configserver:9101
       DOCKER_EUREKA_SERVER_URL: http://microservice-eurekaserver:8761/eureka
       DOCKER_ZIPKIN_URL: http://zipkin:9411/api/v2/spans
-      DOCKER_KEYCLOAK_TOKEN_URL: http://keycloak:8888
-      DOCKER_KEYCLOAK_AUTHORIZATION_URL: http://localhost:8888 
-      DOCKER_KEYCLOAK_USERINFO_URL: http://keycloak:8888
-      DOCKER_KEYCLOAK_AUTHSERVER_URL: http://keycloak:8888
+      DOCKER_ISSUER_URI: http://microservice-oauth2server:9000
     image: clientui
     depends_on:
       microservice-configserver:
@@ -170,8 +192,6 @@ services:
         condition: service_started
       zipkin: 
         condition: service_healthy  
-    restart: on-failure
-networks: 
-  default: 
-    name: microservice        
- 
+      microservice-oauth2server: 
+       condition: service_started  
+    restart: on-failure 

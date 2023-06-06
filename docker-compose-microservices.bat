@@ -2,6 +2,8 @@ cd microservice-configserver
 call mvn package -DskipTests
 cd ../microservice-eurekaserver
 call mvn package -DskipTests
+cd ../microservice-oauth2server
+call mvn package -DskipTests
 cd ../microservice-gateway
 call mvn package -DskipTests
 cd ../microservice-patient
