@@ -31,7 +31,7 @@ public class ClientuiFeignConfig {
     }
 
     /*
-     * public static final String CLIENT_REGISTRATION_ID = "gateway";
+     * public static final String CLIENT_REGISTRATION_ID = "client";
      * 
      * private final OAuth2AuthorizedClientService oAuth2AuthorizedClientService;
      * private final ClientRegistrationRepository clientRegistrationRepository;

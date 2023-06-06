@@ -61,7 +61,7 @@ services:
         DOCKER_CONFIG_SERVER_URL: http://microservice-configserver:9101
         DOCKER_EUREKA_SERVER_URL: http://microservice-eurekaserver:8761/eureka
         DOCKER_ZIPKIN_URL: http://zipkin:9411/api/v2/spans
-        DOCKER_KEYCLOAK_ISSUER_URL : http://keycloak:8080
+        DOCKER_KEYCLOAK_ISSUER_URL : http://keycloak:8888
     image: patienthistory
     depends_on:
       mongodb:
@@ -83,7 +83,7 @@ services:
         DOCKER_CONFIG_SERVER_URL: http://microservice-configserver:9101
         DOCKER_EUREKA_SERVER_URL: http://microservice-eurekaserver:8761/eureka
         DOCKER_ZIPKIN_URL: http://zipkin:9411/api/v2/spans
-        DOCKER_KEYCLOAK_ISSUER_URL : http://keycloak:8080
+        DOCKER_KEYCLOAK_ISSUER_URL : http://keycloak:8888
     image: patient
     depends_on:
       mysqldb:
@@ -105,7 +105,7 @@ services:
         DOCKER_CONFIG_SERVER_URL: http://microservice-configserver:9101
         DOCKER_EUREKA_SERVER_URL: http://microservice-eurekaserver:8761/eureka
         DOCKER_ZIPKIN_URL: http://zipkin:9411/api/v2/spans
-        DOCKER_KEYCLOAK_ISSUER_URL : http://keycloak:8080
+        DOCKER_KEYCLOAK_ISSUER_URL : http://keycloak:8888
     image: expert
     depends_on:
       mysqldb:
@@ -150,10 +150,10 @@ services:
       DOCKER_CONFIG_SERVER_URL: http://microservice-configserver:9101
       DOCKER_EUREKA_SERVER_URL: http://microservice-eurekaserver:8761/eureka
       DOCKER_ZIPKIN_URL: http://zipkin:9411/api/v2/spans
-      DOCKER_KEYCLOAK_TOKEN_URL: http://localhost:8888
+      DOCKER_KEYCLOAK_TOKEN_URL: http://keycloak:8888
       DOCKER_KEYCLOAK_AUTHORIZATION_URL: http://localhost:8888 
-      DOCKER_KEYCLOAK_USERINFO_URL: http://localhost:8888
-      DOCKER_KEYCLOAK_ISSUER_URL: http://keycloak:8080
+      DOCKER_KEYCLOAK_USERINFO_URL: http://keycloak:8888
+      DOCKER_KEYCLOAK_AUTHSERVER_URL: http://keycloak:8888
     image: clientui
     depends_on:
       microservice-configserver:
