@@ -90,7 +90,7 @@ public class Oauth2serverSecurityConfig {
 
     @Bean
     public RegisteredClientRepository registeredClientRepository() {
-	RegisteredClient registeredClient = RegisteredClient.withId(UUID.randomUUID().toString())
+	RegisteredClient registeredClient = RegisteredClient.withId("myoauth2")
 		.clientId("client")
 		.clientSecret("secret")
 		.scope(OidcScopes.OPENID)

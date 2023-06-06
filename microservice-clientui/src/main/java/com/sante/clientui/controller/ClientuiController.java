@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
-import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -31,16 +29,11 @@ import lombok.Getter;
 @Getter
 public class ClientuiController {
 
-    private OAuth2AuthorizedClient authorizedClient;
-
     @Autowired
     private GatewayService gatewayService;
 
     @GetMapping("/")
-    public String viewHomePage(@RegisteredOAuth2AuthorizedClient OAuth2AuthorizedClient authorizedClient,
-	    RedirectAttributes ra, Model model) {
-
-	this.authorizedClient = authorizedClient;
+    public String viewHomePage(RedirectAttributes ra, Model model) {
 
 	List<Patient> patients = new ArrayList<>();
 	try {
