@@ -1,6 +1,0 @@
-spring:
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: ${DOCKER_KEYCLOAK_ISSUER_URL:http://localhost:8888}/auth/realms/master
