@@ -18,6 +18,9 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
 public class ClientuiSecurityConfig {
 
+    // @Autowired
+    // ClientRegistrationRepository clientRegistrationRepository;
+
     @Value("${logout.success.url}")
     String logoutSuccessUrl;
 
@@ -32,6 +35,7 @@ public class ClientuiSecurityConfig {
 		.authorizeHttpRequests(authorize -> authorize
 			.anyRequest().authenticated())
 		.logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+		// .logoutSuccessHandler(oidcLogoutSuccessHandler())
 		.logoutSuccessUrl(logoutSuccessUrl)
 		.invalidateHttpSession(true)
 		.clearAuthentication(true)
@@ -42,4 +46,12 @@ public class ClientuiSecurityConfig {
 		.oauth2Client(Customizer.withDefaults());
 	return http.build();
     }
+
+    /*
+     * public OidcClientInitiatedLogoutSuccessHandler oidcLogoutSuccessHandler() {
+     * OidcClientInitiatedLogoutSuccessHandler successHandler = new
+     * OidcClientInitiatedLogoutSuccessHandler( clientRegistrationRepository);
+     * successHandler.setPostLogoutRedirectUri(logoutSuccessUrl); return
+     * successHandler; }
+     */
 }
