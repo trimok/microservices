@@ -16,21 +16,42 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import feign.RequestInterceptor;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * @author trimok Feign client configuration
+ */
 @Configuration
 @Slf4j
 public class OAuthFeignConfig {
 
+    /**
+     * CLIENT_REGISTRATION_ID
+     */
     public static final String CLIENT_REGISTRATION_ID = "myoauth2";
 
+    /**
+     * oAuth2AuthorizedClientService
+     */
     private final OAuth2AuthorizedClientService oAuth2AuthorizedClientService;
+    /**
+     * clientRegistrationRepository
+     */
     private final ClientRegistrationRepository clientRegistrationRepository;
 
+    /**
+     * @param oAuth2AuthorizedClientService : oAuth2AuthorizedClientService
+     * @param clientRegistrationRepository  : clientRegistrationRepository
+     */
     public OAuthFeignConfig(OAuth2AuthorizedClientService oAuth2AuthorizedClientService,
 	    ClientRegistrationRepository clientRegistrationRepository) {
 	this.oAuth2AuthorizedClientService = oAuth2AuthorizedClientService;
 	this.clientRegistrationRepository = clientRegistrationRepository;
     }
 
+    /**
+     * Interceptor to relay token
+     * 
+     * @return : RequestInterceptor
+     */
     @Bean
     public RequestInterceptor requestInterceptor() {
 
@@ -55,6 +76,11 @@ public class OAuthFeignConfig {
 	};
     }
 
+    /**
+     * Get a manager to authorize request
+     * 
+     * @return : OAuth2AuthorizedClientManager
+     */
     @Bean
     OAuth2AuthorizedClientManager authorizedClientManager() {
 	OAuth2AuthorizedClientProvider authorizedClientProvider = OAuth2AuthorizedClientProviderBuilder.builder()

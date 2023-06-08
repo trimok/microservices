@@ -44,10 +44,24 @@ import com.nimbusds.jose.proc.SecurityContext;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * @author trimok
+ *
+ *
+ *         Security configuration
+ */
 @Configuration
+
 @Slf4j
 public class Oauth2serverSecurityConfig {
 
+    /**
+     * Configuration oauth2server
+     * 
+     * @param http : http
+     * @return : SecurityFilterChain
+     * @throws Exception : exception
+     */
     @Bean
     @Order(1)
     public SecurityFilterChain asSecurityFilterChain(HttpSecurity http) throws Exception {
@@ -64,6 +78,13 @@ public class Oauth2serverSecurityConfig {
 
     }
 
+    /**
+     * Standard security access
+     * 
+     * @param http : http
+     * @return : SecurityFilterChain
+     * @throws Exception : exception
+     */
     @Bean
     @Order(2)
     public SecurityFilterChain appSecurityFilterChain(HttpSecurity http) throws Exception {
@@ -74,6 +95,11 @@ public class Oauth2serverSecurityConfig {
 
     }
 
+    /**
+     * User list (in memory)
+     * 
+     * @return UserDetailsService
+     */
     @Bean
     public UserDetailsService userDetailsService() {
 	var user1 = User.withUsername("user")
@@ -83,11 +109,19 @@ public class Oauth2serverSecurityConfig {
 	return new InMemoryUserDetailsManager(user1);
     }
 
+    /**
+     * @return : PasswordEncoder
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
 	return NoOpPasswordEncoder.getInstance();
     }
 
+    /**
+     * Enregistrement du client (InMemoryRegisteredClientRepository)
+     * 
+     * @return : RegisteredClientRepository
+     */
     @Bean
     public RegisteredClientRepository registeredClientRepository() {
 	RegisteredClient registeredClient = RegisteredClient.withId("myoauth2")
@@ -102,6 +136,11 @@ public class Oauth2serverSecurityConfig {
 	return new InMemoryRegisteredClientRepository(registeredClient);
     }
 
+    /**
+     * Associate roles to claim
+     * 
+     * @return : OAuth2TokenCustomizer
+     */
     @Bean
     OAuth2TokenCustomizer<JwtEncodingContext> jwtCustomizer() {
 	return context -> {
@@ -115,16 +154,32 @@ public class Oauth2serverSecurityConfig {
 	};
     }
 
+    /**
+     * Gives an AuthorizationServerSettings object
+     * 
+     * @return : AuthorizationServerSettings
+     */
     @Bean
     public AuthorizationServerSettings authorizationServerSettings() {
 	return AuthorizationServerSettings.builder().build();
     }
 
+    /**
+     * Gives an JwtDecoder object
+     * 
+     * @param jwkSource : jwkSource
+     * @return : jwtDecoder
+     */
     @Bean
     public JwtDecoder jwtDecoder(JWKSource<SecurityContext> jwkSource) {
 	return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);
     }
 
+    /**
+     * Gives a JWKSource object
+     * 
+     * @return : JWKSource
+     */
     @Bean
     public JWKSource<SecurityContext> jwkSource() {
 	RSAKey rsaKey = generateRsa();
@@ -132,6 +187,11 @@ public class Oauth2serverSecurityConfig {
 	return (jwkSelector, securityContext) -> jwkSelector.select(jwkSet);
     }
 
+    /**
+     * Gives an RSAKey
+     * 
+     * @return : RSAKey
+     */
     public static RSAKey generateRsa() {
 	KeyPair keyPair = generateRsaKey();
 	RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
@@ -139,6 +199,11 @@ public class Oauth2serverSecurityConfig {
 	return new RSAKey.Builder(publicKey).privateKey(privateKey).keyID(UUID.randomUUID().toString()).build();
     }
 
+    /**
+     * Gives an KeyPair object
+     * 
+     * @return : KeyPair
+     */
     static KeyPair generateRsaKey() {
 	KeyPair keyPair;
 	try {

@@ -25,13 +25,28 @@ import com.sante.clientui.service.GatewayService;
 import jakarta.validation.Valid;
 import lombok.Getter;
 
+/**
+ * @author trimok
+ *
+ *         The controller of the aplication
+ */
 @Controller
 @Getter
 public class ClientuiController {
 
+    /**
+     * gatewayService
+     */
     @Autowired
     private GatewayService gatewayService;
 
+    /**
+     * Entry point of the application, return list patients view (home)
+     * 
+     * @param ra    : the redirect attributes
+     * @param model : the model
+     * @return : string
+     */
     @GetMapping("/")
     public String viewHomePage(RedirectAttributes ra, Model model) {
 
@@ -46,6 +61,12 @@ public class ClientuiController {
 	return "home";
     }
 
+    /**
+     * Return add patient view
+     * 
+     * @param model :the model
+     * @return : add patient view
+     */
     @GetMapping("/add")
     public String showNewPatientForm(Model model) {
 	Patient patient = new Patient();
@@ -53,6 +74,15 @@ public class ClientuiController {
 	return "add";
     }
 
+    /**
+     * Patient creation, then redirect list patients view
+     * 
+     * @param patient       : the patient
+     * @param bindingResult : bindingResult
+     * @param ra            : redirect attributes
+     * @param model         : the model
+     * @return : redirect redirect list patients view
+     */
     @PostMapping("/save")
     public String savePatient(@Valid @ModelAttribute("patient") Patient patient,
 	    BindingResult bindingResult, RedirectAttributes ra, Model model) {
@@ -69,6 +99,15 @@ public class ClientuiController {
 	}
     }
 
+    /**
+     * Patient update, then redirect list patients view
+     * 
+     * @param patient       : the patient
+     * @param bindingResult : bindingResult
+     * @param ra            : redirect attributes
+     * @param model         : the model
+     * @return : redirect application entry point
+     */
     @PostMapping("/update")
     public String updatePatient(@Valid @ModelAttribute("patient") Patient patient,
 	    BindingResult bindingResult, RedirectAttributes ra, Model model) {
@@ -85,6 +124,14 @@ public class ClientuiController {
 	}
     }
 
+    /**
+     * Display the update patient view
+     * 
+     * @param id    : id patient
+     * @param ra    : redirect attributes
+     * @param model : the model
+     * @return : the update patient view
+     */
     @GetMapping("/update/{id}")
     public String showFormForUpdate(@PathVariable(value = "id") long id, RedirectAttributes ra, Model model) {
 	Patient patient = null;
@@ -100,17 +147,39 @@ public class ClientuiController {
 	}
     }
 
+    /**
+     * Delete a patient, then redirect list patient view
+     * 
+     * @param id    : the patient id
+     * @param ra    : the redirect attributes
+     * @param model : the model
+     * @return : redirect list patient view
+     */
     @GetMapping("/delete/{id}")
-    public String deleteCourse(@PathVariable(value = "id") long id, RedirectAttributes ra, Model model) {
+    public String deletePatient(@PathVariable(value = "id") long id, RedirectAttributes ra, Model model) {
 	try {
 	    gatewayService.deletePatient(id);
 	} catch (Exception e) {
 	    ra.addAttribute("error_delete_patient", true);
 	    ra.addFlashAttribute("error_delete_patient", true);
 	}
+	try {
+	    gatewayService.deletePatientHistory(id);
+	} catch (Exception e) {
+	    ra.addAttribute("error_delete_patient_history", true);
+	    ra.addFlashAttribute("error_delete_patient_history", true);
+	}
 	return "redirect:/";
     }
 
+    /**
+     * Display add note view
+     * 
+     * @param id    : patient id
+     * @param ra    : redirect attributes
+     * @param model : the model
+     * @return : the add note view
+     */
     @GetMapping("/note/add/{id}")
     public String showNewPatientHistoryForm(@PathVariable(value = "id") long id,
 	    RedirectAttributes ra, Model model) {
@@ -134,6 +203,14 @@ public class ClientuiController {
 	return "note_add";
     }
 
+    /**
+     * Display list notes home page
+     * 
+     * @param id    : patient id
+     * @param ra    : redirect attributes
+     * @param model : the model
+     * @return : list notes home page
+     */
     @GetMapping("/notes/{id}")
     public String viewNotesHomePage(@PathVariable(value = "id") long id, RedirectAttributes ra, Model model) {
 	Patient patient = null;
@@ -162,6 +239,16 @@ public class ClientuiController {
 	}
     }
 
+    /**
+     * Save note and display list notes view
+     * 
+     * @param patientHistory : patient history
+     * @param note           : the note to add
+     * @param bindingResult  : bindingResult
+     * @param ra             : redirect attributes
+     * @param model          : the model
+     * @return : list notes view
+     */
     @PostMapping("/note/save")
     public String savePatientHistory(@Valid @ModelAttribute("patientHistory") PatientHistory patientHistory,
 	    @Valid @ModelAttribute("note") Note note,
@@ -193,6 +280,15 @@ public class ClientuiController {
 	}
     }
 
+    /**
+     * Delete a note, then redirect list notes view
+     * 
+     * @param id           : patient id
+     * @param creationDate : creation date (note id)
+     * @param ra           : redirect attributes
+     * @param model        : the model
+     * @return : list notes view
+     */
     @GetMapping("/note/delete/{id}/{creationDate}")
     public String deleteNote(@PathVariable(value = "id") long id,
 	    @PathVariable(value = "creationDate") LocalDateTime creationDate,
@@ -213,6 +309,15 @@ public class ClientuiController {
 	return "redirect:/notes/" + id;
     }
 
+    /**
+     * Display the notes update view
+     * 
+     * @param id           : patient id
+     * @param creationDate creationDate (note id)
+     * @param ra           : redirect attributes
+     * @param model        : the model
+     * @return : notes update view
+     */
     @GetMapping("/note/update/{id}/{creationDate}")
     public String showNoteFormForUpdate(@PathVariable(value = "id") long id,
 	    @PathVariable(value = "creationDate") LocalDateTime creationDate, RedirectAttributes ra, Model model) {
@@ -251,6 +356,16 @@ public class ClientuiController {
 	}
     }
 
+    /**
+     * Update a note, and redirect list notes view
+     * 
+     * @param patientHistory : patient history
+     * @param note           : note
+     * @param bindingResult  : bindingResult
+     * @param ra             : redirect attributes
+     * @param model          : the model
+     * @return : redirect list notes view
+     */
     @PostMapping("/note/update")
     public String updateNote(@Valid @ModelAttribute("patientHistory") PatientHistory patientHistory,
 	    @Valid @ModelAttribute("note") Note note,
@@ -271,6 +386,14 @@ public class ClientuiController {
 	}
     }
 
+    /**
+     * Calculate the risk, and redirect risk view
+     * 
+     * @param id    : patient id
+     * @param ra    : redirect attributes
+     * @param model : the model
+     * @return : risk view
+     */
     @GetMapping("/risque/{id}")
     public String showRisqueForm(@PathVariable(value = "id") long id, RedirectAttributes ra, Model model) {
 	Patient patient = null;

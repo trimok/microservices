@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * @author trimok
  *
+ *         Security configuration
  */
 @Configuration
 @EnableWebSecurity
@@ -49,6 +50,9 @@ public class PatientSecurityConfig {
      * This converter extracts the list of user roles from a "roles" claim and
      * builds a list of GrantedAuthority
      */
+    /**
+     * @return JwtAuthenticationConverter
+     */
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
 	var jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
@@ -61,6 +65,11 @@ public class PatientSecurityConfig {
 	return jwtAuthenticationConverter;
     }
 
+    /**
+     * Extracting roles from claims
+     * 
+     * @return JwtAuthenticationConverter
+     */
     @SuppressWarnings("unused")
     public JwtAuthenticationConverter jwtAuthenticationConverterForRoles() {
 	Converter<Jwt, Collection<GrantedAuthority>> jwtGrantedAuthoritiesConverter = null;

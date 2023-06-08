@@ -11,6 +11,10 @@
 </head>
 <body>
 
+
+	<div th:if="${error_delete_patient_history}"
+		class="mb-5 alert alert-success text-danger">Impossible
+		de supprimer l'historique du patient</div>	
 	<div th:if="${error_delete_patient}"
 		class="mb-5 alert alert-success text-danger">Impossible de
 		supprimer le patient</div>
@@ -29,6 +33,9 @@
 	<div th:if="${error_get_risque}"
 		class="mb-5 alert alert-success text-danger">Impossible
 		d'obtenir le risque associ&eacute au patient</div>
+	
+		
+		
 
 	<div class="container my-2">
 
