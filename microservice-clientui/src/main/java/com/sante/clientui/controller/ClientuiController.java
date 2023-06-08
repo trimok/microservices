@@ -22,6 +22,7 @@ import com.sante.clientui.model.PatientHistory;
 import com.sante.clientui.model.Risque;
 import com.sante.clientui.service.GatewayService;
 
+import feign.FeignException.FeignClientException;
 import jakarta.validation.Valid;
 import lombok.Getter;
 
@@ -39,6 +40,11 @@ public class ClientuiController {
      */
     @Autowired
     private GatewayService gatewayService;
+
+    @GetMapping("/*")
+    public String redirect() {
+	return "redirect:/";
+    }
 
     /**
      * Entry point of the application, return list patients view (home)
@@ -224,10 +230,21 @@ public class ClientuiController {
 	    try {
 		patientHistory = gatewayService.getPatientHistory(patient.getId());
 	    } catch (Exception e) {
-		// S'il n'y a pas d'historique, on revient quand même dans notes_home
-		// avec une liste vide
-		patientHistory = new PatientHistory();
-		patientHistory.setId(patient.getId());
+		FeignClientException fe = (FeignClientException) e;
+		String message = fe.getMessage();
+
+		// Acces interdit
+		if (message.contains("403")) {
+		    ra.addAttribute("error_get_patient_history", true);
+		    ra.addFlashAttribute("error_get_patient_history", true);
+		    return "redirect:/";
+		} else {
+		    // Acces autorisé, mais historique absent
+		    // S'il n'y a pas d'historique, on revient quand même dans notes_home
+		    // avec une liste vide
+		    patientHistory = new PatientHistory();
+		    patientHistory.setId(patient.getId());
+		}
 	    }
 
 	    model.addAttribute("patientHistory", patientHistory);

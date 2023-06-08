@@ -116,7 +116,12 @@ public class Oauth2serverSecurityConfig {
 		.roles("GATEWAY_USER", "PATIENT_USER", "PATIENT_HISTORY_USER")
 		.build();
 
-	return new InMemoryUserDetailsManager(total, patient, history);
+	var nogateway = User.withUsername("nogateway")
+		.password("nogateway")
+		.roles("PATIENT_USER", "PATIENT_HISTORY_USER", "EXPERT_USER")
+		.build();
+
+	return new InMemoryUserDetailsManager(total, patient, history, nogateway);
     }
 
     /**

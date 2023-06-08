@@ -16,6 +16,12 @@
 </head>
 <body>
 	<div class="container">
+
+		<div class="col-md-12 bg-light text-end">
+			<a th:href="@{/logout}" class="btn btn-danger"> Logout</a>
+		</div>
+
+		<br /> <br />
 		<h2>Modifier un patient</h2>
 
 		<form action="#" th:action="@{/update}" th:object="${patient}"
@@ -48,10 +54,10 @@
 
 			<!--  Genre -->
 			<div>
-				<label for="genre">Genre</label> 
-				<select th:field="*{genre}" class="form-select">
-				    <option th:value="'F'" th:text="Femme" th:selected="true"></option>
-					<option th:value="'M'" th:text="Homme"></option>					
+				<label for="genre">Genre</label> <select th:field="*{genre}"
+					class="form-select">
+					<option th:value="'F'" th:text="Femme" th:selected="true"></option>
+					<option th:value="'M'" th:text="Homme"></option>
 				</select>
 				<ul>
 					<li th:each="err : ${#fields.errors('genre')}" th:text="${err}"
@@ -61,8 +67,9 @@
 
 			<div>
 				<label for="dateNaissance">Date de naissance</label> <br> <input
-					type="date" min="1900-01-01" max="2010-01-01" th:field="*{dateNaissance}" id="dateNaissance"
-					placeholder="Date de naissance"  required>
+					type="date" min="1900-01-01" max="2010-01-01"
+					th:field="*{dateNaissance}" id="dateNaissance"
+					placeholder="Date de naissance" required>
 				<ul>
 					<li th:each="err : ${#fields.errors('dateNaissance')}"
 						th:text="${err}" class="error" />
@@ -82,7 +89,8 @@
 
 			<!--  Telephone -->
 			<div>
-				<label for="telephone">Telephone</label> <input type="tel" pattern="[0-9]{2} [0-9]{2} [0-9]{2} [0-9]{2} [0-9]{2}"  
+				<label for="telephone">Telephone</label> <input type="tel"
+					pattern="[0-9]{2} [0-9]{2} [0-9]{2} [0-9]{2} [0-9]{2}"
 					th:field="*{telephone}" id="telephone" placeholder="Telephone"
 					class="form-control mb-4 col-4" required>
 				<ul>
