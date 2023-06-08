@@ -102,11 +102,21 @@ public class Oauth2serverSecurityConfig {
      */
     @Bean
     public UserDetailsService userDetailsService() {
-	var user1 = User.withUsername("user")
-		.password("password")
+	var total = User.withUsername("total")
+		.password("total")
 		.roles("GATEWAY_USER", "PATIENT_USER", "PATIENT_HISTORY_USER", "EXPERT_USER")
 		.build();
-	return new InMemoryUserDetailsManager(user1);
+	var patient = User.withUsername("patient")
+		.password("patient")
+		.roles("GATEWAY_USER", "PATIENT_USER")
+		.build();
+
+	var history = User.withUsername("history")
+		.password("history")
+		.roles("GATEWAY_USER", "PATIENT_USER", "PATIENT_HISTORY_USER")
+		.build();
+
+	return new InMemoryUserDetailsManager(total, patient, history);
     }
 
     /**
