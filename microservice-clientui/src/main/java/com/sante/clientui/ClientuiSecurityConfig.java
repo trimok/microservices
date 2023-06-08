@@ -31,6 +31,7 @@ public class ClientuiSecurityConfig {
      */
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
 	http
 		.authorizeHttpRequests(authorize -> authorize
 			.anyRequest().authenticated())
