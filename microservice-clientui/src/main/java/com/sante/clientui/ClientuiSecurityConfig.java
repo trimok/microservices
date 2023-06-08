@@ -1,5 +1,6 @@
 package com.sante.clientui;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +18,9 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
 public class ClientuiSecurityConfig {
 
+    @Value("${logout.success.url}")
+    String logoutSuccessUrl;
+
     /**
      * @param http : http
      * @return : a SecurityFilterChain object
@@ -28,7 +32,7 @@ public class ClientuiSecurityConfig {
 		.authorizeHttpRequests(authorize -> authorize
 			.anyRequest().authenticated())
 		.logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-		.logoutSuccessUrl("http://localhost:8080/")
+		.logoutSuccessUrl(logoutSuccessUrl)
 		.invalidateHttpSession(true)
 		.clearAuthentication(true)
 		.deleteCookies("JSESSIONID")

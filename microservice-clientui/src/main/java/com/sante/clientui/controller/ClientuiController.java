@@ -41,11 +41,6 @@ public class ClientuiController {
     @Autowired
     private GatewayService gatewayService;
 
-    @GetMapping("/*")
-    public String redirect() {
-	return "redirect:/";
-    }
-
     /**
      * Entry point of the application, return list patients view (home)
      * 
