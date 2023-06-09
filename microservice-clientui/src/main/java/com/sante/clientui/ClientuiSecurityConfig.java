@@ -18,9 +18,6 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
 public class ClientuiSecurityConfig {
 
-    // @Autowired
-    // ClientRegistrationRepository clientRegistrationRepository;
-
     @Value("${logout.success.url}")
     String logoutSuccessUrl;
 
@@ -36,23 +33,11 @@ public class ClientuiSecurityConfig {
 		.authorizeHttpRequests(authorize -> authorize
 			.anyRequest().authenticated())
 		.logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-		// .logoutSuccessHandler(oidcLogoutSuccessHandler())
-		.logoutSuccessUrl(logoutSuccessUrl)
-		.invalidateHttpSession(true)
-		.clearAuthentication(true)
-		.deleteCookies("JSESSIONID")
-		.permitAll()
+		.clearAuthentication(true).logoutSuccessUrl(logoutSuccessUrl)
+		.deleteCookies("JSESSIONID").invalidateHttpSession(true).permitAll()
 		.and()
 		.oauth2Login(oauth2Login -> oauth2Login.loginPage("/oauth2/authorization/myoauth2"))
 		.oauth2Client(Customizer.withDefaults());
 	return http.build();
     }
-
-    /*
-     * public OidcClientInitiatedLogoutSuccessHandler oidcLogoutSuccessHandler() {
-     * OidcClientInitiatedLogoutSuccessHandler successHandler = new
-     * OidcClientInitiatedLogoutSuccessHandler( clientRegistrationRepository);
-     * successHandler.setPostLogoutRedirectUri(logoutSuccessUrl); return
-     * successHandler; }
-     */
 }

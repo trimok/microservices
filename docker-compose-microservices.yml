@@ -61,6 +61,7 @@ services:
     environment:
         DOCKER_CONFIG_SERVER_URL: http://microservice-configserver:9101
         DOCKER_EUREKA_SERVER_URL: http://microservice-eurekaserver:8761/eureka
+        DOCKER_ZIPKIN_URL: http://zipkin:9411/api/v2/spans
     depends_on:
       microservice-configserver:
        condition: service_healthy
@@ -177,7 +178,7 @@ services:
       DOCKER_EUREKA_SERVER_URL: http://microservice-eurekaserver:8761/eureka
       DOCKER_ZIPKIN_URL: http://zipkin:9411/api/v2/spans
       DOCKER_ISSUER_URI: http://microservice-oauth2server:9000
-      DOCKER_LOGOUT_SUCCESS_URL : http://microservice-clientui:8080
+      DOCKER_LOGOUT_SUCCESS_URL : http://127.0.0.1:8080/
     image: clientui
     depends_on:
       microservice-configserver:

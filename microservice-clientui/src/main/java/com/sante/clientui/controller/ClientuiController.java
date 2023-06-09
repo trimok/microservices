@@ -318,7 +318,7 @@ public class ClientuiController {
 	    ra.addAttribute("error_delete_note", true);
 	    ra.addFlashAttribute("error_delete_note", true);
 	}
-	return "redirect:/notes/" + id;
+	return "redirect:/homenotes/" + id;
     }
 
     /**
@@ -361,7 +361,7 @@ public class ClientuiController {
 	if (optionalNote.isEmpty()) {
 	    ra.addAttribute("error_get_note", true);
 	    ra.addFlashAttribute("error_get_note", true);
-	    return "redirect:/notes/" + id;
+	    return "redirect:/homenotes/" + id;
 	} else {
 	    model.addAttribute("note", optionalNote.get());
 	    return "note_update";
@@ -394,7 +394,7 @@ public class ClientuiController {
 		ra.addAttribute("error_update_note", true);
 		ra.addFlashAttribute("error_update_note", true);
 	    }
-	    return "redirect:/notes/" + patientHistory.getId();
+	    return "redirect:/homenotes/" + patientHistory.getId();
 	}
     }
 
