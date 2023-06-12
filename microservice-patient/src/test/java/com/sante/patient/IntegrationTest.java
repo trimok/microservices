@@ -65,6 +65,7 @@ public class IntegrationTest {
 	patientToBeSavedNotValid = new Patient(null, "Tristan", "Mokobodzki", dateNaissance, "MF",
 		"1 rue du Louvre, PARIS",
 		"06 01 02 08 09");
+	patientService.deleteAllPatient();
     }
 
     @AfterEach
@@ -214,10 +215,10 @@ public class IntegrationTest {
     @Test
     public void deletePatient() throws Exception {
 	// Creation d'un patient
-	patientService.createPatient(patient);
+	Patient patientCreated = patientService.createPatient(patient);
 
 	mockMvc
-		.perform(MockMvcRequestBuilders.delete("/patient/1")
+		.perform(MockMvcRequestBuilders.delete("/patient/" + patientCreated.getId())
 			.with(jwt().authorities(new SimpleGrantedAuthority(ROLE_PATIENT_USER))))
 		.andExpect(status().is(200)).andReturn();
     }
@@ -225,8 +226,10 @@ public class IntegrationTest {
     @Test
     public void deletePatient_PatientNotFoundException() throws Exception {
 
+	// Creation d'un patient
+	Patient patientCreated = patientService.createPatient(patient);
 	mockMvc
-		.perform(MockMvcRequestBuilders.delete("/patient/1")
+		.perform(MockMvcRequestBuilders.delete("/patient/1000")
 			.with(jwt().authorities(new SimpleGrantedAuthority(ROLE_PATIENT_USER))))
 		.andExpect(status().is(404));
     }

@@ -22,7 +22,6 @@ import com.sante.clientui.model.PatientHistory;
 import com.sante.clientui.model.Risque;
 import com.sante.clientui.service.GatewayService;
 
-import feign.FeignException.FeignClientException;
 import jakarta.validation.Valid;
 import lombok.Getter;
 
@@ -55,8 +54,7 @@ public class ClientuiController {
 	try {
 	    patients = gatewayService.getPatients();
 	} catch (Exception e) {
-	    FeignClientException fe = (FeignClientException) e;
-	    String message = fe.getMessage();
+	    String message = e.getMessage();
 
 	    // Acces interdit
 	    if (message.contains("403")) {
@@ -233,8 +231,7 @@ public class ClientuiController {
 	    try {
 		patientHistory = gatewayService.getPatientHistory(patient.getId());
 	    } catch (Exception e) {
-		FeignClientException fe = (FeignClientException) e;
-		String message = fe.getMessage();
+		String message = e.getMessage();
 
 		// Acces interdit
 		if (message.contains("403")) {
@@ -430,13 +427,13 @@ public class ClientuiController {
 	try {
 	    patientHistory = gatewayService.getPatientHistory(id);
 	} catch (Exception e) {
-	    FeignClientException fe = (FeignClientException) e;
-	    String message = fe.getMessage();
+	    String message = e.getMessage();
 
 	    // Acces interdit
 	    if (message.contains("403")) {
 		ra.addAttribute("error_get_patient_history_access_forbidden", true);
 		ra.addFlashAttribute("error_get_patient_history_access_forbidden", true);
+		return "redirect:/";
 	    }
 
 	    patientHistory = new PatientHistory();
@@ -449,8 +446,7 @@ public class ClientuiController {
 	    risque = gatewayService.getRisque(patientDao);
 	} catch (Exception e) {
 
-	    FeignClientException fe = (FeignClientException) e;
-	    String message = fe.getMessage();
+	    String message = e.getMessage();
 
 	    // Acces interdit
 	    if (message.contains("403")) {
