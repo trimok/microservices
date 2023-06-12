@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.0.1</version>
+		<version>3.1.0</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.sante</groupId>
@@ -16,7 +16,7 @@
 		<java.version>20</java.version>
 		<maven.compiler.source>20</maven.compiler.source>
 		<maven.compiler.target>20</maven.compiler.target>
-		<spring-cloud.version>2022.0.3-SNAPSHOT</spring-cloud.version>
+		<spring-cloud.version>2022.0.3</spring-cloud.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -120,14 +120,4 @@
 			</plugin>
 		</plugins>
 	</build>
-	<repositories>
-		<repository>
-			<id>spring-snapshots</id>
-			<name>Spring Snapshots</name>
-			<url>https://repo.spring.io/snapshot</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-		</repository>
-	</repositories>
 </project>

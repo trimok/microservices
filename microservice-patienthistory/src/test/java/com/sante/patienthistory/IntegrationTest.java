@@ -2,6 +2,7 @@ package com.sante.patienthistory;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDateTime;
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -42,6 +44,8 @@ public class IntegrationTest {
 
     @Autowired
     IPatientHistoryService patientHistoryService;
+
+    private final static String ROLE_PATIENT_HISTORY_USER = "ROLE_PATIENT_HISTORY_USER";
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
     private LocalDateTime creationDate = LocalDateTime.parse("04/12/1957 11:10:07", formatter);
@@ -87,7 +91,8 @@ public class IntegrationTest {
 	PatientHistory patientHistoryCreated = patientHistoryService.createPatientHistory(patientHistoryDatabase);
 
 	MvcResult mvcResult = mockMvc
-		.perform(MockMvcRequestBuilders.get("/patientHistory/" + patientHistoryCreated.getId()))
+		.perform(MockMvcRequestBuilders.get("/patientHistory/" + patientHistoryCreated.getId())
+			.with(jwt().authorities(new SimpleGrantedAuthority(ROLE_PATIENT_HISTORY_USER))))
 		.andExpect(status().is(200)).andReturn();
 
 	PatientHistory patientHistory = Util.getPatientHistoryFromMvcResult(mvcResult);
@@ -98,7 +103,8 @@ public class IntegrationTest {
     public void getPatientHistory_PatientHistoryNotFoundException() throws Exception {
 
 	mockMvc
-		.perform(MockMvcRequestBuilders.get("/patientHistory/2"))
+		.perform(MockMvcRequestBuilders.get("/patientHistory/2")
+			.with(jwt().authorities(new SimpleGrantedAuthority(ROLE_PATIENT_HISTORY_USER))))
 		.andExpect(status().is(404));
     }
 
@@ -107,6 +113,7 @@ public class IntegrationTest {
 
 	MvcResult mvcResult = mockMvc
 		.perform(MockMvcRequestBuilders.post("/patientHistory")
+			.with(jwt().authorities(new SimpleGrantedAuthority(ROLE_PATIENT_HISTORY_USER)))
 			.content(Util.mapper.writeValueAsString(patientHistoryDatabase))
 			.contentType(MediaType.APPLICATION_JSON)
 			.accept(MediaType.APPLICATION_JSON))
@@ -122,6 +129,7 @@ public class IntegrationTest {
 	    throws Exception {
 
 	mockMvc.perform(MockMvcRequestBuilders.post("/patientHistory")
+		.with(jwt().authorities(new SimpleGrantedAuthority(ROLE_PATIENT_HISTORY_USER)))
 		.content(Util.mapper.writeValueAsString(patientHistoryNoDatabase))
 		.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
 		.andExpect(status().is(400)).andReturn();
@@ -136,6 +144,7 @@ public class IntegrationTest {
 
 	MvcResult mvcResult = mockMvc
 		.perform(MockMvcRequestBuilders.put("/patientHistory")
+			.with(jwt().authorities(new SimpleGrantedAuthority(ROLE_PATIENT_HISTORY_USER)))
 			.content(Util.mapper.writeValueAsString(patientHistoryToBeUpdated))
 			.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
 		.andExpect(status().is(200)).andReturn();
@@ -156,6 +165,7 @@ public class IntegrationTest {
 	patientHistoryToBeUpdated.setId(2L);
 
 	mockMvc.perform(MockMvcRequestBuilders.put("/patientHistory")
+		.with(jwt().authorities(new SimpleGrantedAuthority(ROLE_PATIENT_HISTORY_USER)))
 		.content(Util.mapper.writeValueAsString(patientHistoryToBeUpdated))
 		.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
 		.andExpect(status().is(404)).andReturn();
@@ -166,6 +176,7 @@ public class IntegrationTest {
 
 	MvcResult mvcResult = mockMvc
 		.perform(MockMvcRequestBuilders.post("/patientHistory/add")
+			.with(jwt().authorities(new SimpleGrantedAuthority(ROLE_PATIENT_HISTORY_USER)))
 			.content(Util.mapper.writeValueAsString(patientHistoryDatabase))
 			.contentType(MediaType.APPLICATION_JSON)
 			.accept(MediaType.APPLICATION_JSON))
@@ -186,6 +197,7 @@ public class IntegrationTest {
 
 	MvcResult mvcResult = mockMvc
 		.perform(MockMvcRequestBuilders.post("/patientHistory/add")
+			.with(jwt().authorities(new SimpleGrantedAuthority(ROLE_PATIENT_HISTORY_USER)))
 			.content(Util.mapper.writeValueAsString(patientHistoryToBeUpdated))
 			.contentType(MediaType.APPLICATION_JSON)
 			.accept(MediaType.APPLICATION_JSON))
@@ -201,7 +213,8 @@ public class IntegrationTest {
 	// Creation d'un patientHistory
 	patientHistoryService.createPatientHistory(patientHistoryDatabase);
 
-	mockMvc.perform(MockMvcRequestBuilders.delete("/patientHistory/1"))
+	mockMvc.perform(MockMvcRequestBuilders.delete("/patientHistory/1")
+		.with(jwt().authorities(new SimpleGrantedAuthority(ROLE_PATIENT_HISTORY_USER))))
 		.andExpect(status().is(200)).andReturn();
     }
 
@@ -209,7 +222,8 @@ public class IntegrationTest {
     public void deletePatientHistory_PatientHistoryNotFoundException()
 	    throws Exception {
 
-	mockMvc.perform(MockMvcRequestBuilders.delete("/patientHistory/1"))
+	mockMvc.perform(MockMvcRequestBuilders.delete("/patientHistory/1")
+		.with(jwt().authorities(new SimpleGrantedAuthority(ROLE_PATIENT_HISTORY_USER))))
 		.andExpect(status().is(404));
     }
 
@@ -223,6 +237,7 @@ public class IntegrationTest {
 
 	MvcResult mvcResult = mockMvc
 		.perform(MockMvcRequestBuilders.put("/patientHistory/note")
+			.with(jwt().authorities(new SimpleGrantedAuthority(ROLE_PATIENT_HISTORY_USER)))
 			.content(Util.mapper.writeValueAsString(patientHistoryToBeUpdated))
 			.contentType(MediaType.APPLICATION_JSON)
 			.accept(MediaType.APPLICATION_JSON))
@@ -242,6 +257,7 @@ public class IntegrationTest {
 
 	mockMvc
 		.perform(MockMvcRequestBuilders.put("/patientHistory/note")
+			.with(jwt().authorities(new SimpleGrantedAuthority(ROLE_PATIENT_HISTORY_USER)))
 			.content(Util.mapper.writeValueAsString(patientHistoryToBeUpdated))
 			.contentType(MediaType.APPLICATION_JSON)
 			.accept(MediaType.APPLICATION_JSON))
@@ -256,6 +272,7 @@ public class IntegrationTest {
 
 	mockMvc
 		.perform(MockMvcRequestBuilders.put("/patientHistory/note")
+			.with(jwt().authorities(new SimpleGrantedAuthority(ROLE_PATIENT_HISTORY_USER)))
 			.content(Util.mapper.writeValueAsString(patientHistoryToBeUpdated))
 			.contentType(MediaType.APPLICATION_JSON)
 			.accept(MediaType.APPLICATION_JSON))
@@ -271,6 +288,7 @@ public class IntegrationTest {
 
 	mockMvc
 		.perform(MockMvcRequestBuilders.put("/patientHistory/note")
+			.with(jwt().authorities(new SimpleGrantedAuthority(ROLE_PATIENT_HISTORY_USER)))
 			.content(Util.mapper.writeValueAsString(patientHistoryToBeUpdated))
 			.contentType(MediaType.APPLICATION_JSON)
 			.accept(MediaType.APPLICATION_JSON))
@@ -285,6 +303,7 @@ public class IntegrationTest {
 
 	MvcResult mvcResult = mockMvc
 		.perform(MockMvcRequestBuilders.delete("/patientHistory/note")
+			.with(jwt().authorities(new SimpleGrantedAuthority(ROLE_PATIENT_HISTORY_USER)))
 			.content(Util.mapper.writeValueAsString(patientHistoryToBeUpdated))
 			.contentType(MediaType.APPLICATION_JSON)
 			.accept(MediaType.APPLICATION_JSON))
@@ -304,6 +323,7 @@ public class IntegrationTest {
 
 	mockMvc
 		.perform(MockMvcRequestBuilders.delete("/patientHistory/note")
+			.with(jwt().authorities(new SimpleGrantedAuthority(ROLE_PATIENT_HISTORY_USER)))
 			.content(Util.mapper.writeValueAsString(patientHistoryToBeUpdated))
 			.contentType(MediaType.APPLICATION_JSON)
 			.accept(MediaType.APPLICATION_JSON))
@@ -318,6 +338,7 @@ public class IntegrationTest {
 
 	mockMvc
 		.perform(MockMvcRequestBuilders.delete("/patientHistory/note")
+			.with(jwt().authorities(new SimpleGrantedAuthority(ROLE_PATIENT_HISTORY_USER)))
 			.content(Util.mapper.writeValueAsString(patientHistoryToBeUpdated))
 			.contentType(MediaType.APPLICATION_JSON)
 			.accept(MediaType.APPLICATION_JSON))
@@ -333,6 +354,7 @@ public class IntegrationTest {
 
 	mockMvc
 		.perform(MockMvcRequestBuilders.delete("/patientHistory/note")
+			.with(jwt().authorities(new SimpleGrantedAuthority(ROLE_PATIENT_HISTORY_USER)))
 			.content(Util.mapper.writeValueAsString(patientHistoryToBeUpdated))
 			.contentType(MediaType.APPLICATION_JSON)
 			.accept(MediaType.APPLICATION_JSON))

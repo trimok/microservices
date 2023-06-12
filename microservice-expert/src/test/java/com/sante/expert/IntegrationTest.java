@@ -2,6 +2,7 @@ package com.sante.expert;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.List;
@@ -20,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -49,6 +51,8 @@ public class IntegrationTest {
     @Autowired
     IDeclencheurService declencheurService;
     private List<String> keywords = Util.getKeywords();
+
+    private final static String ROLE_EXPERT_USER = "ROLE_EXPERT_USER";
 
     @BeforeEach
     public void beforeEach() {
@@ -131,7 +135,9 @@ public class IntegrationTest {
 	PatientDao patientDao = Util.getPatientDao(genre, age, nbDeclencheur);
 
 	MvcResult mvcResult = mockMvc
-		.perform(MockMvcRequestBuilders.post("/expert").content(Util.mapper.writeValueAsString(patientDao))
+		.perform(MockMvcRequestBuilders.post("/expert")
+			.with(jwt().authorities(new SimpleGrantedAuthority(ROLE_EXPERT_USER)))
+			.content(Util.mapper.writeValueAsString(patientDao))
 			.contentType(MediaType.APPLICATION_JSON)
 			.accept(MediaType.APPLICATION_JSON))
 		.andExpect(status().is(200)).andReturn();
@@ -149,6 +155,7 @@ public class IntegrationTest {
 	PatientDao patientDao = Util.getPatientDao("A", 300, 0);
 
 	mockMvc.perform(MockMvcRequestBuilders.post("/expert")
+		.with(jwt().authorities(new SimpleGrantedAuthority(ROLE_EXPERT_USER)))
 		.content(Util.mapper.writeValueAsString(patientDao))
 		.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
 		.andExpect(status().is(404)).andReturn();

@@ -43,7 +43,7 @@ import com.sante.expert.service.IDeclencheurService;
 import com.sante.expert.service.IRegleService;
 
 @WebMvcTest({ ExpertController.class })
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 @ExtendWith(MockitoExtension.class)
 @TestInstance(Lifecycle.PER_CLASS)
 @TestMethodOrder(value = org.junit.jupiter.api.MethodOrderer.MethodName.class)

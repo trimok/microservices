@@ -15,7 +15,7 @@
 	<description>Serveur de configuration</description>
 	<properties>
 		<java.version>20</java.version>
-		<spring-cloud.version>2022.0.3-SNAPSHOT</spring-cloud.version>
+		<spring-cloud.version>2022.0.3</spring-cloud.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -49,15 +49,4 @@
 			</plugin>
 		</plugins>
 	</build>
-	<repositories>
-		<repository>
-			<id>spring-snapshots</id>
-			<name>Spring Snapshots</name>
-			<url>https://repo.spring.io/snapshot</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-		</repository>
-	</repositories>
-
 </project>

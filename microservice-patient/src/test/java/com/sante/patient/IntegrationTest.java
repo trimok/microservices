@@ -2,11 +2,13 @@ package com.sante.patient;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -38,6 +41,10 @@ public class IntegrationTest {
 
     @Autowired
     IPatientService patientService;
+
+    private final static String ROLE_PATIENT_USER = "ROLE_PATIENT_USER";
+
+    private Map<String, Object> sessionAttrs = null;
 
     private Patient patientDatabase;
     private Patient patient;
@@ -74,7 +81,8 @@ public class IntegrationTest {
 	Patient patientCreated = patientService.createPatient(patient);
 
 	MvcResult mvcResult = mockMvc
-		.perform(MockMvcRequestBuilders.get("/patient"))
+		.perform(MockMvcRequestBuilders.get("/patient")
+			.with(jwt().authorities(new SimpleGrantedAuthority(ROLE_PATIENT_USER))))
 		.andExpect(status().is(200)).andReturn();
 
 	List<Patient> patientsReturn = Util.getListPatientFromMvcResult(mvcResult);
@@ -90,7 +98,8 @@ public class IntegrationTest {
 	Patient patientCreated = patientService.createPatient(patient);
 
 	MvcResult mvcResult = mockMvc
-		.perform(MockMvcRequestBuilders.get("/patient/" + patientCreated.getId()))
+		.perform(MockMvcRequestBuilders.get("/patient/" + patientCreated.getId())
+			.with(jwt().authorities(new SimpleGrantedAuthority(ROLE_PATIENT_USER))))
 		.andExpect(status().is(200)).andReturn();
 
 	Patient patient = Util.getPatientFromMvcResult(mvcResult);
@@ -101,7 +110,8 @@ public class IntegrationTest {
     public void getPatient_PatientNotFoundException() throws Exception {
 
 	mockMvc
-		.perform(MockMvcRequestBuilders.get("/patient/2"))
+		.perform(MockMvcRequestBuilders.get("/patient/2")
+			.with(jwt().authorities(new SimpleGrantedAuthority(ROLE_PATIENT_USER))))
 		.andExpect(status().is(404));
     }
 
@@ -109,7 +119,9 @@ public class IntegrationTest {
     public void savePatient() throws Exception {
 
 	MvcResult mvcResult = mockMvc
-		.perform(MockMvcRequestBuilders.post("/patient").content(Util.mapper.writeValueAsString(patient))
+		.perform(MockMvcRequestBuilders.post("/patient")
+			.with(jwt().authorities(new SimpleGrantedAuthority(ROLE_PATIENT_USER)))
+			.content(Util.mapper.writeValueAsString(patient))
 			.contentType(MediaType.APPLICATION_JSON)
 			.accept(MediaType.APPLICATION_JSON))
 		.andExpect(status().is(201)).andReturn();
@@ -125,6 +137,7 @@ public class IntegrationTest {
 	mockMvc
 		.perform(
 			MockMvcRequestBuilders.post("/patient")
+				.with(jwt().authorities(new SimpleGrantedAuthority(ROLE_PATIENT_USER)))
 				.content(Util.mapper.writeValueAsString(patientToBeSavedNotValid))
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
@@ -137,6 +150,7 @@ public class IntegrationTest {
 	mockMvc
 		.perform(
 			MockMvcRequestBuilders.post("/patient")
+				.with(jwt().authorities(new SimpleGrantedAuthority(ROLE_PATIENT_USER)))
 				.content(Util.mapper.writeValueAsString(patientDatabase))
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
@@ -151,10 +165,12 @@ public class IntegrationTest {
 	patientToBeUpdated.setPrenom("Daniel");
 
 	MvcResult mvcResult = mockMvc
-		.perform(MockMvcRequestBuilders.put("/patient")
-			.content(Util.mapper.writeValueAsString(patientToBeUpdated))
-			.contentType(MediaType.APPLICATION_JSON)
-			.accept(MediaType.APPLICATION_JSON))
+		.perform(
+			MockMvcRequestBuilders.put("/patient")
+				.with(jwt().authorities(new SimpleGrantedAuthority(ROLE_PATIENT_USER)))
+				.content(Util.mapper.writeValueAsString(patientToBeUpdated))
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
 		.andExpect(status().is(200)).andReturn();
 
 	Patient patientUpdated = Util.getPatientFromMvcResult(mvcResult);
@@ -172,6 +188,7 @@ public class IntegrationTest {
 
 	mockMvc
 		.perform(MockMvcRequestBuilders.put("/patient")
+			.with(jwt().authorities(new SimpleGrantedAuthority(ROLE_PATIENT_USER)))
 			.content(Util.mapper.writeValueAsString(patientToBeUpdated))
 			.contentType(MediaType.APPLICATION_JSON)
 			.accept(MediaType.APPLICATION_JSON))
@@ -187,6 +204,7 @@ public class IntegrationTest {
 	mockMvc
 		.perform(
 			MockMvcRequestBuilders.put("/patient")
+				.with(jwt().authorities(new SimpleGrantedAuthority(ROLE_PATIENT_USER)))
 				.content(Util.mapper.writeValueAsString(patientNotValidToBeUpdated))
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
@@ -199,7 +217,8 @@ public class IntegrationTest {
 	patientService.createPatient(patient);
 
 	mockMvc
-		.perform(MockMvcRequestBuilders.delete("/patient/1"))
+		.perform(MockMvcRequestBuilders.delete("/patient/1")
+			.with(jwt().authorities(new SimpleGrantedAuthority(ROLE_PATIENT_USER))))
 		.andExpect(status().is(200)).andReturn();
     }
 
@@ -207,7 +226,8 @@ public class IntegrationTest {
     public void deletePatient_PatientNotFoundException() throws Exception {
 
 	mockMvc
-		.perform(MockMvcRequestBuilders.delete("/patient/1"))
+		.perform(MockMvcRequestBuilders.delete("/patient/1")
+			.with(jwt().authorities(new SimpleGrantedAuthority(ROLE_PATIENT_USER))))
 		.andExpect(status().is(404));
     }
 

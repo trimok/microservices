@@ -29,7 +29,7 @@ import lombok.Getter;
 /**
  * @author trimok
  *
- *         The controller of the aplication
+ *         The controller of the application
  */
 @Controller
 @Getter
@@ -55,7 +55,15 @@ public class ClientuiController {
 	try {
 	    patients = gatewayService.getPatients();
 	} catch (Exception e) {
-	    model.addAttribute("error_get_list_patient", true);
+	    FeignClientException fe = (FeignClientException) e;
+	    String message = fe.getMessage();
+
+	    // Acces interdit
+	    if (message.contains("403")) {
+		model.addAttribute("error_get_list_patient_access_forbidden", true);
+	    } else {
+		model.addAttribute("error_get_list_patient", true);
+	    }
 	}
 
 	model.addAttribute("patients", patients);
@@ -230,8 +238,8 @@ public class ClientuiController {
 
 		// Acces interdit
 		if (message.contains("403")) {
-		    ra.addAttribute("error_get_patient_history", true);
-		    ra.addFlashAttribute("error_get_patient_history", true);
+		    ra.addAttribute("error_get_patient_history_access_forbidden", true);
+		    ra.addFlashAttribute("error_get_patient_history_access_forbidden", true);
 		    return "redirect:/";
 		} else {
 		    // Acces autorisé, mais historique absent
@@ -422,6 +430,15 @@ public class ClientuiController {
 	try {
 	    patientHistory = gatewayService.getPatientHistory(id);
 	} catch (Exception e) {
+	    FeignClientException fe = (FeignClientException) e;
+	    String message = fe.getMessage();
+
+	    // Acces interdit
+	    if (message.contains("403")) {
+		ra.addAttribute("error_get_patient_history_access_forbidden", true);
+		ra.addFlashAttribute("error_get_patient_history_access_forbidden", true);
+	    }
+
 	    patientHistory = new PatientHistory();
 	    patientHistory.setId(patient.getId());
 	}
@@ -431,8 +448,18 @@ public class ClientuiController {
 	try {
 	    risque = gatewayService.getRisque(patientDao);
 	} catch (Exception e) {
-	    ra.addAttribute("error_get_risque", true);
-	    ra.addFlashAttribute("error_get_risque", true);
+
+	    FeignClientException fe = (FeignClientException) e;
+	    String message = fe.getMessage();
+
+	    // Acces interdit
+	    if (message.contains("403")) {
+		ra.addAttribute("error_get_risque_access_forbidden", true);
+		ra.addFlashAttribute("error_get_risque_access_forbidden", true);
+	    } else {
+		ra.addAttribute("error_get_risque", true);
+		ra.addFlashAttribute("error_get_risque", true);
+	    }
 	    return "redirect:/";
 	}
 
