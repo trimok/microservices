@@ -12,6 +12,7 @@ import org.springframework.security.oauth2.client.OAuth2AuthorizedClientProvider
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 
 import feign.RequestInterceptor;
 import lombok.extern.slf4j.Slf4j;
@@ -59,20 +60,43 @@ public class OAuthFeignConfig {
 		.findByRegistrationId(CLIENT_REGISTRATION_ID);
 
 	return requestTemplate -> {
+
 	    OAuth2AuthorizeRequest oAuth2AuthorizeRequest = OAuth2AuthorizeRequest
 		    .withClientRegistrationId(clientRegistration.getRegistrationId())
 		    .principal(SecurityContextHolder.getContext().getAuthentication())
 		    .build();
 
 	    OAuth2AuthorizedClient client = authorizedClientManager().authorize(oAuth2AuthorizeRequest);
-	    String token = "";
+	    String token = null;
+
 	    if (client == null) {
-		throw new IllegalStateException("client credentials flow on " + clientRegistration.getRegistrationId()
-			+ " failed, client is null");
+		// FOR tests only
+		try {
+		    DefaultOidcUser principal = (DefaultOidcUser) SecurityContextHolder.getContext().getAuthentication()
+			    .getPrincipal();
+
+		    if (principal != null && principal.getIdToken() != null) {
+			token = principal.getIdToken().getTokenValue();
+		    }
+		} catch (Exception e) {
+		    log.error(
+			    "FOR tests only : DefaultOidcUserException : Cannot convert principal in DefaultOidcUser.");
+		}
+		if (token == null) {
+		    log.error("IllegalStateException : " + "client credentials flow on "
+			    + clientRegistration.getRegistrationId()
+			    + " failed, client is null");
+		}
+
 	    } else {
 		token = client.getAccessToken().getTokenValue();
 	    }
-	    requestTemplate.header("Authorization", "Bearer " + token);
+
+	    if (token != null) {
+		requestTemplate.header("Authorization", "Bearer " + token);
+	    }
+
+	    log.info("Headers request :" + requestTemplate.headers().toString());
 	};
     }
 

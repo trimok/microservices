@@ -3,6 +3,7 @@ package com.sante.clientui.controller;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.sante.clientui.dao.PatientDao;
@@ -24,6 +26,7 @@ import com.sante.clientui.service.GatewayService;
 
 import jakarta.validation.Valid;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author trimok
@@ -32,6 +35,7 @@ import lombok.Getter;
  */
 @Controller
 @Getter
+@Slf4j
 public class ClientuiController {
 
     /**
@@ -39,6 +43,15 @@ public class ClientuiController {
      */
     @Autowired
     private GatewayService gatewayService;
+
+    @GetMapping("/listHeaders")
+    public void listAllHeaders(
+	    @RequestHeader Map<String, String> headers) {
+	headers.forEach((key, value) -> {
+	    log.info(String.format("Header '%s' = %s", key, value));
+	});
+	log.info("");
+    }
 
     /**
      * Entry point of the application, return list patients view (home)
@@ -55,6 +68,7 @@ public class ClientuiController {
 	    patients = gatewayService.getPatients();
 	} catch (Exception e) {
 	    String message = e.getMessage();
+	    log.info("Exception : " + message);
 
 	    // Acces interdit
 	    if (message.contains("403")) {

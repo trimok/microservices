@@ -17,7 +17,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -104,10 +103,6 @@ public class ControllerTest {
 
     }
 
-    @AfterAll
-    public void afterAll() {
-    }
-
     @Test
     public void getPatients() throws Exception {
 
@@ -120,6 +115,7 @@ public class ControllerTest {
 		.perform(MockMvcRequestBuilders.get("/"))
 
 		.andExpect(status().is(200))
+		.andExpect(model().attributeExists("patients"))
 		.andExpect(model().attributeDoesNotExist("error_get_list_patient"))
 		.andExpect(model().attributeDoesNotExist("error_get_list_patient_access_forbidden"))
 		.andExpect(view().name("home"));
