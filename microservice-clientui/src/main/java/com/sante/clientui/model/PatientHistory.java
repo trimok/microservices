@@ -31,4 +31,43 @@ public class PatientHistory {
      */
     @NotNull
     private SortedSet<Note> notes = new TreeSet<>();
+
+    @Override
+    public boolean equals(Object obj) {
+	if (this == obj)
+	    return true;
+	if (obj == null)
+	    return false;
+	if (getClass() != obj.getClass())
+	    return false;
+	PatientHistory other = (PatientHistory) obj;
+
+	for (Note note : notes) {
+	    boolean noteFound = false;
+	    for (Note noteOther : other.getNotes()) {
+		if (note.equals(noteOther)) {
+		    noteFound = true;
+		    break;
+		}
+	    }
+	    if (!noteFound) {
+		return false;
+	    }
+	}
+
+	for (Note noteOther : other.getNotes()) {
+	    boolean noteFound = false;
+	    for (Note note : notes) {
+		if (noteOther.equals(note)) {
+		    noteFound = true;
+		    break;
+		}
+	    }
+	    if (!noteFound) {
+		return false;
+	    }
+	}
+
+	return true;
+    }
 }

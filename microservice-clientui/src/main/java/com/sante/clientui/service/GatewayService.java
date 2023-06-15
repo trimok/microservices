@@ -54,6 +54,13 @@ public interface GatewayService {
     public void deletePatient(@PathVariable("id") Long id);
 
     /**
+     * Delete all patients
+     * 
+     */
+    @DeleteMapping("/patient/admin/all")
+    public void deleteAllPatient();
+
+    /**
      * Getting the list of patients
      * 
      * @return : the list of patients
@@ -115,6 +122,14 @@ public interface GatewayService {
      */
     @DeleteMapping("/patientHistory/{id}")
     public ResponseEntity<PatientHistory> deletePatientHistory(@PathVariable(value = "id") Long id);
+
+    /**
+     * Delete all patient history
+     * 
+     * @return
+     */
+    @DeleteMapping("/patientHistory/admin/all")
+    public ResponseEntity<PatientHistory> deleteAllPatientHistory();
 
     /**
      * Updating a note

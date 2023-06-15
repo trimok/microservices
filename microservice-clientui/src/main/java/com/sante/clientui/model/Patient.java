@@ -1,6 +1,7 @@
 package com.sante.clientui.model;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -68,4 +69,20 @@ public class Patient {
     @Size(min = 8, max = 20)
     @Pattern(regexp = "[0-9]{2} [0-9]{2} [0-9]{2} [0-9]{2} [0-9]{2}")
     private String telephone;
+
+    @Override
+    public boolean equals(Object obj) {
+	if (this == obj)
+	    return true;
+	if (obj == null)
+	    return false;
+	if (getClass() != obj.getClass())
+	    return false;
+	Patient other = (Patient) obj;
+	return Objects.equals(adressePostale, other.adressePostale)
+		&& Objects.equals(dateNaissance, other.dateNaissance) && Objects.equals(genre, other.genre)
+		&& Objects.equals(nom, other.nom) && Objects.equals(prenom, other.prenom)
+		&& Objects.equals(telephone, other.telephone);
+    }
+
 }

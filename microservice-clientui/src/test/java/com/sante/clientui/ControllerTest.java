@@ -197,7 +197,7 @@ public class ControllerTest {
     @Test
     public void savePatient_exception() throws Exception {
 
-	when(gatewayService.createPatient(any(Patient.class))).thenThrow(new RuntimeException());
+	when(gatewayService.createPatient(any(Patient.class))).thenThrow(new RuntimeException(""));
 
 	mockMvc
 		.perform(MockMvcRequestBuilders.post("/save")

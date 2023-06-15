@@ -111,10 +111,15 @@ public class ClientuiController {
 	    return "add";
 	} else {
 	    try {
-		gatewayService.createPatient(patient);
+		Patient patientCreated = gatewayService.createPatient(patient);
 	    } catch (Exception e) {
-		ra.addAttribute("error_add_patient", true);
-		ra.addFlashAttribute("error_add_patient", true);
+		if (e.getMessage().contains("403")) {
+		    ra.addAttribute("error_add_patient_access_forbidden", true);
+		    ra.addFlashAttribute("error_add_patient_access_forbidden", true);
+		} else {
+		    ra.addAttribute("error_add_patient", true);
+		    ra.addFlashAttribute("error_add_patient", true);
+		}
 	    }
 	    return "redirect:/";
 	}
@@ -184,11 +189,29 @@ public class ClientuiController {
 	    ra.addAttribute("error_delete_patient", true);
 	    ra.addFlashAttribute("error_delete_patient", true);
 	}
+
+	// Is there a patient history ?
+	boolean patientHistoryPresent = false;
+
 	try {
-	    gatewayService.deletePatientHistory(id);
+	    gatewayService.getPatientHistory(id);
+	    patientHistoryPresent = true;
 	} catch (Exception e) {
-	    ra.addAttribute("error_delete_patient_history", true);
-	    ra.addFlashAttribute("error_delete_patient_history", true);
+	    String message = e.getMessage();
+	    if (message.contains("403")) {
+		// access forbidden does not mean patienthistory absent
+		patientHistoryPresent = true;
+	    }
+	}
+
+	if (patientHistoryPresent) {
+	    try {
+		gatewayService.deletePatientHistory(id);
+	    } catch (Exception e) {
+		ra.addAttribute("error_delete_patient_history", true);
+		ra.addFlashAttribute("error_delete_patient_history", true);
+	    }
+
 	}
 	return "redirect:/";
     }
@@ -477,5 +500,29 @@ public class ClientuiController {
 	model.addAttribute("risque", risque);
 
 	return "risque";
+    }
+
+    @GetMapping("/deleteAllPatient")
+    public String deleteAllPatient(RedirectAttributes ra) {
+	try {
+	    gatewayService.deleteAllPatient();
+	} catch (Exception e) {
+	    ra.addAttribute("error_delete_all_patient", true);
+	    ra.addFlashAttribute("error_delete_all_patient", true);
+	    log.error(e.getMessage());
+	}
+	return "redirect:/";
+    }
+
+    @GetMapping("/deleteAllPatientHistory")
+    public String deleteAllPatientHistory(RedirectAttributes ra) {
+	try {
+	    gatewayService.deleteAllPatientHistory();
+	} catch (Exception e) {
+	    ra.addAttribute("error_delete_all_patient_history", true);
+	    ra.addFlashAttribute("error_delete_all_patient_history", true);
+	    log.error(e.getMessage());
+	}
+	return "redirect:/";
     }
 }

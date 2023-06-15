@@ -150,4 +150,19 @@ public class PatientHistoryController {
 	patientHistoryService.deletePatientHistory(id);
 	return ResponseEntity.ok().build();
     }
+
+    /**
+     * Suppression de tous les patients
+     * 
+     * @return : ok
+     */
+    @Operation(summary = "Supprimer tous les historiques de patients")
+    @ApiResponse(responseCode = "200")
+    @ApiResponse(responseCode = "404")
+    @DeleteMapping("/patientHistory/admin/all")
+
+    public ResponseEntity<PatientHistory> deleteAllPatientHistory() {
+	patientHistoryService.deleteAllPatientHistory();
+	return ResponseEntity.ok().build();
+    }
 }

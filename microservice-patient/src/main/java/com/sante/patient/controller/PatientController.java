@@ -100,7 +100,7 @@ public class PatientController {
     }
 
     /**
-     * Suppression d'u patient
+     * Suppression d'un patient
      * 
      * @param id : l'id du patient
      * @return : ok
@@ -111,6 +111,21 @@ public class PatientController {
     @DeleteMapping("/patient/{id}")
     public ResponseEntity<Patient> deletePatient(@PathVariable(value = "id") Long id) {
 	patientService.deletePatient(id);
+	return ResponseEntity.ok().build();
+    }
+
+    /**
+     * Suppression de tous les patients
+     * 
+     * @return : ok
+     */
+    @Operation(summary = "Supprimer tous les patients")
+    @ApiResponse(responseCode = "200")
+    @ApiResponse(responseCode = "404")
+    @DeleteMapping("/patient/admin/all")
+
+    public ResponseEntity<Patient> deleteAllPatient() {
+	patientService.deleteAllPatient();
 	return ResponseEntity.ok().build();
     }
 }

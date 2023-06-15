@@ -109,5 +109,6 @@ public class PatientService implements IPatientService {
     @Override
     public void deleteAllPatient() {
 	patientRepository.deleteAll();
+	patientRepository.truncateTable();
     }
 }
