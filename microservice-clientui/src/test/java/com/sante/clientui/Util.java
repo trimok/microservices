@@ -64,7 +64,7 @@ public class Util {
     }
 
     public static String getTotalToken() {
-	return "eyJraWQiOiI3YjRkYTk1NS0zZDZkLTQ0YzAtOGZhZC1jNDMxMTYzZmVhNjIiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJ0b3RhbCIsImF1ZCI6ImNsaWVudCIsIm5iZiI6MTY4Njg0NjA4Mywic2NvcGUiOlsib3BlbmlkIl0sInJvbGVzIjpbIlJPTEVfRVhQRVJUX1VTRVIiLCJST0xFX1BBVElFTlRfVVNFUiIsIlJPTEVfUEFUSUVOVF9ISVNUT1JZX1VTRVIiLCJST0xFX0dBVEVXQVlfVVNFUiJdLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjkwMDAiLCJleHAiOjE2OTU0ODYwODMsImlhdCI6MTY4Njg0NjA4M30.A7Jzbjsm1Zp7JVVdpWTcPZdg1f8kDO5wGQcbXWj8RFiOhiTx5zB6rmig3t4RBrkGSVlG1ThC_GlpYLttT7sO3QYMoKpfr-qJDQGPO2_3AeaFQKaP1PWGkQZfXgLca_JBND-4K4j7wxwWyWDA-RA3ueqJqNE6yI2o5mSWl4g37CRZwE00W8VtzRiu5Y30WdYpzlp6poDQYeWXC2Gt4pcxb00vbyVx8-P5jw7hgmVVmc3yFfKejuFb-WXCG9Yz5wnSGokUxNAfSMxlfrwvsOKrIfKzvCg_tV4dUrufO4U5noMB-3sAtrI2CTrqnSp329jFyU9QrR7pfFTrr8SGAMtMNQ";
+	return "eyJraWQiOiJiNDlmMGVlYS05OWM2LTRmOTItYjRlYS0yMThmMGU1ZDYzNmUiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJ0b3RhbCIsImF1ZCI6ImNsaWVudCIsIm5iZiI6MTY4NjkwOTE3NCwic2NvcGUiOlsib3BlbmlkIl0sInJvbGVzIjpbIlJPTEVfRVhQRVJUX1VTRVIiLCJST0xFX1BBVElFTlRfVVNFUiIsIlJPTEVfUEFUSUVOVF9ISVNUT1JZX1VTRVIiLCJST0xFX0dBVEVXQVlfVVNFUiJdLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjkwMDAiLCJleHAiOjE2OTU1NDkxNzQsImlhdCI6MTY4NjkwOTE3NH0.plQchwTVsO5ttlN3uL5k4EidfkAeWNBCSO0Aiqz37lUpl4HbuuK3-9GBzIuRUs9WxbQAPjbsclXDxlfO75Wl2xg1rublSDLXaiUsYBzOhrE9_x1MTgM8NW_n7oGqDbOX2zc6-yqYoFC7lqjfWpDreL4yg2pS9A-OU-HM2gtCGFV8ZvTQz62oULfT2IGRZ2Uouq0HYQUBqLxO-PTlkn0mUUuRYbxCKTboA4S88D3VzafGXJhBBR82Roi4knmOnWAT8qT8mu0nFThxYeIxLy0DNIpkSS6HemI0Mkjj7VBuRYjvgLgPnznhJaPm2ObX7JJTpSdKPEkx3qDGjQDZFArs3A";
     }
 
     public static String getPatientToken() {
@@ -108,44 +108,36 @@ public class Util {
 
 	    @Override
 	    public String getName() {
-		// TODO Auto-generated method stub
 		return userName;
 	    }
 
 	    @Override
 	    public Collection<? extends GrantedAuthority> getAuthorities() {
-		// TODO Auto-generated method stub
 		return null;
 	    }
 
 	    @Override
 	    public Object getCredentials() {
-		// TODO Auto-generated method stub
 		return null;
 	    }
 
 	    @Override
 	    public Object getDetails() {
-		// TODO Auto-generated method stub
 		return null;
 	    }
 
 	    @Override
 	    public Object getPrincipal() {
-		// TODO Auto-generated method stub
 		return null;
 	    }
 
 	    @Override
 	    public boolean isAuthenticated() {
-		// TODO Auto-generated method stub
 		return true;
 	    }
 
 	    @Override
 	    public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-
 	    }
 
 	};
