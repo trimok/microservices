@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -127,6 +128,12 @@ public class IntegrationTest {
 	patientHistoryDatabaseWithoutNotes.setId(1L);
 
 	patientDaoDatabase = new PatientDao(patientDatabase, patientHistoryDatabase);
+	oidcUser = null;
+    }
+
+    @AfterEach
+    public void afterEach() {
+	oidcUser = null;
     }
 
     @Test

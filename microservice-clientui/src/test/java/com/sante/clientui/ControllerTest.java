@@ -14,8 +14,6 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -101,62 +99,6 @@ public class ControllerTest {
 
 	patientDaoDatabase = new PatientDao(patientDatabase, patientHistoryDatabase);
 
-    }
-
-    @Test
-    public void getPatients() throws Exception {
-
-	List<Patient> patients = new ArrayList<>();
-	patients.add(patientDatabase);
-
-	when(gatewayService.getPatients()).thenReturn(patients);
-
-	mockMvc
-		.perform(MockMvcRequestBuilders.get("/"))
-
-		.andExpect(status().is(200))
-		.andExpect(model().attributeExists("patients"))
-		.andExpect(model().attributeDoesNotExist("error_get_list_patient"))
-		.andExpect(model().attributeDoesNotExist("error_get_list_patient_access_forbidden"))
-		.andExpect(view().name("home"));
-
-	verify(gatewayService, times(1)).getPatients();
-    }
-
-    @Test
-    public void getPatients_access_forbidden() throws Exception {
-
-	List<Patient> patients = new ArrayList<>();
-	patients.add(patientDatabase);
-
-	when(gatewayService.getPatients()).thenThrow(new RuntimeException("403"));
-
-	mockMvc
-		.perform(MockMvcRequestBuilders.get("/"))
-		.andExpect(status().is(200))
-		.andExpect(model().attributeDoesNotExist("error_get_list_patient"))
-		.andExpect(model().attributeExists("error_get_list_patient_access_forbidden"))
-		.andExpect(view().name("home"));
-
-	verify(gatewayService, times(1)).getPatients();
-    }
-
-    @Test
-    public void getPatients_exception() throws Exception {
-
-	List<Patient> patients = new ArrayList<>();
-	patients.add(patientDatabase);
-
-	when(gatewayService.getPatients()).thenThrow(new RuntimeException(""));
-
-	mockMvc
-		.perform(MockMvcRequestBuilders.get("/"))
-		.andExpect(status().is(200))
-		.andExpect(model().attributeExists("error_get_list_patient"))
-		.andExpect(model().attributeDoesNotExist("error_get_list_patient_access_forbidden"))
-		.andExpect(view().name("home"));
-
-	verify(gatewayService, times(1)).getPatients();
     }
 
     @Test

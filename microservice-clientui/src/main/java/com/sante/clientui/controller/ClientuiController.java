@@ -44,22 +44,6 @@ public class ClientuiController {
     @Autowired
     private GatewayService gatewayService;
 
-    @GetMapping("/token")
-    public String getToken(@RegisteredOAuth2AuthorizedClient OAuth2AuthorizedClient client, Model model) {
-
-	String token = null;
-
-	if (client != null && client.getAccessToken() != null) {
-	    token = client.getAccessToken().getTokenValue();
-	} else {
-	    token = "user or user id token null";
-	}
-
-	model.addAttribute("token", token);
-
-	return "token";
-    }
-
     /**
      * Entry point of the application, return list patients view (home)
      * 
@@ -68,8 +52,8 @@ public class ClientuiController {
      * @return : string
      */
     @GetMapping("/")
-    public String viewHomePage(RedirectAttributes ra, Model model,
-	    @RegisteredOAuth2AuthorizedClient OAuth2AuthorizedClient client) {
+    public String viewHomePageWithToken(RedirectAttributes ra, Model model,
+	    @RegisteredOAuth2AuthorizedClient("myoauth2") OAuth2AuthorizedClient client) {
 
 	List<Patient> patients = new ArrayList<>();
 	try {

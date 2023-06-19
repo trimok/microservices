@@ -43,10 +43,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Util {
 
-    private static String tokenTotal;
-    private static String tokenPatient;
-    private static String tokenHistory;
-    private static String tokenNogateway;
+    private static String tokenTotal = null;
+    private static String tokenPatient = null;
+    private static String tokenHistory = null;
+    private static String tokenNogateway = null;
 
     public static class Mapper extends ObjectMapper {
 	/**
@@ -85,7 +85,7 @@ public class Util {
 	WebDriver driver = new ChromeDriver();
 	driver.manage().window().minimize();
 	driver.manage().window().setPosition(new Point(-30000, -30000));
-	driver.get("http://localhost:8080/");
+	driver.get("http://localhost:8080");
 
 	try {
 	    tokenTotal = getToken(driver, "total");
@@ -95,7 +95,7 @@ public class Util {
 	} catch (Exception e) {
 	    e.printStackTrace();
 	} finally {
-	    driver.close();
+	    driver.quit();
 	}
 
 	return new String[] { tokenTotal, tokenPatient, tokenHistory, tokenNogateway };
@@ -103,7 +103,6 @@ public class Util {
 
     @SuppressWarnings("finally")
     public static String getToken(WebDriver driver, String username) {
-
 	String token = null;
 
 	try {
@@ -148,6 +147,10 @@ public class Util {
 	    ClientRegistrationRepository clientRegistrationRepository, String userName) {
 
 	String token = getToken(userName);
+	if (token == null) {
+	    getTokens();
+	    token = getToken(userName);
+	}
 
 	// Create OidcUser
 	Map<String, Object> claims = new HashMap<>();
