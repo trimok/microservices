@@ -92,7 +92,7 @@ public class Oauth2serverSecurityConfig {
     public SecurityFilterChain appSecurityFilterChain(HttpSecurity http) throws Exception {
 	return http
 		.formLogin(withDefaults())
-		.authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated())
+		.authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll())
 		.build();
 
     }

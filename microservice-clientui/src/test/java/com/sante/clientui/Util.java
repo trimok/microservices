@@ -1,12 +1,21 @@
 package com.sante.clientui;
 
 import java.io.UnsupportedEncodingException;
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.Point;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -29,7 +38,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.sante.clientui.model.Patient;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class Util {
+
+    private static String tokenTotal;
+    private static String tokenPatient;
+    private static String tokenHistory;
+    private static String tokenNogateway;
 
     public static class Mapper extends ObjectMapper {
 	/**
@@ -63,37 +80,76 @@ public class Util {
 	return patients;
     }
 
-    public static String getTotalToken() {
-	return "eyJraWQiOiJiNDlmMGVlYS05OWM2LTRmOTItYjRlYS0yMThmMGU1ZDYzNmUiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJ0b3RhbCIsImF1ZCI6ImNsaWVudCIsIm5iZiI6MTY4NjkwOTE3NCwic2NvcGUiOlsib3BlbmlkIl0sInJvbGVzIjpbIlJPTEVfRVhQRVJUX1VTRVIiLCJST0xFX1BBVElFTlRfVVNFUiIsIlJPTEVfUEFUSUVOVF9ISVNUT1JZX1VTRVIiLCJST0xFX0dBVEVXQVlfVVNFUiJdLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjkwMDAiLCJleHAiOjE2OTU1NDkxNzQsImlhdCI6MTY4NjkwOTE3NH0.plQchwTVsO5ttlN3uL5k4EidfkAeWNBCSO0Aiqz37lUpl4HbuuK3-9GBzIuRUs9WxbQAPjbsclXDxlfO75Wl2xg1rublSDLXaiUsYBzOhrE9_x1MTgM8NW_n7oGqDbOX2zc6-yqYoFC7lqjfWpDreL4yg2pS9A-OU-HM2gtCGFV8ZvTQz62oULfT2IGRZ2Uouq0HYQUBqLxO-PTlkn0mUUuRYbxCKTboA4S88D3VzafGXJhBBR82Roi4knmOnWAT8qT8mu0nFThxYeIxLy0DNIpkSS6HemI0Mkjj7VBuRYjvgLgPnznhJaPm2ObX7JJTpSdKPEkx3qDGjQDZFArs3A";
+    @SuppressWarnings("finally")
+    public static String[] getTokens() {
+	WebDriver driver = new ChromeDriver();
+	driver.manage().window().minimize();
+	driver.manage().window().setPosition(new Point(-30000, -30000));
+	driver.get("http://localhost:8080/");
+
+	try {
+	    tokenTotal = getToken(driver, "total");
+	    tokenPatient = getToken(driver, "patient");
+	    tokenHistory = getToken(driver, "history");
+	    tokenNogateway = getToken(driver, "nogateway");
+	} catch (Exception e) {
+	    e.printStackTrace();
+	} finally {
+	    driver.close();
+	}
+
+	return new String[] { tokenTotal, tokenPatient, tokenHistory, tokenNogateway };
     }
 
-    public static String getPatientToken() {
-	return "eyJraWQiOiIzNzA2YzM0MC0yMjRjLTQzNzQtOWM3YS0wMTU2YjYyMjhlMmQiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJwYXRpZW50IiwiYXVkIjoiY2xpZW50IiwibmJmIjoxNjg2ODI2MzkzLCJzY29wZSI6WyJvcGVuaWQiXSwicm9sZXMiOlsiUk9MRV9QQVRJRU5UX1VTRVIiLCJST0xFX0dBVEVXQVlfVVNFUiJdLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjkwMDAiLCJleHAiOjE2OTU0NjYzOTMsImlhdCI6MTY4NjgyNjM5M30.BzATHg9ah-3l64F8Y0X-pd_X5yWVNJoQOZQmA7-Kyu58jafLYuzvQ5wk4KIk0HnjKY3q71rvaOFB_1RYAApZ5Mxod_sc5rIOFu4B8hXxqiOW_aje1hiDE-cITaEYD2mLf_lBckAxY4VK9HRBpn0zD-iKAg1rVm9Dpnkg4zrg5D6bi6DMVnoGR33obrCzgyaQok8xIn_klliHHQPt4tqhqT_Acv-atfNGz_CGT1GlctvHPkuoi8WA71134T-YyPGcEQUQISoxyaa_BqrfI4ZYJ2j5cvoZiSvRwNzN-1qA-s8BFFZ2UEELKTC17SbOGupM9iQkAdnrscLq_mP8TBlOTQ";
+    @SuppressWarnings("finally")
+    public static String getToken(WebDriver driver, String username) {
+
+	String token = null;
+
+	try {
+	    WebElement element = driver.findElement(By.className("btn"));
+	    new Actions(driver).moveToElement(new WebDriverWait(driver,
+		    Duration.ofSeconds(10L))
+		    .until(ExpectedConditions.elementToBeClickable(element)));
+
+	    driver.findElement(By.id("username")).sendKeys(username);
+	    driver.findElement(By.id("password")).sendKeys(username);
+	    driver.findElement(By.className("btn")).click();
+
+	    element = driver.findElement(By.className("logout"));
+	    new Actions(driver)
+		    .moveToElement(new WebDriverWait(driver, Duration.ofSeconds(10L))
+			    .until(ExpectedConditions.elementToBeClickable(element)));
+
+	    element = driver.findElement(By.id("token"));
+	    token = element.getAttribute("value");
+	    log.info("Token: " + token);
+
+	    driver.findElement(By.className("logout")).click();
+
+	} catch (Exception e) {
+	    e.printStackTrace();
+	} finally {
+	    return token;
+	}
     }
 
-    public static String getHistoryToken() {
-	return "eyJraWQiOiIzNzA2YzM0MC0yMjRjLTQzNzQtOWM3YS0wMTU2YjYyMjhlMmQiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJoaXN0b3J5IiwiYXVkIjoiY2xpZW50IiwibmJmIjoxNjg2ODI2NDY1LCJzY29wZSI6WyJvcGVuaWQiXSwicm9sZXMiOlsiUk9MRV9QQVRJRU5UX1VTRVIiLCJST0xFX1BBVElFTlRfSElTVE9SWV9VU0VSIiwiUk9MRV9HQVRFV0FZX1VTRVIiXSwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo5MDAwIiwiZXhwIjoxNjk1NDY2NDY1LCJpYXQiOjE2ODY4MjY0NjV9.dq0T46flY8mVsBSQ8LI_h5LbHj_-acP6Yp6TtADQZXenkCE1K7Ds_J6GmCjMHgH1a4yKbMUiIgoXptgGtFWbUs5-th9ajmSdyBKpt5CXUucheg582A3z-Q1me73dMk0Zys7Dy771xaVpjt2Kcmr7JenhbPtCEPZuv22au8-fqoOJ6rw4uZ6oDGiNsFJBKJOwhys8kXSj---JWUkKhqVlrdHdd4MWiMD7ZLWFm5JoiQLKygUSdzBpj9zaTo7Ty101E75jxwgZjP3qbna784B7zDaiWCkATrEe_My51vIqTZwBwS3UIAaKzbDANp6xkGmwQypDZyHWWScu-zZJKPPr5g";
-    }
-
-    public static String getNogatewayToken() {
-	return "eyJraWQiOiIzNzA2YzM0MC0yMjRjLTQzNzQtOWM3YS0wMTU2YjYyMjhlMmQiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJub2dhdGV3YXkiLCJhdWQiOiJjbGllbnQiLCJuYmYiOjE2ODY4MjY1NTcsInNjb3BlIjpbIm9wZW5pZCJdLCJyb2xlcyI6WyJST0xFX0VYUEVSVF9VU0VSIiwiUk9MRV9QQVRJRU5UX1VTRVIiLCJST0xFX1BBVElFTlRfSElTVE9SWV9VU0VSIl0sImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6OTAwMCIsImV4cCI6MTY5NTQ2NjU1NywiaWF0IjoxNjg2ODI2NTU3fQ.XtGgkaUcs7zYtu1l8GwkUN0SnNnPGPCc6gKGIpA4LzqcLpiXdo54a5TCreBH7H4O6oPR_cXoyCsofH8MXHzXZO7vLS43RV1Q6tUuwnduWSKVtuU14YIh7hsGzDMKTOBMZqOlYR8SLm7yBoeL45p5j9W4XFTApd2gkE2Xtb-UPdPt48R1h8-9zWGSlQgPaAmE8XMSrV8hsqYM8OvqDyXXxEPzEcT5B9necDPE4NdH7JFHb9mExywex1YetSXN5HOHYF7La2WxMfRb9znXV_MKj9DJbw6FQVpLE9P0innK0MNPPTUX8HcBJQXVNWSRsE1l6BW4LiJkEwXYmv_zjYzfVw";
-    }
-
-    public static String getToken(String userName) {
-	return switch (userName) {
-	case "total" -> getTotalToken();
-	case "patient" -> getPatientToken();
-	case "history" -> getHistoryToken();
-	case "nogateway" -> getNogatewayToken();
-	default -> getTotalToken();
+    public static String getToken(String username) {
+	return switch (username) {
+	case "total" -> tokenTotal;
+	case "patient" -> tokenPatient;
+	case "history" -> tokenHistory;
+	case "nogateway" -> tokenNogateway;
+	default -> null;
 	};
     }
 
     public static OidcUser getOidcUser(OAuth2AuthorizedClientService oAuth2AuthorizedClientService,
 	    ClientRegistrationRepository clientRegistrationRepository, String userName) {
 
-	String token = Util.getToken(userName);
+	String token = getToken(userName);
 
+	// Create OidcUser
 	Map<String, Object> claims = new HashMap<>();
 	claims.put("sub", userName);
 	OidcIdToken oidcToken = new OidcIdToken(token, null, null, claims);
@@ -101,6 +157,8 @@ public class Util {
 	List<GrantedAuthority> listAuthorities = Arrays.asList(authority, new SimpleGrantedAuthority("SCOPE_openid"));
 	OidcUser oidcUser = new DefaultOidcUser(listAuthorities, oidcToken, "sub");
 
+	// Create registered OAuth2AuthorizedClient
+	// (correctly managed by oAuth2AuthorizedClientService)
 	OAuth2AccessToken oauth2Token = new OAuth2AccessToken(TokenType.BEARER, token, null, null);
 	ClientRegistration clientRegistration = clientRegistrationRepository.findByRegistrationId("myoauth2");
 	OAuth2AuthorizedClient authorizedClient = new OAuth2AuthorizedClient(clientRegistration, userName, oauth2Token);
@@ -141,8 +199,10 @@ public class Util {
 	    }
 
 	};
+	// Registering authorizedClient
 	oAuth2AuthorizedClientService.saveAuthorizedClient(authorizedClient, principal);
 
 	return oidcUser;
     }
+
 }

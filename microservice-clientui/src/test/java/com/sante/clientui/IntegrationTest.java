@@ -2,6 +2,7 @@ package com.sante.clientui;
 
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oidcLogin;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
@@ -16,6 +17,7 @@ import java.util.List;
 
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -45,7 +47,7 @@ import lombok.extern.slf4j.Slf4j;
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestInstance(Lifecycle.PER_CLASS)
-@TestMethodOrder(value = org.junit.jupiter.api.MethodOrderer.MethodName.class)
+@TestMethodOrder(value = org.junit.jupiter.api.MethodOrderer.OrderAnnotation.class)
 public class IntegrationTest {
 
     @Autowired
@@ -125,6 +127,16 @@ public class IntegrationTest {
 	patientHistoryDatabaseWithoutNotes.setId(1L);
 
 	patientDaoDatabase = new PatientDao(patientDatabase, patientHistoryDatabase);
+    }
+
+    @Test
+    @Order(-100)
+    public void getTokens() {
+
+	String[] tokens = Util.getTokens();
+	for (String token : tokens) {
+	    assertNotNull(token);
+	}
     }
 
     @Test
