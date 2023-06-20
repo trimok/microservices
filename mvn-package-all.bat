@@ -34,16 +34,16 @@ cd ../microservice-expert
 call mvn package
 if errorlevel 1 echo  %NL%%NL%%NL%    ************************************%NL%    Erreur dans  mvn package expert%NL%    ************************************%NL%%NL% & cd.. & pause & goto :EOF
 echo %NL%%NL%%NL%    ************************************%NL%    spring boot run configserver %NL%    ************************************%NL%%NL%
-cd ../microservice-configserver -Dspring-boot.run.profiles=test
-start /b mvn spring-boot:run
+cd ../microservice-configserver 
+start /b mvn spring-boot:run -Dspring-boot.run.profiles=test
 ping 127.0.0.1 -n 15 > nul
 echo %NL%%NL%%NL%    ************************************%NL%    spring boot run eurekaserver  %NL%    ************************************%NL%%NL%
-cd ../microservice-eurekaserver -Dspring-boot.run.profiles=test
-start /b mvn spring-boot:run
+cd ../microservice-eurekaserver 
+start /b mvn spring-boot:run -Dspring-boot.run.profiles=test
 ping 127.0.0.1 -n 15 > nul
 echo %NL%%NL%%NL%    ************************************%NL%    spring boot run oauth2server%NL%    ************************************%NL%%NL%
-cd ../microservice-oauth2server -Dspring-boot.run.profiles=test
-start /b mvn spring-boot:run
+cd ../microservice-oauth2server 
+start /b mvn spring-boot:run -Dspring-boot.run.profiles=test
 ping 127.0.0.1 -n 15 > nul
 echo %NL%%NL%%NL%    ************************************%NL%    spring boot run gateway %NL%    ************************************%NL%%NL%
 cd ../microservice-gateway
