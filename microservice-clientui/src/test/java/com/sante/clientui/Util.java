@@ -29,6 +29,7 @@ import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.core.oidc.user.OidcUserAuthority;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MvcResult;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -41,12 +42,15 @@ import com.sante.clientui.model.Patient;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@ContextConfiguration
 public class Util {
 
     private static String tokenTotal = null;
     private static String tokenPatient = null;
     private static String tokenHistory = null;
     private static String tokenNogateway = null;
+
+    private static String urlTokenUtility = "http://localhost:8999";
 
     public static class Mapper extends ObjectMapper {
 	/**
@@ -85,7 +89,7 @@ public class Util {
 	WebDriver driver = new ChromeDriver();
 	driver.manage().window().minimize();
 	driver.manage().window().setPosition(new Point(-30000, -30000));
-	driver.get("http://localhost:8080");
+	driver.get(urlTokenUtility);
 
 	try {
 	    tokenTotal = getToken(driver, "total");

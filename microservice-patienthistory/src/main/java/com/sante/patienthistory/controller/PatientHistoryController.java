@@ -156,9 +156,9 @@ public class PatientHistoryController {
      * 
      * @return : ok
      */
-    @Operation(summary = "Supprimer tous les historiques de patients")
-    @ApiResponse(responseCode = "200")
-    @ApiResponse(responseCode = "404")
+    // @Operation(summary = "Supprimer tous les historiques de patients")
+    // @ApiResponse(responseCode = "200")
+    // @ApiResponse(responseCode = "404")
     @DeleteMapping("/patientHistory/admin/all")
 
     public ResponseEntity<PatientHistory> deleteAllPatientHistory() {

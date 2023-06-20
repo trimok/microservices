@@ -486,4 +486,65 @@ public class IntegrationTest {
 		.andExpect(view().name("risque"));
 
     }
+
+    // Test de sécurité
+    @Test
+    public void getPatients_access_forbidden() throws Exception {
+
+	if (oidcUser == null) {
+	    oidcUser = Util.getOidcUser(oAuth2AuthorizedClientService, clientRegistrationRepository, "nogateway");
+	}
+
+	mockMvc
+		.perform(MockMvcRequestBuilders.get("/")
+			.with(oidcLogin().oidcUser(oidcUser)))
+		.andExpect(status().is(200))
+		.andExpect(model().attributeExists("error_get_list_patient_access_forbidden"))
+		.andExpect(view().name("home"));
+
+    }
+
+    @Test
+    public void getPatientHistory_access_forbidden()
+	    throws Exception {
+
+	if (oidcUser == null) {
+	    oidcUser = Util.getOidcUser(oAuth2AuthorizedClientService, clientRegistrationRepository, "patient");
+	}
+
+	// Suppression des patients et des patients history
+	deleteAllPatient();
+
+	// Création d'un d'un patient
+	savePatient(false);
+
+	mockMvc
+		.perform(MockMvcRequestBuilders.get("/notes/1")
+			.with(oidcLogin().oidcUser(oidcUser))
+			.with(csrf()))
+		.andExpect(status().is(302))
+		.andExpect(model().attributeExists("error_get_patient_history_access_forbidden"));
+    }
+
+    @Test
+    public void showRisqueForm_access_forbidden() throws Exception {
+	if (oidcUser == null) {
+	    oidcUser = Util.getOidcUser(oAuth2AuthorizedClientService, clientRegistrationRepository, "history");
+	}
+
+	// Suppression des patients et des patients history
+	deleteAllPatient();
+	deleteAllPatientHistory();
+
+	// Création d'un patient history et d'un patient
+	savePatientHistory(false, false);
+
+	Risque risque = Risque.AUCUN_RISQUE;
+
+	mockMvc
+		.perform(MockMvcRequestBuilders.get("/risque/1").with(oidcLogin().oidcUser(oidcUser)))
+		.andExpect(status().is(302))
+		.andExpect(model().attributeExists("error_get_risque_access_forbidden"));
+
+    }
 }

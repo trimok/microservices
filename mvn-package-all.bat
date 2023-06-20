@@ -36,36 +36,37 @@ if errorlevel 1 echo  %NL%%NL%%NL%    ************************************%NL%  
 echo %NL%%NL%%NL%    ************************************%NL%    spring boot run configserver %NL%    ************************************%NL%%NL%
 cd ../microservice-configserver 
 start /b mvn spring-boot:run -Dspring-boot.run.profiles=test
-ping 127.0.0.1 -n 15 > nul
+ping 127.0.0.1 -n 20 > nul
 echo %NL%%NL%%NL%    ************************************%NL%    spring boot run eurekaserver  %NL%    ************************************%NL%%NL%
 cd ../microservice-eurekaserver 
 start /b mvn spring-boot:run -Dspring-boot.run.profiles=test
-ping 127.0.0.1 -n 15 > nul
+ping 127.0.0.1 -n 20 > nul
 echo %NL%%NL%%NL%    ************************************%NL%    spring boot run oauth2server%NL%    ************************************%NL%%NL%
 cd ../microservice-oauth2server 
 start /b mvn spring-boot:run -Dspring-boot.run.profiles=test
-ping 127.0.0.1 -n 15 > nul
+ping 127.0.0.1 -n 20 > nul
 echo %NL%%NL%%NL%    ************************************%NL%    spring boot run gateway %NL%    ************************************%NL%%NL%
 cd ../microservice-gateway
 start /b mvn spring-boot:run -Dspring-boot.run.profiles=test
-ping 127.0.0.1 -n 15 > nul
-echo %NL%%NL%%NL%    ************************************%NL%    spring boot run patient %NL%    ************************************%NL%%NL%
-cd ../microservice-patient
-start /b mvn spring-boot:run -Dspring-boot.run.profiles=test
-ping 127.0.0.1 -n 15 > nul
-echo %NL%%NL%%NL%    ************************************%NL%    spring boot run patienthistory %NL%    ************************************%NL%%NL%
-cd ../microservice-patienthistory
-start /b mvn spring-boot:run -Dspring-boot.run.profiles=test
-ping 127.0.0.1 -n 15 > nul
+ping 127.0.0.1 -n 20 > nul
 echo %NL%%NL%%NL%    ************************************%NL%    spring boot run expert %NL%    ************************************%NL%%NL%
 cd ../microservice-expert
 start /b mvn spring-boot:run -Dspring-boot.run.profiles=test
-ping 127.0.0.1 -n 15 > nul
-echo %NL%%NL%%NL%    ************************************%NL%    spring boot run clientui %NL%    ************************************%NL%%NL%
-cd ../microservice-clientui
+ping 127.0.0.1 -n 25 > nul
+echo %NL%%NL%%NL%    ************************************%NL%    spring boot run token utility %NL%    ************************************%NL%%NL%
+cd ../microservice-tokenutility
 start /b mvn spring-boot:run -Dspring-boot.run.profiles=test
-ping 127.0.0.1 -n 15 > nul
+ping 127.0.0.1 -n 20 > nul
+echo %NL%%NL%%NL%    ************************************%NL%    spring boot run patient %NL%    ************************************%NL%%NL%
+cd ../microservice-patient
+start /b mvn spring-boot:run -Dspring-boot.run.profiles=test
+ping 127.0.0.1 -n 25 > nul
+echo %NL%%NL%%NL%    ************************************%NL%    spring boot run patienthistory %NL%    ************************************%NL%%NL%
+cd ../microservice-patienthistory
+start /b mvn spring-boot:run -Dspring-boot.run.profiles=test
+ping 127.0.0.1 -n 30 > nul
 echo %NL%%NL%%NL%    ************************************%NL%    mvn package clientui  %NL%    ************************************%NL%%NL%
+cd ../microservice-clientui
 call mvn package
 if errorlevel 1 echo  %NL%%NL%%NL%    ************************************%NL%    Erreur dans  mvn package clientui%NL%    ************************************%NL%%NL% & cd.. & pause & goto :EOF
 cd..

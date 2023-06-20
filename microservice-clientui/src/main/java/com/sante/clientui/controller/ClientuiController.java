@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
-import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -52,8 +50,7 @@ public class ClientuiController {
      * @return : string
      */
     @GetMapping("/")
-    public String viewHomePageWithToken(RedirectAttributes ra, Model model,
-	    @RegisteredOAuth2AuthorizedClient("myoauth2") OAuth2AuthorizedClient client) {
+    public String viewHomePage(RedirectAttributes ra, Model model) {
 
 	List<Patient> patients = new ArrayList<>();
 	try {
@@ -71,16 +68,6 @@ public class ClientuiController {
 	}
 
 	model.addAttribute("patients", patients);
-
-	String token = null;
-
-	if (client != null && client.getAccessToken() != null) {
-	    token = client.getAccessToken().getTokenValue();
-	} else {
-	    token = "user or user id token null";
-	}
-
-	model.addAttribute("token", token);
 
 	return "home";
     }

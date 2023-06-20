@@ -119,11 +119,10 @@ public class PatientController {
      * 
      * @return : ok
      */
-    @Operation(summary = "Supprimer tous les patients")
-    @ApiResponse(responseCode = "200")
-    @ApiResponse(responseCode = "404")
+    // @Operation(summary = "Supprimer tous les patients")
+    // @ApiResponse(responseCode = "200")
+    // @ApiResponse(responseCode = "404")
     @DeleteMapping("/patient/admin/all")
-
     public ResponseEntity<Patient> deleteAllPatient() {
 	patientService.deleteAllPatient();
 	return ResponseEntity.ok().build();
