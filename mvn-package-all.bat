@@ -70,7 +70,6 @@ call mvn package
 if errorlevel 1 echo  %NL%%NL%%NL%    ************************************%NL%    Erreur dans  mvn package clientui%NL%    ************************************%NL%%NL% & cd.. & pause & goto :EOF
 cd..
 echo %NL%%NL%%NL%    ************************************%NL%    SUCCESS SUCCESS  %NL%    ************************************%NL%%NL%
-pause
 exit 0 /b
 :EOF
 pause
