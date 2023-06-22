@@ -178,7 +178,7 @@ services:
       DOCKER_EUREKA_SERVER_URL: http://microservice-eurekaserver:8761/eureka
       DOCKER_ZIPKIN_URL: http://zipkin:9411/api/v2/spans
       DOCKER_ISSUER_URI: http://microservice-oauth2server:9000
-      DOCKER_LOGOUT_SUCCESS_URL : http://microservice-oauth2server:9000/
+      DOCKER_LOGOUT_SUCCESS_URL : http://microservice-oauth2server:9000/login
     image: clientui
     depends_on:
       microservice-configserver:
