@@ -24,7 +24,7 @@ public class SwaggerConfig {
 	return new OpenAPI()
 		.info(new Info()
 			.title("Microservice expert diabète")
-			.description("Description des endpoints de type GET.")
+			.description("Endpoint Obtention du risque.")
 			.version("v1.0.0"));
     }
 

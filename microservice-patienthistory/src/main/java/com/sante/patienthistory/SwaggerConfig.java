@@ -35,7 +35,7 @@ public class SwaggerConfig {
 	return GroupedOpenApi.builder()
 		.group("user")
 		.packagesToScan("com.sante.patienthistory.controller")
-		.pathsToMatch("/patienthistory/**")
+		.pathsToMatch("/patientHistory/**")
 		.build();
     }
 

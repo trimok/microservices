@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sante.patient.model.Patient;
 import com.sante.patient.service.IPatientService;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -119,9 +120,9 @@ public class PatientController {
      * 
      * @return : ok
      */
-    // @Operation(summary = "Supprimer tous les patients")
-    // @ApiResponse(responseCode = "200")
-    // @ApiResponse(responseCode = "404")
+    @Hidden
+    @Operation(summary = "Supprimer tous les patients")
+    @ApiResponse(responseCode = "200")
     @DeleteMapping("/patient/admin/all")
     public ResponseEntity<Patient> deleteAllPatient() {
 	patientService.deleteAllPatient();
