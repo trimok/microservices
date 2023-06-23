@@ -1,9 +1,4 @@
-<style>
-r { color: Red }
-o { color: Orange }
-g { color: Green }
-b { color: blue }
-</style>
+<link rel="stylesheet" href="md/readme.css">
 
 # <b>Mediscreen</b> #
 - Mediscreen est une société internationale qui travaille avec les cliniques de santé et les
