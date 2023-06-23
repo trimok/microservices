@@ -131,6 +131,28 @@ soit désactiver Zipkin en lançant les applications avec le profil <r>test</r> 
 Pour plus d'informations, ci-dessous une présentation détaillée du projet: 
 
 
+![](md/Slide1.jpg)
+![](md/Slide2.jpg)
+![](md/Slide3.jpg)
+![](md/Slide4.jpg)
+![](md/Slide5.jpg)
+![](md/Slide6.jpg)
+![](md/Slide7.jpg)
+![](md/Slide8.jpg)
+![](md/Slide9.jpg)
+![](md/Slide10.jpg)
+![](md/Slide11.jpg)
+![](md/Slide12.jpg)
+![](md/Slide13.jpg)
+![](md/Slide14.jpg)
+![](md/Slide15.jpg)
+![](md/Slide16.jpg)
+![](md/Slide17.jpg)
+![](md/Slide18.jpg)
+![](md/Slide19.jpg)
+
+
+
 
 
 
