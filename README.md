@@ -1,5 +1,8 @@
 <link rel="stylesheet" href="md/readme.css">
 
+$${\color{red}Red}$$
+
+
 # <b>Mediscreen</b> #
 - Mediscreen est une société internationale qui travaille avec les cliniques de santé et les
 cabinets privés pour dépister les risques de maladies.
