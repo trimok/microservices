@@ -1,6 +1,7 @@
 <link rel="stylesheet" href="md/readme.css">
 
 $${\color{red}Red}$$
+#{\color{red}Red}#
 
 # $${\color{blue}Mediscreen}$$ #
 # <b>Mediscreen</b> #
