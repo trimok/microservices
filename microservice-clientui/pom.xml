@@ -17,6 +17,8 @@
 		<maven.compiler.source>20</maven.compiler.source>
 		<maven.compiler.target>20</maven.compiler.target>
 		<spring-cloud.version>2022.0.3</spring-cloud.version>
+		<selenium-htmlunit.version>4.11.0</selenium-htmlunit.version>
+		<selenium.version>4.11.0</selenium.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -90,6 +92,20 @@
 			<artifactId>opentelemetry-exporter-zipkin</artifactId>
 		</dependency>
 
+		<dependency>      
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<version>7.8.0</version>
+			<scope>test</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-java</artifactId>
+			<version>4.11.0</version>
+			<scope>test</scope>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -102,18 +118,6 @@
 			<scope>test</scope>
 		</dependency>
 		
-		
-		<dependency>
-			<groupId>org.seleniumhq.selenium</groupId>
-			<artifactId>selenium-java</artifactId>
-		</dependency>
-		<dependency>
-      
-			<groupId>org.testng</groupId>
-			<artifactId>testng</artifactId>
-			<version>6.8</version>
-			<scope>test</scope>
-		</dependency>
 
 	</dependencies>
 

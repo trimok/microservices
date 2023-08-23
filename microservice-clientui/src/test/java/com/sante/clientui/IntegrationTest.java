@@ -432,7 +432,7 @@ public class IntegrationTest {
 			.with(csrf()))
 		.andExpect(status().is(302))
 		.andExpect(model().attributeDoesNotExist("error_update_note"))
-		.andExpect(view().name("redirect:/homenotes/1"));
+		.andExpect(view().name("redirect:/notes/1"));
 
 	// Vérification du patient history
 	verifyPatientHistory(patientHistoryDatabaseUpdated);

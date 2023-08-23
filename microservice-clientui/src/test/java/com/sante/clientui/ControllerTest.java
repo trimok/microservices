@@ -484,7 +484,7 @@ public class ControllerTest {
 	mockMvc
 		.perform(MockMvcRequestBuilders.get("/note/delete/1/" + creationDate.toString()))
 		.andExpect(status().is(302))
-		.andExpect(view().name("redirect:/homenotes/1"));
+		.andExpect(view().name("redirect:/notes/1"));
 
 	verify(gatewayService, times(1)).deleteNote(any(PatientHistory.class));
     }
@@ -498,7 +498,7 @@ public class ControllerTest {
 		.perform(MockMvcRequestBuilders.get("/note/delete/1/" + creationDate.toString()))
 		.andExpect(status().is(302))
 		.andExpect(model().attributeExists("error_delete_note"))
-		.andExpect(view().name("redirect:/homenotes/1"));
+		.andExpect(view().name("redirect:/notes/1"));
 
 	verify(gatewayService, times(1)).deleteNote(any(PatientHistory.class));
     }
@@ -558,7 +558,7 @@ public class ControllerTest {
 		.perform(MockMvcRequestBuilders.get("/note/update/1/" + creationDateNoteAdd.toString()))
 		.andExpect(model().attributeExists("error_get_note"))
 		.andExpect(status().is(302))
-		.andExpect(view().name("redirect:/homenotes/1"));
+		.andExpect(view().name("redirect:/notes/1"));
 
 	verify(gatewayService, times(1)).getPatient(any(Long.class));
 	verify(gatewayService, times(1)).getPatientHistory(any(Long.class));
@@ -574,7 +574,7 @@ public class ControllerTest {
 			.flashAttr("patientHistory", patientHistoryDatabase).flashAttr("note", note))
 		.andExpect(status().is(302))
 		.andExpect(model().attributeDoesNotExist("error_update_note"))
-		.andExpect(view().name("redirect:/homenotes/1"));
+		.andExpect(view().name("redirect:/notes/1"));
 
 	verify(gatewayService, times(1)).updateNote(any(PatientHistory.class));
     }
@@ -589,7 +589,7 @@ public class ControllerTest {
 			.flashAttr("patientHistory", patientHistoryDatabase).flashAttr("note", note))
 		.andExpect(status().is(302))
 		.andExpect(model().attributeExists("error_update_note"))
-		.andExpect(view().name("redirect:/homenotes/1"));
+		.andExpect(view().name("redirect:/notes/1"));
 
 	verify(gatewayService, times(1)).updateNote(any(PatientHistory.class));
     }

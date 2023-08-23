@@ -114,6 +114,11 @@ cliente (en lançant les applications nécessaires)
 
 - En cas de problème, on sort en exit 1, si tout est ok, en exit 0
 
+
+- Les tests de l'application clientui utilisent un script Selenium (pour obtenir un vrai token), qui nécessite la présence de Chrome 
+ avec une version inférieure ou égale à 116
+(si version de Chrome superieure, upgrader les propriétés selenium-htmlunit.version et selenium.version(actuellement 4.11.0) dans le pom.xml du projet microservice-clientui)
+
 **Batch Zipkin**
 
 En développement, le module Zipkin n'est pas lancé par les applications, on peut soit le lancer dans Docker (avec le batch **docker-zipkin-run.bat**) - baisser la mémoire allouée  Docker à 1 GB - , 
